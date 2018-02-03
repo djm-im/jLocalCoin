@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.djm.blockchain.BlockChain;
+import im.djm.exception.TxException;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.Utxo;
@@ -93,12 +94,7 @@ public class Wallet {
 		}
 
 		if (sum < coinAmount) {
-			// TODO
-			// throw no enough coins
-
-			SoutUtil.printlnParagraph("Error", "Sum: " + sum + " SendCoin: " + coinAmount);
-
-			throw null;
+			throw new TxException("Not enough coins for tx. Tried to send " + coinAmount + ". Utxo is " + sum + ".");
 		}
 
 		Tx newTx = createNewTx(walletAddress, coinAmount, sum, spendOutputs);

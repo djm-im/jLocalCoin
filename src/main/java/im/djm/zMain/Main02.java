@@ -1,15 +1,15 @@
 package im.djm.zMain;
 
-import java.security.InvalidKeyException;
+import static im.djm.zMain.SoutUtil.printlnParagraph;
 
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 
 import im.djm.blockchain.BlockChain;
+import im.djm.exception.TxException;
 import im.djm.tx.Tx;
 import im.djm.wallet.Wallet;
-
-import static im.djm.zMain.SoutUtil.printlnParagraph;
 
 /**
  * 
@@ -48,8 +48,13 @@ public class Main02 {
 		// blockchain status
 		// _miner: 200, w1: 50, w2: 50
 
-		Tx tx2 = w1.sendCoin(w2.getWalletAddress(), 200);
-		printlnParagraph("Tx2: " + tx2);
+		try {
+			Tx tx2 = w1.sendCoin(w2.getWalletAddress(), 200);
+			printlnParagraph("Tx2: " + tx2);
+		} catch (TxException txEx) {
+			printlnParagraph("Error: " + txEx.getMessage());
+		}
 
+		printlnParagraph("Exit!");
 	}
 }
