@@ -1,0 +1,29 @@
+
+// Apply the java-library plugin to add support for Java Library
+apply plugin: 'java-library'
+apply plugin: 'application'
+
+mainClassName = 'im.djm.zMain.Main03'
+
+archivesBaseName = 'jLocalCoin'
+version = "0.2"
+
+run {
+    standardInput = System.in
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    implementation 'com.google.guava:guava:21.0'
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+
+    // AssertJ unit testing
+    testCompile 'org.assertj:assertj-core:3.8.0'
+}
+

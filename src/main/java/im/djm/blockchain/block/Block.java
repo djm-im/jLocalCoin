@@ -1,0 +1,132 @@
+package im.djm.blockchain.block;
+
+import java.security.NoSuchAlgorithmException;
+
+import im.djm.blockchain.BlockUtil;
+import im.djm.blockchain.block.data.Data;
+import im.djm.blockchain.block.nulls.NullData;
+import im.djm.blockchain.block.nulls.NullHash;
+import im.djm.blockchain.hash.BlockHash;
+import im.djm.blockchain.hash.DataHash;
+import im.djm.blockchain.hash.HashUtil;
+
+/**
+ * @author djm.im
+ */
+public class Block {
+
+	private final Head head;
+
+	private final Data data;
+
+	private final BlockHash hash;
+
+	/**
+	 * 
+	 * @param prevBlock
+	 * @param data
+	 * @throws NoSuchAlgorithmException
+	 */
+	public Block(final Block prevBlock, final Data data) throws NoSuchAlgorithmException {
+		this.data = data;
+
+		this.head = Miner.createHead(prevBlock, data);
+
+		this.hash = HashUtil.calculateBlockHash(this.getRawBlock());
+	}
+
+	/**
+	 * Special constructor to create the first block - genesis (null) block.
+	 */
+	protected Block(NullData nullData, NullHash prevHash) throws NoSuchAlgorithmException {
+		// TODO: 1510903985
+		this.data = nullData;
+
+		DataHash dataHash = HashUtil.calculateDataHash(data.getRawData());
+		this.head = new Head(prevHash, 0, dataHash);
+
+		this.hash = HashUtil.calculateBlockHash(this.getRawBlock());
+	}
+
+	// Package visibility - package private constructor
+	private Block(Head head, Data data, BlockHash hash) {
+		this.head = head;
+		this.data = data;
+		this.hash = hash;
+	}
+
+	/**
+	 * 
+	 * @param head
+	 * @param data
+	 * @param hash
+	 * @return
+	 * 
+	 * 		Factory method.
+	 */
+	public static Block createBlock(Head head, Data data, BlockHash hash) {
+		return new Block(head, data, hash);
+	}
+
+	/**
+	 * @return
+	 * 
+	 * 		Method returns hash for the block.
+	 */
+	public BlockHash getBlockHash() {
+		// TODO ???
+		// Should it return copy?
+		return this.hash;
+	}
+
+	/**
+	 * @return Method returns hash of previous block.
+	 */
+	public BlockHash getPrevBlockHash() {
+		return this.head.getPrevHash();
+	}
+
+	private byte[] getRawBlock() {
+		byte[] rawHead = this.head.getRawHead();
+		byte[] rawData = this.data.getRawData();
+
+		return BlockUtil.concatenateArrays(rawHead, rawData);
+	}
+
+	public long getLength() {
+		return this.head.getLength();
+	}
+
+	public Data getData() {
+		return this.data;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(System.lineSeparator());
+		String dashes = "--------------------------------------------------------------------------------------------------------------------------------";
+		sb.append("[[" + dashes);
+		sb.append(System.lineSeparator());
+
+		sb.append("Head: ");
+		sb.append(this.head.toString());
+		sb.append(System.lineSeparator());
+
+		sb.append("Data: ");
+		sb.append(this.data.toString());
+		sb.append(System.lineSeparator());
+
+		sb.append("Hash: ");
+		sb.append(this.hash.toString());
+		sb.append(System.lineSeparator());
+
+		sb.append(dashes + "]]");
+		sb.append(System.lineSeparator());
+		sb.append(System.lineSeparator());
+
+		return sb.toString();
+	}
+
+}
