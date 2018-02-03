@@ -67,7 +67,6 @@ public class Wallet {
 			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
 		SoutUtil.printlnParagraph("Get Utxo for " + this.walletAddress);
-
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
 		if (utxoList.isEmpty()) {
 			SoutUtil.printlnParagraph("No Utxo: " + utxoList);
@@ -102,16 +101,20 @@ public class Wallet {
 			throw null;
 		}
 
+		Tx newTx = createNewTx(walletAddress, coinAmount, sum, spendOutputs);
+
+		return newTx;
+	}
+
+	private Tx createNewTx(WalletAddress walletAddress, long coinAmount, long sum, List<Utxo> spendOutputs)
+			throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spendOutputs);
 		this.createOutput(walletAddress, coinAmount, newTx, sum);
 
-		// this.blockChain.
-
 		byte[] inputSign = newTx.getRawDataForSignature();
 		byte[] signature = signTx(inputSign);
-		newTx.addSignature(index, signature);
-
+		newTx.addSignature(signature);
 		this.blockChain.add(newTx, spendOutputs);
 
 		return newTx;

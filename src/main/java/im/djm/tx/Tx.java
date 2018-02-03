@@ -101,7 +101,7 @@ public class Tx {
 		return txOutputRaw;
 	}
 
-	public void addSignature(int index, byte[] signature) {
+	public void addSignature(byte[] signature) {
 		this.txSignature = Arrays.copyOf(signature, signature.length);
 	}
 

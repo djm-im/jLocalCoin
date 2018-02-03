@@ -44,5 +44,12 @@ public class Main02 {
 				"W2 coins: " + w2.balance());
 
 		printlnParagraph("Wallets", "Miner " + minerWallet, "W1    " + w1, "W2    " + w2);
+
+		// blockchain status
+		// _miner: 200, w1: 50, w2: 50
+
+		Tx tx2 = w1.sendCoin(w2.getWalletAddress(), 200);
+		printlnParagraph("Tx2: " + tx2);
+
 	}
 }
