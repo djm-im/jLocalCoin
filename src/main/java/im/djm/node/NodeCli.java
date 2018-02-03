@@ -17,6 +17,8 @@ import im.djm.wallet.Wallet;
  */
 public class NodeCli implements Runnable {
 
+	private static final String MINER_WALLET_NAME = "_miner";
+
 	private static final String CMD_WDEL = "wdel";
 
 	private static final String CMD_WLIST = "wlist";
@@ -40,7 +42,7 @@ public class NodeCli implements Runnable {
 		this.blockchain = new BlockChain(minerWallet.getWalletAddress());
 		this.minerWallet.setBlockchain(this.blockchain);
 
-		this.wallets.put("_miner", this.minerWallet);
+		this.wallets.put(MINER_WALLET_NAME, this.minerWallet);
 	}
 
 	@Override
@@ -62,10 +64,12 @@ public class NodeCli implements Runnable {
 			case CMD_HELP:
 				printHelp();
 				break;
+
 			case CMD_EXIT:
 				isRunning = false;
 				// input.close();
 				break loop;
+
 			case CMD_SEND:
 				try {
 					sendCoins(cmdLine);
@@ -75,6 +79,7 @@ public class NodeCli implements Runnable {
 					e1.printStackTrace();
 				}
 				break;
+
 			case CMD_WNEW:
 				try {
 					createNewWallet(cmdLine);
@@ -84,17 +89,21 @@ public class NodeCli implements Runnable {
 					e.printStackTrace();
 				}
 				break;
-			case CMD_WLIST:
-				listAllWallets();
-				break;
+
 			case CMD_WDEL:
 				deleteWallet(cmdLine);
 				break;
+
+			case CMD_WLIST:
+				listAllWallets();
+				break;
+
 			default:
 				System.out.println("Unknow command.");
 				System.out.println("Type help.");
 				break;
 			}
+
 			System.out.println();
 			System.out.println();
 		}
@@ -175,20 +184,20 @@ public class NodeCli implements Runnable {
 		System.out.println(CMD_EXIT + "\t - Stop and exit from the program.");
 		System.out.println();
 
-		System.out.println(CMD_SEND + "\t - Send coins from one to another wallet.");
-		System.out.println("\t send WALLET-NAME-1 WLLET-NAME-2 VALUE ");
-		System.out.println();
-
 		System.out.println("Wallet commands");
 		System.out.println(CMD_WNEW + "\t - Create a new wallet");
 		System.out.println("\t wnew WALLET-NAME");
 		System.out.println();
 
-		System.out.println(CMD_WLIST + "\t - List walletes and balances for each wallet");
-		System.out.println();
-
 		System.out.println(CMD_WDEL + "\t - Delete a wallet");
 		System.out.println("\t wdel WALLET-NAME");
+		System.out.println();
+
+		System.out.println(CMD_WLIST + "\t - List walletes and 'balances' for each wallet");
+		System.out.println();
+
+		System.out.println(CMD_SEND + "\t - Send coins from one to another wallet.");
+		System.out.println("\t send WALLET-NAME-1 WLLET-NAME-2 VALUE ");
 		System.out.println();
 	}
 
