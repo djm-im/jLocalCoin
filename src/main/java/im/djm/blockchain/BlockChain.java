@@ -22,10 +22,8 @@ import im.djm.tx.TxPool;
 import im.djm.tx.Utxo;
 import im.djm.tx.UtxoPool;
 import im.djm.wallet.WalletAddress;
-import im.djm.zMain.SoutUtil;
 
 /**
- * 
  * @author djm.im
  *
  */
@@ -97,7 +95,6 @@ public class BlockChain {
 	private TxPool txPool;
 
 	/**
-	 * 
 	 * @throws NoSuchAlgorithmException
 	 */
 	// TODO
@@ -247,8 +244,6 @@ public class BlockChain {
 		for (Utxo utxo : spentOutputs) {
 			this.utxoPool.remove(utxo);
 		}
-
-		SoutUtil.printlnParagraph("Updated txPool", "Added " + txData, this.txPool.toString());
 	}
 
 	private Block getTopBlock() {
@@ -294,9 +289,6 @@ public class BlockChain {
 		return Long.toString(this.getTopBlock().getLength());
 	}
 
-	/**
-	 *
-	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

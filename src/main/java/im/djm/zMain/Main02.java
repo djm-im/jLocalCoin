@@ -27,6 +27,7 @@ public class Main02 {
 
 		Wallet w1 = new Wallet(blockChain);
 		Wallet w2 = new Wallet(blockChain);
+		Wallet w3 = new Wallet(blockChain);
 
 		printlnParagraph("Wallets", "Miner " + minerWallet, "W1    " + w1, "W2    " + w2);
 
@@ -41,16 +42,21 @@ public class Main02 {
 
 		printlnParagraph("Tx1: " + tx1);
 		printlnParagraph("Miner coins: " + minerWallet.balance(), "W1 coins: " + w1.balance(),
-				"W2 coins: " + w2.balance());
-
-		printlnParagraph("Wallets", "Miner " + minerWallet, "W1    " + w1, "W2    " + w2);
+				"W2 coins: " + w2.balance(), "W3 coins: " + w3.balance());
 
 		// blockchain status
-		// _miner: 200, w1: 50, w2: 50
+		// _miner: 200, w1: 50, w2: 50, w3: 0
 
 		try {
 			Tx tx2 = w1.sendCoin(w2.getWalletAddress(), 200);
 			printlnParagraph("Tx2: " + tx2);
+		} catch (TxException txEx) {
+			printlnParagraph("Error: " + txEx.getMessage());
+		}
+
+		try {
+			Tx tx3 = w3.sendCoin(w1.getWalletAddress(), 100);
+			printlnParagraph("Tx3: " + tx3);
 		} catch (TxException txEx) {
 			printlnParagraph("Error: " + txEx.getMessage());
 		}

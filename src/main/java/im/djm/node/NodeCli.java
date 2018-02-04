@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import im.djm.blockchain.BlockChain;
+import im.djm.exception.TxException;
 import im.djm.wallet.Wallet;
 
 /**
@@ -50,61 +51,64 @@ public class NodeCli implements Runnable {
 		boolean isRunning = true;
 		Scanner input = new Scanner(System.in);
 		loop: while (isRunning) {
-			System.out.println("[BC length: " + blockchain.status() + "].$ ");
-			if (input.hasNext()) {
+			try {
+				System.out.println("[BC length: " + blockchain.status() + "].$ ");
+				if (input.hasNext()) {
 
-			}
-			String inLine = input.nextLine();
-			String[] cmdLine = inLine.split("\\s+");
-
-			String cmdName = cmdLine[0].trim();
-			// TODO
-			// extract constants for command names
-			switch (cmdName) {
-			case CMD_HELP:
-				printHelp();
-				break;
-
-			case CMD_EXIT:
-				isRunning = false;
-				// input.close();
-				break loop;
-
-			case CMD_SEND:
-				try {
-					sendCoins(cmdLine);
-				} catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException e1) {
-					// TODO
-					// Use exception wrapper
-					e1.printStackTrace();
 				}
-				break;
+				String inLine = input.nextLine();
+				String[] cmdLine = inLine.split("\\s+");
 
-			case CMD_WNEW:
-				try {
-					createNewWallet(cmdLine);
-				} catch (NoSuchAlgorithmException e) {
-					// TODO
-					// Use exception wrapper
-					e.printStackTrace();
+				String cmdName = cmdLine[0].trim();
+				// TODO
+				// extract constants for command names
+				switch (cmdName) {
+				case CMD_HELP:
+					printHelp();
+					break;
+
+				case CMD_EXIT:
+					isRunning = false;
+					// input.close();
+					break loop;
+
+				case CMD_SEND:
+					try {
+						sendCoins(cmdLine);
+					} catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException e1) {
+						// TODO
+						// Use exception wrapper
+						e1.printStackTrace();
+					}
+					break;
+
+				case CMD_WNEW:
+					try {
+						createNewWallet(cmdLine);
+					} catch (NoSuchAlgorithmException e) {
+						// TODO
+						// Use exception wrapper
+						e.printStackTrace();
+					}
+					break;
+
+				case CMD_WDEL:
+					deleteWallet(cmdLine);
+					break;
+
+				case CMD_WLIST:
+					listAllWallets();
+					break;
+
+				default:
+					System.out.println("Unknow command.");
+					System.out.println("Type help.");
+					break;
 				}
-				break;
 
-			case CMD_WDEL:
-				deleteWallet(cmdLine);
-				break;
-
-			case CMD_WLIST:
-				listAllWallets();
-				break;
-
-			default:
-				System.out.println("Unknow command.");
-				System.out.println("Type help.");
-				break;
+			} catch (TxException txEx) {
+				System.out.println("Error: " + txEx.getMessage());
 			}
-
-			System.out.println();
 			System.out.println();
 		}
 

@@ -16,7 +16,6 @@ import im.djm.exception.TxException;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.Utxo;
-import im.djm.zMain.SoutUtil;
 
 /**
  * 
@@ -67,20 +66,9 @@ public class Wallet {
 	public Tx sendCoin(WalletAddress walletAddress, long coinAmount)
 			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
-		SoutUtil.printlnParagraph("Get Utxo for " + this.walletAddress);
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
-		if (utxoList.isEmpty()) {
-			SoutUtil.printlnParagraph("No Utxo: " + utxoList);
-
-			// TODO
-			// throw exception
-			throw null;
-		}
-
-		SoutUtil.printlnParagraph("Yes Utxo: " + utxoList);
-
-		long sum = 0;
 		List<Utxo> spendOutputs = new ArrayList<>();
+		long sum = 0;
 		int index = 0;
 		while (sum < coinAmount && index < utxoList.size()) {
 			Utxo utxo = utxoList.get(index);
@@ -98,6 +86,7 @@ public class Wallet {
 		}
 
 		Tx newTx = createNewTx(walletAddress, coinAmount, sum, spendOutputs);
+		this.blockChain.add(newTx, spendOutputs);
 
 		return newTx;
 	}
@@ -107,11 +96,7 @@ public class Wallet {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spendOutputs);
 		this.createOutput(walletAddress, coinAmount, newTx, sum);
-
-		byte[] inputSign = newTx.getRawDataForSignature();
-		byte[] signature = signTx(inputSign);
-		newTx.addSignature(signature);
-		this.blockChain.add(newTx, spendOutputs);
+		this.signTx(newTx);
 
 		return newTx;
 	}
@@ -126,24 +111,27 @@ public class Wallet {
 		}
 	}
 
-	private byte[] signTx(byte[] rawDataToSign)
-			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-
-		Signature sig = Signature.getInstance("SHA256withRSA");
-		sig.initSign(this.privateKey);
-
-		sig.update(rawDataToSign);
-
-		return sig.sign();
-	}
-
 	private void createOutput(WalletAddress walletAddress, long coinAmount, Tx tx, long sum)
 			throws NoSuchAlgorithmException {
-
 		tx.addOutput(walletAddress, coinAmount);
 		if (sum > coinAmount) {
 			tx.addOutput(this.walletAddress, sum - coinAmount);
 		}
+	}
+
+	private void signTx(Tx newTx) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+		byte[] inputSign = newTx.getRawDataForSignature();
+		byte[] signature = txSignature(inputSign);
+		newTx.addSignature(signature);
+	}
+
+	private byte[] txSignature(byte[] rawDataToSign)
+			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+		Signature signature = Signature.getInstance("SHA256withRSA");
+		signature.initSign(this.privateKey);
+		signature.update(rawDataToSign);
+
+		return signature.sign();
 	}
 
 	/**
