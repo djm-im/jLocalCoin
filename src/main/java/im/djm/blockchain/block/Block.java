@@ -1,7 +1,5 @@
 package im.djm.blockchain.block;
 
-import java.security.NoSuchAlgorithmException;
-
 import im.djm.blockchain.BlockUtil;
 import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.nulls.NullData;
@@ -21,13 +19,7 @@ public class Block {
 
 	private final BlockHash hash;
 
-	/**
-	 * 
-	 * @param prevBlock
-	 * @param data
-	 * @throws NoSuchAlgorithmException
-	 */
-	public Block(final Block prevBlock, final Data data) throws NoSuchAlgorithmException {
+	public Block(final Block prevBlock, final Data data) {
 		this.data = data;
 
 		this.head = Miner.createHead(prevBlock, data);
@@ -38,7 +30,7 @@ public class Block {
 	/**
 	 * Special constructor to create the first block - genesis (null) block.
 	 */
-	protected Block(NullData nullData, NullHash prevHash) throws NoSuchAlgorithmException {
+	protected Block(NullData nullData, NullHash prevHash) {
 		// TODO: 1510903985
 		this.data = nullData;
 

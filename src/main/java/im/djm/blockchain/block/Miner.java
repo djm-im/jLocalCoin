@@ -1,6 +1,5 @@
 package im.djm.blockchain.block;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -20,7 +19,7 @@ public class Miner {
 	// TODO
 	// Replace Data with TxData
 	public static Block createNewBlock(Block prevBlock, Data data, Validator<BlockHash> hashValidator,
-			List<Predicate<BlockHash>> rules) throws NoSuchAlgorithmException {
+			List<Predicate<BlockHash>> rules) {
 
 		Head head = createHead(prevBlock, data);
 
@@ -39,7 +38,7 @@ public class Miner {
 		return Block.createBlock(head, data, hash);
 	}
 
-	static Head createHead(Block prevBlock, Data data) throws NoSuchAlgorithmException {
+	static Head createHead(Block prevBlock, Data data) {
 		BlockHash prevHash = prevBlock.getBlockHash();
 
 		long length = prevBlock.getLength() + 1;

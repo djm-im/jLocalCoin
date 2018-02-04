@@ -1,8 +1,5 @@
 package im.djm.node;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -38,7 +35,7 @@ public class NodeCli implements Runnable {
 
 	private Map<String, Wallet> wallets = new HashMap<>();
 
-	public NodeCli() throws NoSuchAlgorithmException {
+	public NodeCli() {
 		this.minerWallet = new Wallet(null);
 		this.blockchain = new BlockChain(minerWallet.getWalletAddress());
 		this.minerWallet.setBlockchain(this.blockchain);
@@ -60,8 +57,6 @@ public class NodeCli implements Runnable {
 				String[] cmdLine = inLine.split("\\s+");
 
 				String cmdName = cmdLine[0].trim();
-				// TODO
-				// extract constants for command names
 				switch (cmdName) {
 				case CMD_HELP:
 					printHelp();
@@ -73,23 +68,11 @@ public class NodeCli implements Runnable {
 					break loop;
 
 				case CMD_SEND:
-					try {
-						sendCoins(cmdLine);
-					} catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException e1) {
-						// TODO
-						// Use exception wrapper
-						e1.printStackTrace();
-					}
+					sendCoins(cmdLine);
 					break;
 
 				case CMD_WNEW:
-					try {
-						createNewWallet(cmdLine);
-					} catch (NoSuchAlgorithmException e) {
-						// TODO
-						// Use exception wrapper
-						e.printStackTrace();
-					}
+					createNewWallet(cmdLine);
 					break;
 
 				case CMD_WDEL:
@@ -115,7 +98,7 @@ public class NodeCli implements Runnable {
 		System.out.println("Good by blockchain");
 	}
 
-	private void sendCoins(String[] cmdLine) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
+	private void sendCoins(String[] cmdLine) {
 		if (cmdLine.length != 4) {
 			System.out.println("Commnad forma");
 			System.out.println("send WALLET-NAME-1 WALLET-NAME-2 VALUE");
@@ -159,7 +142,7 @@ public class NodeCli implements Runnable {
 		});
 	}
 
-	private void createNewWallet(String[] cmdLine) throws NoSuchAlgorithmException {
+	private void createNewWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
 			System.out.println("Commnad forma");
 			System.out.println("wnew WALLET_NAME");

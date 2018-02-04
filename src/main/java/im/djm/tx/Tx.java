@@ -1,6 +1,5 @@
 package im.djm.tx;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +39,7 @@ public class Tx {
 		// this.txSignature = null;
 	}
 
-	public Tx(WalletAddress minerAddress, long coinValue) throws NoSuchAlgorithmException {
+	public Tx(WalletAddress minerAddress, long coinValue) {
 		this.coinbase = true;
 
 		// TOOD
@@ -51,7 +50,7 @@ public class Tx {
 		this.addOutput(minerAddress, coinValue);
 	}
 
-	public void addOutput(WalletAddress address, long coinAmount) throws NoSuchAlgorithmException {
+	public void addOutput(WalletAddress address, long coinAmount) {
 		Output output = new Output(address, coinAmount);
 		this.outputs.add(output);
 

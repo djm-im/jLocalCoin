@@ -1,6 +1,5 @@
 package im.djm.wallet;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 
 import im.djm.blockchain.hash.AddressHash;
@@ -19,7 +18,7 @@ public final class WalletAddress {
 
 	private AddressHash addressHash;
 
-	public WalletAddress(RSAPublicKey publicKey) throws NoSuchAlgorithmException {
+	public WalletAddress(RSAPublicKey publicKey) {
 		this.address = publicKey;
 
 		this.addressHash = HashUtil.calculateAddressHash(this.address.getEncoded());

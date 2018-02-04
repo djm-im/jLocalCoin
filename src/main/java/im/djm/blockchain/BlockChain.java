@@ -1,6 +1,5 @@
 package im.djm.blockchain;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,13 +93,10 @@ public class BlockChain {
 
 	private TxPool txPool;
 
-	/**
-	 * @throws NoSuchAlgorithmException
-	 */
 	// TODO
 	// constructor should be private
 	@Deprecated
-	public BlockChain() throws NoSuchAlgorithmException {
+	public BlockChain() {
 		this.initBlockValidationRules();
 
 		this.utxoPool = new UtxoPool();
@@ -110,7 +106,7 @@ public class BlockChain {
 		this.initNullTxBlock();
 	}
 
-	public BlockChain(WalletAddress walletAddress) throws NoSuchAlgorithmException {
+	public BlockChain(WalletAddress walletAddress) {
 		this.initBlockValidationRules();
 
 		this.minerAddress = walletAddress;
@@ -123,13 +119,13 @@ public class BlockChain {
 	}
 
 	// the null block has to be the same for in all nodes
-	private void initNullBlock() throws NoSuchAlgorithmException {
+	private void initNullBlock() {
 		NullBlock nullBlock = new NullBlock();
 
 		this.wrapAndAddBlock(nullBlock, null);
 	}
 
-	private void initNullTxBlock() throws NoSuchAlgorithmException {
+	private void initNullTxBlock() {
 		NullTxData nullTxData = new NullTxData();
 
 		Block txBlock = generateNewTxBlock(nullTxData, new ArrayList<>());
@@ -181,13 +177,12 @@ public class BlockChain {
 	/**
 	 * 
 	 * @param data
-	 * @throws NoSuchAlgorithmException
 	 * 
-	 *             Deprecated method if used in the first version of blockchain
-	 *             (without tx)
+	 *            Deprecated method if used in the first version of blockchain
+	 *            (without tx)
 	 */
 	@Deprecated
-	public void add(Data data) throws NoSuchAlgorithmException {
+	public void add(Data data) {
 		if (!BlockChain.dataValidator.isValid(data, BlockChain.dataValidationRules)) {
 			// TODO: throw exception
 			// Cannot add invalid data
@@ -199,14 +194,14 @@ public class BlockChain {
 	}
 
 	@Deprecated
-	private Block generateNewBlock(Data data) throws NoSuchAlgorithmException {
+	private Block generateNewBlock(Data data) {
 		Block prevBlock = this.getTopBlock();
 		Block block = Miner.createNewBlock(prevBlock, data, BlockChain.hashValidator, BlockChain.hashValidationRules);
 
 		return block;
 	}
 
-	public void add(Tx tx, List<Utxo> spentOutputs) throws NoSuchAlgorithmException {
+	public void add(Tx tx, List<Utxo> spentOutputs) {
 		TxData txData = new TxData();
 		txData.add(tx);
 
@@ -215,7 +210,7 @@ public class BlockChain {
 		this.add(block);
 	}
 
-	private Block generateNewTxBlock(TxData txData, List<Utxo> spentOutputs) throws NoSuchAlgorithmException {
+	private Block generateNewTxBlock(TxData txData, List<Utxo> spentOutputs) {
 		txData = this.addCoinbaseTx(txData);
 
 		this.updateTxPoolAndUtxoPool(txData, spentOutputs);
@@ -225,7 +220,7 @@ public class BlockChain {
 		return Miner.createNewBlock(prevBlock, txData, BlockChain.hashValidator, BlockChain.hashValidationRules);
 	}
 
-	private TxData addCoinbaseTx(TxData txData) throws NoSuchAlgorithmException {
+	private TxData addCoinbaseTx(TxData txData) {
 		Tx coinbaseTx = new Tx(this.minerAddress, BlockChain.REWARD);
 		txData.addCoinbaseTx(coinbaseTx);
 

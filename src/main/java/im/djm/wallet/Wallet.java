@@ -13,6 +13,7 @@ import java.util.List;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
+import im.djm.exception.WrapperException;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.Utxo;
@@ -30,19 +31,25 @@ public class Wallet {
 
 	private BlockChain blockChain;
 
-	/**
-	 * @param blockChain
-	 * @throws NoSuchAlgorithmException
-	 */
-	public Wallet(BlockChain blockChain) throws NoSuchAlgorithmException {
+	public Wallet(BlockChain blockChain) {
 		this.blockChain = blockChain;
 
-		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		keyGen.initialize(512);
-		KeyPair generateKeyPair = keyGen.generateKeyPair();
+		KeyPair keyPair = createKeyPair();
+		this.walletAddress = new WalletAddress((RSAPublicKey) keyPair.getPublic());
 
-		this.walletAddress = new WalletAddress((RSAPublicKey) generateKeyPair.getPublic());
-		this.privateKey = generateKeyPair.getPrivate();
+		this.privateKey = keyPair.getPrivate();
+	}
+
+	private KeyPair createKeyPair() {
+		try {
+			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(512);
+			KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+			return keyPair;
+		} catch (NoSuchAlgorithmException ex) {
+			throw new WrapperException("Tried to create a new wallet", ex);
+		}
 	}
 
 	public void setBlockchain(BlockChain blockChain) {
@@ -57,42 +64,43 @@ public class Wallet {
 	 * 
 	 * @param blockChain
 	 * @param walletAddress
-	 * @param coinAmount
+	 * @param coinValue
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeyException
 	 * @throws SignatureException
 	 */
-	public Tx sendCoin(WalletAddress walletAddress, long coinAmount)
-			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+	public Tx sendCoin(WalletAddress walletAddress, long coinValue) {
+		if (coinValue < 1) {
+			throw new TxException("Error: Cannot send less or zero value for coin. Tried to send " + coinValue + ".");
+		}
 
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
 		List<Utxo> spendOutputs = new ArrayList<>();
 		long sum = 0;
 		int index = 0;
-		while (sum < coinAmount && index < utxoList.size()) {
+		while (sum < coinValue && index < utxoList.size()) {
 			Utxo utxo = utxoList.get(index);
 			spendOutputs.add(utxo);
 			index++;
 
 			Tx tx = this.blockChain.getTxFromPool(utxo.getTxId());
 			Output txOutput = tx.getOutput(utxo.getOutputIndexd());
-			long coinValue = txOutput.getCoinValue();
-			sum += coinValue;
+			long outputCoinValue = txOutput.getCoinValue();
+			sum += outputCoinValue;
 		}
 
-		if (sum < coinAmount) {
-			throw new TxException("Not enough coins for tx. Tried to send " + coinAmount + ". Utxo is " + sum + ".");
+		if (sum < coinValue) {
+			throw new TxException("Not enough coins for tx. Tried to send " + coinValue + ". Utxo is " + sum + ".");
 		}
 
-		Tx newTx = createNewTx(walletAddress, coinAmount, sum, spendOutputs);
+		Tx newTx = createNewTx(walletAddress, coinValue, sum, spendOutputs);
 		this.blockChain.add(newTx, spendOutputs);
 
 		return newTx;
 	}
 
-	private Tx createNewTx(WalletAddress walletAddress, long coinAmount, long sum, List<Utxo> spendOutputs)
-			throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
+	private Tx createNewTx(WalletAddress walletAddress, long coinAmount, long sum, List<Utxo> spendOutputs) {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spendOutputs);
 		this.createOutput(walletAddress, coinAmount, newTx, sum);
@@ -101,34 +109,34 @@ public class Wallet {
 		return newTx;
 	}
 
-	private void fillInputs(Tx tx, List<Utxo> prevTxOutputs)
-			throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
+	private void fillInputs(Tx tx, List<Utxo> prevTxOutputs) {
 		prevTxOutputs.forEach(utxo -> {
 			tx.addInput(utxo.getTxId(), utxo.getOutputIndexd());
 		});
 	}
 
-	private void createOutput(WalletAddress walletAddress, long coinAmount, Tx tx, long sum)
-			throws NoSuchAlgorithmException {
+	private void createOutput(WalletAddress walletAddress, long coinAmount, Tx tx, long sum) {
 		tx.addOutput(walletAddress, coinAmount);
 		if (sum > coinAmount) {
 			tx.addOutput(this.walletAddress, sum - coinAmount);
 		}
 	}
 
-	private void signTx(Tx newTx) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+	private void signTx(Tx newTx) {
 		byte[] inputSign = newTx.getRawDataForSignature();
 		byte[] signature = txSignature(inputSign);
 		newTx.addSignature(signature);
 	}
 
-	private byte[] txSignature(byte[] rawDataToSign)
-			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-		Signature signature = Signature.getInstance("SHA256withRSA");
-		signature.initSign(this.privateKey);
-		signature.update(rawDataToSign);
-
-		return signature.sign();
+	private byte[] txSignature(byte[] rawDataToSign) {
+		try {
+			Signature signature = Signature.getInstance("SHA256withRSA");
+			signature.initSign(this.privateKey);
+			signature.update(rawDataToSign);
+			return signature.sign();
+		} catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
+			throw new WrapperException("txSignature", ex);
+		}
 	}
 
 	/**

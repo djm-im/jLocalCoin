@@ -31,9 +31,6 @@ public abstract class Hash extends ByteArray {
 		return Arrays.copyOf(this.content, this.content.length);
 	}
 
-	/**
-	 *
-	 */
 	@Override
 	public int hashCode() {
 		return this.hashCode;

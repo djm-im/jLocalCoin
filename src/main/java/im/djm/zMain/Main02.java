@@ -2,10 +2,6 @@ package im.djm.zMain;
 
 import static im.djm.zMain.SoutUtil.printlnParagraph;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
-
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
 import im.djm.tx.Tx;
@@ -18,7 +14,7 @@ import im.djm.wallet.Wallet;
  */
 public class Main02 {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+	public static void main(String[] args) {
 		Wallet minerWallet = new Wallet(null);
 
 		BlockChain blockChain = new BlockChain(minerWallet.getWalletAddress());

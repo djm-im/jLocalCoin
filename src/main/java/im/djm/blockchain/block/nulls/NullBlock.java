@@ -15,7 +15,7 @@ public final class NullBlock extends Block {
 	 * 
 	 * @throws NoSuchAlgorithmException
 	 */
-	public NullBlock() throws NoSuchAlgorithmException {
+	public NullBlock() {
 		// TODO
 		// 1510903985
 		super(new NullData(), new NullHash());

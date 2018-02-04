@@ -1,7 +1,5 @@
 package im.djm.zMain;
 
-import java.security.NoSuchAlgorithmException;
-
 import im.djm.node.NodeCli;
 
 /**
@@ -11,7 +9,7 @@ import im.djm.node.NodeCli;
  */
 public class Main03 {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException {
+	public static void main(String[] args) {
 		Thread nodeThread = new Thread(new NodeCli());
 		nodeThread.start();
 	}

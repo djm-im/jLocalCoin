@@ -1,6 +1,5 @@
 package im.djm.zMain;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.block.data.Data;
 
 /**
- * 
  * @author djm.im
  *
  */
@@ -44,7 +42,7 @@ public class Main01 {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void main(String[] args) throws NoSuchAlgorithmException {
+	public static void main(String[] args) {
 
 		// create block chain
 		BlockChain blockChain = new BlockChain();
