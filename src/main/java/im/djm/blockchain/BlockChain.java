@@ -245,6 +245,10 @@ public class BlockChain {
 		return this.topBlockWrapper.getBlock();
 	}
 
+	public List<Utxo> getAllUtxo() {
+		return this.utxoPool.getAll();
+	}
+
 	public List<Utxo> getUtxoFor(WalletAddress walletAddress) {
 		List<Utxo> utxoList = new ArrayList<>();
 		// TODO

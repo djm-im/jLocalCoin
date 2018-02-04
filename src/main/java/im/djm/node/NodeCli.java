@@ -22,17 +22,21 @@ public class NodeCli implements Runnable {
 
 	private static final String MINER_WALLET_NAME = "_miner";
 
+	private static final String CMD_HELP = "help";
+
+	private static final String CMD_EXIT = "exit";
+
+	private static final String CMD_WNEW = "wnew";
+
 	private static final String CMD_WDEL = "wdel";
 
 	private static final String CMD_WLIST = "wlist";
 
-	private static final String CMD_WNEW = "wnew";
-
 	private static final String CMD_SEND = "send";
 
-	private static final String CMD_EXIT = "exit";
+	private static final String CMD_BCPRINT = "bcprint";
 
-	private static final String CMD_HELP = "help";
+	private static final String CMD_UTXOPRINT = "utxoprint";
 
 	private BlockChain blockchain;
 
@@ -56,13 +60,11 @@ public class NodeCli implements Runnable {
 		while (isRunning) {
 			try {
 				System.out.println("[BC length: " + blockchain.status() + "].$ ");
-
 				isRunning = menuReadStdin(stdin);
-
-				System.out.print(NodeCli.LINE_SEPARATOR);
 			} catch (TxException txEx) {
 				System.out.println("Error: " + txEx.getMessage());
 			}
+			System.out.print(NodeCli.LINE_SEPARATOR);
 		}
 		stdin.close();
 	}
@@ -102,11 +104,27 @@ public class NodeCli implements Runnable {
 			listAllWallets();
 			return true;
 
+		case CMD_BCPRINT:
+			printBlockchain();
+			return true;
+
+		case CMD_UTXOPRINT:
+			printUtxo();
+			return true;
+
 		default:
 			System.out.println("Unknow command.");
 			System.out.println("Type help.");
 			return true;
 		}
+	}
+
+	private void printUtxo() {
+		System.out.println(this.blockchain.getAllUtxo());
+	}
+
+	private void printBlockchain() {
+		System.out.println(this.blockchain);
 	}
 
 	private void sendCoins(String[] cmdLine) {
@@ -181,6 +199,8 @@ public class NodeCli implements Runnable {
 			cmdHelp.put(CMD_WDEL, "Delete a wallet");
 			cmdHelp.put(CMD_WLIST, "List walletes and 'balances' for each wallet.");
 			cmdHelp.put(CMD_SEND, "Send coins from one to another wallet.");
+			cmdHelp.put(CMD_BCPRINT, "Print all blocks in blockchain.");
+			cmdHelp.put(CMD_UTXOPRINT, "Print all unpent tx outpusts.");
 		}
 
 		static {

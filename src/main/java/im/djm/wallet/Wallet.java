@@ -69,7 +69,7 @@ public class Wallet {
 	 */
 	public Tx sendCoin(WalletAddress walletAddress, long coinValue) {
 		if (coinValue < 1) {
-			throw new TxException("Error: Cannot send less or zero value for coin. Tried to send " + coinValue + ".");
+			throw new TxException("Cannot send less or zero value for coin. Tried to send " + coinValue + ".");
 		}
 
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
@@ -130,6 +130,7 @@ public class Wallet {
 			Signature signature = Signature.getInstance("SHA256withRSA");
 			signature.initSign(this.privateKey);
 			signature.update(rawDataToSign);
+
 			return signature.sign();
 		} catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
 			throw new WrapperException("txSignature", ex);
