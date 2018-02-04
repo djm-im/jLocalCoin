@@ -16,6 +16,10 @@ import im.djm.wallet.Wallet;
  */
 public class NodeCli implements Runnable {
 
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+	private static final String TAB_SIGN = "\t";
+
 	private static final String MINER_WALLET_NAME = "_miner";
 
 	private static final String CMD_WDEL = "wdel";
@@ -47,54 +51,62 @@ public class NodeCli implements Runnable {
 	@Override
 	public void run() {
 		boolean isRunning = true;
-		Scanner input = new Scanner(System.in);
-		loop: while (isRunning) {
+		Scanner stdin = new Scanner(System.in);
+
+		while (isRunning) {
 			try {
 				System.out.println("[BC length: " + blockchain.status() + "].$ ");
 
-				String inLine = input.nextLine();
-				String[] cmdLine = inLine.split("\\s+");
+				isRunning = menuReadStdin(stdin);
 
-				String cmdName = cmdLine[0].trim();
-				switch (cmdName) {
-				case CMD_HELP:
-					HelpMenu.printHelp();
-					break;
-
-				case CMD_EXIT:
-					isRunning = false;
-					// input.close();
-					break loop;
-
-				case CMD_SEND:
-					sendCoins(cmdLine);
-					break;
-
-				case CMD_WNEW:
-					createNewWallet(cmdLine);
-					break;
-
-				case CMD_WDEL:
-					deleteWallet(cmdLine);
-					break;
-
-				case CMD_WLIST:
-					listAllWallets();
-					break;
-
-				default:
-					System.out.println("Unknow command.");
-					System.out.println("Type help.");
-					break;
-				}
-
+				System.out.print(NodeCli.LINE_SEPARATOR);
 			} catch (TxException txEx) {
 				System.out.println("Error: " + txEx.getMessage());
 			}
-			System.out.println();
 		}
+		stdin.close();
+	}
 
-		System.out.println("Good by blockchain");
+	private boolean menuReadStdin(Scanner input) {
+		String inLine = input.nextLine();
+		String[] cmdLine = inLine.split("\\s+");
+
+		return menuSwitch(cmdLine);
+	}
+
+	private boolean menuSwitch(String[] cmdLine) {
+		String cmdName = cmdLine[0].trim();
+
+		switch (cmdName) {
+		case CMD_HELP:
+			HelpMenu.printHelp();
+			return true;
+
+		case CMD_EXIT:
+			System.out.println("Good by blockchain");
+			return false;
+
+		case CMD_SEND:
+			sendCoins(cmdLine);
+			return true;
+
+		case CMD_WNEW:
+			createNewWallet(cmdLine);
+			return true;
+
+		case CMD_WDEL:
+			deleteWallet(cmdLine);
+			return true;
+
+		case CMD_WLIST:
+			listAllWallets();
+			return true;
+
+		default:
+			System.out.println("Unknow command.");
+			System.out.println("Type help.");
+			return true;
+		}
 	}
 
 	private void sendCoins(String[] cmdLine) {
@@ -157,10 +169,6 @@ public class NodeCli implements Runnable {
 	}
 
 	private static class HelpMenu {
-
-		private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-		private static final String TAB_SIGN = "\t";
 
 		private static Map<String, String> cmdHelp = new LinkedHashMap<>();
 
