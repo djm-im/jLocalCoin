@@ -103,12 +103,9 @@ public class Wallet {
 
 	private void fillInputs(Tx tx, List<Utxo> prevTxOutputs)
 			throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
-		// TODO:
-		// replace this loop by .forEach();
-		for (int index = 0; index < prevTxOutputs.size(); index++) {
-			Utxo utxo = prevTxOutputs.get(index);
+		prevTxOutputs.forEach(utxo -> {
 			tx.addInput(utxo.getTxId(), utxo.getOutputIndexd());
-		}
+		});
 	}
 
 	private void createOutput(WalletAddress walletAddress, long coinAmount, Tx tx, long sum)
