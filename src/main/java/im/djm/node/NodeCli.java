@@ -1,6 +1,7 @@
 package im.djm.node;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -50,16 +51,14 @@ public class NodeCli implements Runnable {
 		loop: while (isRunning) {
 			try {
 				System.out.println("[BC length: " + blockchain.status() + "].$ ");
-				if (input.hasNext()) {
 
-				}
 				String inLine = input.nextLine();
 				String[] cmdLine = inLine.split("\\s+");
 
 				String cmdName = cmdLine[0].trim();
 				switch (cmdName) {
 				case CMD_HELP:
-					printHelp();
+					HelpMenu.printHelp();
 					break;
 
 				case CMD_EXIT:
@@ -100,7 +99,7 @@ public class NodeCli implements Runnable {
 
 	private void sendCoins(String[] cmdLine) {
 		if (cmdLine.length != 4) {
-			System.out.println("Commnad forma");
+			System.out.println("Wrong command format.");
 			System.out.println("send WALLET-NAME-1 WALLET-NAME-2 VALUE");
 			return;
 		}
@@ -126,7 +125,7 @@ public class NodeCli implements Runnable {
 
 	private void deleteWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			System.out.println("Commnad forma");
+			System.out.println("Wrong command format.");
 			System.out.println("wnew WALLET_NAME");
 			return;
 		}
@@ -144,9 +143,8 @@ public class NodeCli implements Runnable {
 
 	private void createNewWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			System.out.println("Commnad forma");
+			System.out.println("Wrong command format.");
 			System.out.println("wnew WALLET_NAME");
-			System.out.println();
 			return;
 		}
 
@@ -158,34 +156,43 @@ public class NodeCli implements Runnable {
 		this.wallets.put(walletName, new Wallet(this.blockchain));
 	}
 
-	private static void printHelp() {
-		// TODO
-		// create help map command name -> Description
+	private static class HelpMenu {
 
-		System.out.println("Java Blockchain implementation");
-		System.out.println("Help commands");
-		System.out.println(CMD_HELP + "\t - Help");
-		System.out.println();
+		private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-		System.out.println("Blockchain commands");
-		System.out.println(CMD_EXIT + "\t - Stop and exit from the program.");
-		System.out.println();
+		private static final String TAB_SIGN = "\t";
 
-		System.out.println("Wallet commands");
-		System.out.println(CMD_WNEW + "\t - Create a new wallet");
-		System.out.println("\t wnew WALLET-NAME");
-		System.out.println();
+		private static Map<String, String> cmdHelp = new LinkedHashMap<>();
 
-		System.out.println(CMD_WDEL + "\t - Delete a wallet");
-		System.out.println("\t wdel WALLET-NAME");
-		System.out.println();
+		private static Map<String, String> cmdHelpExample = new LinkedHashMap<>();
 
-		System.out.println(CMD_WLIST + "\t - List walletes and 'balances' for each wallet");
-		System.out.println();
+		static {
+			cmdHelp.put(CMD_HELP, "Help.");
+			cmdHelp.put(CMD_EXIT, "Stop and exit from the program.");
+			cmdHelp.put(CMD_WNEW, "Create a new wallet.");
+			cmdHelp.put(CMD_WDEL, "Delete a wallet");
+			cmdHelp.put(CMD_WLIST, "List walletes and 'balances' for each wallet.");
+			cmdHelp.put(CMD_SEND, "Send coins from one to another wallet.");
+		}
 
-		System.out.println(CMD_SEND + "\t - Send coins from one to another wallet.");
-		System.out.println("\t send WALLET-NAME-1 WLLET-NAME-2 VALUE ");
-		System.out.println();
+		static {
+			cmdHelpExample.put(CMD_WNEW, "wnew WALLET-NAME");
+			cmdHelpExample.put(CMD_WDEL, "wdel WALLET-NAME");
+			cmdHelpExample.put(CMD_SEND, "send WALLET-NAME-1 WLLET-NAME-2 VALUE");
+		}
+
+		private static void printHelp() {
+			System.out.println("jLocalCooin - blockchain implementation in Java.");
+			cmdHelp.forEach((cmdName, helpDesc) -> {
+				System.out.println(cmdName + TAB_SIGN + " - " + helpDesc);
+
+				if (cmdHelpExample.containsKey(cmdName)) {
+					System.out.println(TAB_SIGN + cmdHelpExample.get(cmdName));
+				}
+
+				System.out.println(LINE_SEPARATOR);
+			});
+		}
 	}
 
 }

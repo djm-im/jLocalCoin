@@ -66,9 +66,6 @@ public class Wallet {
 	 * @param walletAddress
 	 * @param coinValue
 	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeyException
-	 * @throws SignatureException
 	 */
 	public Tx sendCoin(WalletAddress walletAddress, long coinValue) {
 		if (coinValue < 1) {
