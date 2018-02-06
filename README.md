@@ -8,16 +8,26 @@
 ### jLocalCoin commands 
 
 ```text
-help - Print help for commands
-exit - Stop blockchain thread
+help
+    - Print help for commands
+exit
+    - Stop blockchain thread
 
 Wallet commands
-wnew [WALLET-NAME] - create a new wallet in collection
-wdel [WALLET-NAME] - delete a wallet from collection
-wlist - list all wallets with "balances"
+wnew [WALLET-NAME]
+    - create a new wallet in collection
+mwnew [WALLET-NAME-1 ... WALLET-NAME-N]
+    - Create N new wallets. If wallet with a name alreaady exist it will be skipped.
+wdel [WALLET-NAME]
+    - delete a wallet from collection
+wstat [WALLET-NAME]
+    - Display "balance" for a wallet.
+wlist
+    - list all wallets with "balances"
 
 Send coin
-send [W1-NAME W2-NAME COINS] - send from W1 to W2 coins 
+send [W1-NAME W2-NAME COINS]
+    - send from W1 to W2 coins 
 ```
 
 When NodeCli starts, it creates special miner wallet.  
