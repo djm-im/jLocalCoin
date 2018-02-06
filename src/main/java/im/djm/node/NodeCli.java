@@ -28,6 +28,10 @@ public class NodeCli implements Runnable {
 
 	private static final String CMD_WNEW = "wnew";
 
+	private static final String CMD_MWNEW = "mwnew";
+
+	private static final String CMD_WSTAT = "wstat";
+
 	private static final String CMD_WDEL = "wdel";
 
 	private static final String CMD_WLIST = "wlist";
@@ -81,7 +85,7 @@ public class NodeCli implements Runnable {
 
 		switch (cmdName) {
 		case CMD_HELP:
-			HelpMenu.printHelp();
+			HelpCommand.printHelp();
 			return true;
 
 		case CMD_EXIT:
@@ -94,6 +98,14 @@ public class NodeCli implements Runnable {
 
 		case CMD_WNEW:
 			createNewWallet(cmdLine);
+			return true;
+
+		case CMD_MWNEW:
+			createMultiNewWallets(cmdLine);
+			return true;
+
+		case CMD_WSTAT:
+			walletStatus(cmdLine);
 			return true;
 
 		case CMD_WDEL:
@@ -156,6 +168,7 @@ public class NodeCli implements Runnable {
 	private void deleteWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
 			System.out.println("Wrong command format.");
+			System.out.println(HelpCommand.cmdHelpExample.get(CMD_WNEW));
 			System.out.println("wnew WALLET_NAME");
 			return;
 		}
@@ -165,28 +178,68 @@ public class NodeCli implements Runnable {
 		this.wallets.remove(cmdLine[1].trim());
 	}
 
+	private void walletStatus(String[] cmdLine) {
+		if (cmdLine.length != 2) {
+			System.out.println("Wrong command format.");
+			System.out.println(HelpCommand.cmdHelpExample.get(CMD_WSTAT));
+			return;
+		}
+
+		String walletName = cmdLine[1].trim();
+		if (!this.wallets.containsKey(walletName)) {
+			System.out.println("Wallet with name " + walletName + " doesn't exist in collection.");
+			return;
+		}
+
+		Wallet wallet = this.wallets.get(walletName);
+
+		System.out.println(this.getWalletStatus(walletName, wallet));
+	}
+
 	private void listAllWallets() {
 		this.wallets.forEach((walletName, wallet) -> {
-			System.out.println("{ Wallet Name: " + walletName + " " + wallet + ", Balance: " + wallet.balance() + " }");
+			System.out.println(this.getWalletStatus(walletName, wallet));
 		});
+	}
+
+	private String getWalletStatus(String walletName, Wallet wallet) {
+		return "{ Wallet Name: " + walletName + " " + wallet + ", Balance: " + wallet.balance() + " }";
+	}
+
+	private void createMultiNewWallets(String[] cmdLine) {
+		if (cmdLine.length < 2) {
+			System.out.println("Wrong command format.");
+			System.out.println(HelpCommand.cmdHelpExample.get(CMD_MWNEW));
+			return;
+		}
+
+		for (int i = 1; i < cmdLine.length; i++) {
+			this.creatWalletWithName(cmdLine[i].trim());
+		}
 	}
 
 	private void createNewWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
 			System.out.println("Wrong command format.");
-			System.out.println("wnew WALLET_NAME");
+			System.out.println(HelpCommand.cmdHelpExample.get(CMD_WNEW));
 			return;
 		}
 
-		String walletName = cmdLine[1].trim();
+		creatWalletWithName(cmdLine[1].trim());
+	}
+
+	private Wallet creatWalletWithName(String walletName) {
 		if (this.wallets.containsKey(walletName)) {
 			System.out.println("Wallet with name " + walletName + " already exists.");
 		}
 
-		this.wallets.put(walletName, new Wallet(this.blockchain));
+		Wallet newWallet = new Wallet(this.blockchain);
+		this.wallets.put(walletName, newWallet);
+
+		return newWallet;
 	}
 
-	private static class HelpMenu {
+	private static class HelpCommand {
 
 		private static Map<String, String> cmdHelp = new LinkedHashMap<>();
 
@@ -196,6 +249,9 @@ public class NodeCli implements Runnable {
 			cmdHelp.put(CMD_HELP, "Help.");
 			cmdHelp.put(CMD_EXIT, "Stop and exit from the program.");
 			cmdHelp.put(CMD_WNEW, "Create a new wallet.");
+			cmdHelp.put(CMD_MWNEW,
+					"Create multiple new wallets. If any wallet with name alread exist it will be skiped.");
+			cmdHelp.put(CMD_WSTAT, "Display status for wallet.");
 			cmdHelp.put(CMD_WDEL, "Delete a wallet");
 			cmdHelp.put(CMD_WLIST, "List walletes and 'balances' for each wallet.");
 			cmdHelp.put(CMD_SEND, "Send coins from one to another wallet.");
@@ -204,9 +260,11 @@ public class NodeCli implements Runnable {
 		}
 
 		static {
-			cmdHelpExample.put(CMD_WNEW, "wnew WALLET-NAME");
-			cmdHelpExample.put(CMD_WDEL, "wdel WALLET-NAME");
-			cmdHelpExample.put(CMD_SEND, "send WALLET-NAME-1 WLLET-NAME-2 VALUE");
+			cmdHelpExample.put(CMD_WNEW, CMD_WNEW + " WALLET-NAME");
+			cmdHelpExample.put(CMD_MWNEW, CMD_MWNEW + " WALLET-NAME-1 WALLET-NAME-2 ... WALLET-NAME-N");
+			cmdHelpExample.put(CMD_WSTAT, CMD_WSTAT + " WALLET-NAME");
+			cmdHelpExample.put(CMD_WDEL, CMD_WDEL + " WALLET-NAME");
+			cmdHelpExample.put(CMD_SEND, CMD_SEND + " WALLET-NAME-1 WLLET-NAME-2 VALUE");
 		}
 
 		private static void printHelp() {
