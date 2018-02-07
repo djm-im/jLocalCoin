@@ -58,7 +58,8 @@ wnew aaa
 send djm aaa 75
 wlist
 
-
+utxoprint
+bcprint
 
 exit
 ```
