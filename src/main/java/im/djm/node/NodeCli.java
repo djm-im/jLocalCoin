@@ -2,11 +2,13 @@ package im.djm.node;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
+import im.djm.tx.Utxo;
 import im.djm.wallet.Wallet;
 
 /**
@@ -63,18 +65,26 @@ public class NodeCli implements Runnable {
 
 		while (isRunning) {
 			try {
-				System.out.println("[BC length: " + blockchain.status() + "].$ ");
+				UtilString.printMessages("[BC length: " + blockchain.status() + "].$ ");
 				isRunning = menuReadStdin(stdin);
 			} catch (TxException txEx) {
-				System.out.println("Error: " + txEx.getMessage());
+				UtilString.printMessages("Error: " + txEx.getMessage());
 			}
-			System.out.print(NodeCli.LINE_SEPARATOR);
+			UtilString.printMessages(NodeCli.LINE_SEPARATOR);
 		}
 		stdin.close();
 	}
 
+	// ------------------------------------------------------------------------
+
 	private boolean menuReadStdin(Scanner input) {
 		String inLine = input.nextLine();
+		if (inLine.trim().length() < 4) {
+			UtilString.printMessages("Invalid input");
+
+			// Continue with execution of the thread
+			return true;
+		}
 		String[] cmdLine = inLine.split("\\s+");
 
 		return menuSwitch(cmdLine);
@@ -89,7 +99,7 @@ public class NodeCli implements Runnable {
 			return true;
 
 		case CMD_EXIT:
-			System.out.println("Good by blockchain");
+			UtilString.printMessages("", "Good by blockchain!");
 			return false;
 
 		case CMD_SEND:
@@ -125,36 +135,37 @@ public class NodeCli implements Runnable {
 			return true;
 
 		default:
-			System.out.println("Unknow command.");
-			System.out.println("Type help.");
+			UtilString.printMessages("Unknow command.", "Type help.");
 			return true;
 		}
 	}
 
 	private void printUtxo() {
-		System.out.println(this.blockchain.getAllUtxo());
+		List<Utxo> allUtxo = this.blockchain.getAllUtxo();
+		for (Utxo utxo : allUtxo) {
+			UtilString.printMessages(utxo.toString());
+		}
 	}
 
 	private void printBlockchain() {
-		System.out.println(this.blockchain);
+		UtilString.printMessages(this.blockchain.toString());
 	}
 
 	private void sendCoins(String[] cmdLine) {
 		if (cmdLine.length != 4) {
-			System.out.println("Wrong command format.");
-			System.out.println("send WALLET-NAME-1 WALLET-NAME-2 VALUE");
+			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_SEND));
 			return;
 		}
 
 		String wallet1Name = cmdLine[1].trim();
 		if (!this.wallets.containsKey(wallet1Name)) {
-			System.out.println("Wallet " + wallet1Name + " not exists in collection.");
+			UtilString.printMessages("Wallet " + wallet1Name + " not exists in collection.");
 			return;
 		}
 
 		String wallet2Name = cmdLine[2].trim();
 		if (!this.wallets.containsKey(wallet2Name)) {
-			System.out.println("Wallet " + wallet2Name + " does not exist in collection of wallets.");
+			UtilString.printMessages("Wallet " + wallet2Name + " does not exist in collection of wallets.");
 			return;
 		}
 
@@ -167,9 +178,7 @@ public class NodeCli implements Runnable {
 
 	private void deleteWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			System.out.println("Wrong command format.");
-			System.out.println(HelpCommand.cmdHelpExample.get(CMD_WNEW));
-			System.out.println("wnew WALLET_NAME");
+			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
 			return;
 		}
 
@@ -180,25 +189,24 @@ public class NodeCli implements Runnable {
 
 	private void walletStatus(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			System.out.println("Wrong command format.");
-			System.out.println(HelpCommand.cmdHelpExample.get(CMD_WSTAT));
+			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WSTAT));
 			return;
 		}
 
 		String walletName = cmdLine[1].trim();
 		if (!this.wallets.containsKey(walletName)) {
-			System.out.println("Wallet with name " + walletName + " doesn't exist in collection.");
+			UtilString.printMessages("Wallet with name " + walletName + " doesn't exist in collection.");
 			return;
 		}
 
 		Wallet wallet = this.wallets.get(walletName);
 
-		System.out.println(this.getWalletStatus(walletName, wallet));
+		UtilString.printMessages(this.getWalletStatus(walletName, wallet));
 	}
 
 	private void listAllWallets() {
 		this.wallets.forEach((walletName, wallet) -> {
-			System.out.println(this.getWalletStatus(walletName, wallet));
+			UtilString.printMessages(this.getWalletStatus(walletName, wallet));
 		});
 	}
 
@@ -208,8 +216,7 @@ public class NodeCli implements Runnable {
 
 	private void createMultiNewWallets(String[] cmdLine) {
 		if (cmdLine.length < 2) {
-			System.out.println("Wrong command format.");
-			System.out.println(HelpCommand.cmdHelpExample.get(CMD_MWNEW));
+			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MWNEW));
 			return;
 		}
 
@@ -220,8 +227,7 @@ public class NodeCli implements Runnable {
 
 	private void createNewWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			System.out.println("Wrong command format.");
-			System.out.println(HelpCommand.cmdHelpExample.get(CMD_WNEW));
+			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
 			return;
 		}
 
@@ -230,13 +236,23 @@ public class NodeCli implements Runnable {
 
 	private Wallet creatWalletWithName(String walletName) {
 		if (this.wallets.containsKey(walletName)) {
-			System.out.println("Wallet with name " + walletName + " already exists.");
+			UtilString.printMessages("Wallet with name " + walletName + " already exists.");
 		}
 
 		Wallet newWallet = new Wallet(this.blockchain);
 		this.wallets.put(walletName, newWallet);
 
 		return newWallet;
+	}
+
+	private static class UtilString {
+
+		public static void printMessages(String... msgs) {
+			for (String msg : msgs) {
+				System.out.println(msg);
+			}
+		}
+
 	}
 
 	private static class HelpCommand {
@@ -268,15 +284,14 @@ public class NodeCli implements Runnable {
 		}
 
 		private static void printHelp() {
-			System.out.println("jLocalCooin - blockchain implementation in Java.");
+			UtilString.printMessages("jLocalCooin - blockchain implementation in Java.");
+
 			cmdHelp.forEach((cmdName, helpDesc) -> {
-				System.out.println(cmdName + TAB_SIGN + " - " + helpDesc);
-
+				UtilString.printMessages(cmdName + TAB_SIGN + " - " + helpDesc);
 				if (cmdHelpExample.containsKey(cmdName)) {
-					System.out.println(TAB_SIGN + cmdHelpExample.get(cmdName));
+					UtilString.printMessages(TAB_SIGN + cmdHelpExample.get(cmdName));
 				}
-
-				System.out.println(LINE_SEPARATOR);
+				UtilString.printMessages(LINE_SEPARATOR);
 			});
 		}
 	}
