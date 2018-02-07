@@ -1,5 +1,9 @@
 # jLocalCoin
 
+[![pipeline status](https://gitlab.com/djm.im/jLocalCoin/badges/master/pipeline.svg)](https://gitlab.com/djm.im/jLocalCoin/commits/master)
+
+
+
 ## Run in local environtment
 
 ### Run with gradlew
