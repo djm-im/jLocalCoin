@@ -27,7 +27,13 @@ wlist
 
 Send coin
 send [W1-NAME W2-NAME COINS]
-    - send from W1 to W2 coins 
+    - send from W1 to W2 coins
+
+Blockchain status
+bcprint
+    - Display blocks.
+utxoprint
+    - Pritn UtxoPool - display all Utxos in pool.
 ```
 
 When NodeCli starts, it creates special miner wallet.  
@@ -51,6 +57,8 @@ wlist
 wnew aaa
 send djm aaa 75
 wlist
+
+
 
 exit
 ```
