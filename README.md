@@ -1,9 +1,18 @@
 # jLocalCoin
 
 ## Run in local environtment
+
+### Run with gradlew
 * `git clone git@gitlab.com:djm.im/jLocalCoin.git`
 * `cd jLocalCoin`
 * `./gradlew -q run`
+
+### Run as a jar
+* `git clone git@gitlab.com:djm.im/jLocalCoin.git`
+* `cd jLocalCoin`
+* `./gradlew clean build`
+* `java -jar build/libs/jLocalCoin-0.2.jar`
+
 
 ### jLocalCoin commands 
 

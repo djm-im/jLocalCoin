@@ -7,6 +7,9 @@ mainClassName = 'im.djm.zMain.Main03'
 archivesBaseName = 'jLocalCoin'
 version = "0.2"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 run {
     standardInput = System.in
 }
@@ -16,9 +19,19 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.guava:guava:24.0-jre'
+	compile 'com.google.guava:guava:24.0-jre'
 
     testImplementation 'junit:junit:4.12'
 
     testCompile 'org.assertj:assertj-core:3.8.0'
+}
+
+jar {
+	manifest {
+		attributes "Main-Class": "$mainClassName"
+	}
+
+	from {
+		(configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) }
+	}
 }
