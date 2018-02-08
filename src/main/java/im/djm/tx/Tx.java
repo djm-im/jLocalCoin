@@ -159,7 +159,7 @@ public class Tx {
 		sb.append("\t\tCoinbase: ").append(this.coinbase).append("\n");
 		sb.append("\t\tInputs  : ").append(this.inputs).append("\n");
 		sb.append("\t\tOutputs : ").append(this.outputs).append("\n");
-		sb.append("\t}");
+		sb.append("\t\tSignarur: ").append(this.txSignature).append("\n");
 
 		return sb.toString();
 	}

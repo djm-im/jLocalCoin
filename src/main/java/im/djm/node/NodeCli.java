@@ -18,32 +18,6 @@ import im.djm.wallet.Wallet;
  */
 public class NodeCli implements Runnable {
 
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-	private static final String TAB_SIGN = "\t";
-
-	private static final String MINER_WALLET_NAME = "_miner";
-
-	private static final String CMD_HELP = "help";
-
-	private static final String CMD_EXIT = "exit";
-
-	private static final String CMD_WNEW = "wnew";
-
-	private static final String CMD_MWNEW = "mwnew";
-
-	private static final String CMD_WSTAT = "wstat";
-
-	private static final String CMD_WDEL = "wdel";
-
-	private static final String CMD_WLIST = "wlist";
-
-	private static final String CMD_SEND = "send";
-
-	private static final String CMD_BCPRINT = "bcprint";
-
-	private static final String CMD_UTXOPRINT = "utxoprint";
-
 	private BlockChain blockchain;
 
 	private Wallet minerWallet;
@@ -99,7 +73,7 @@ public class NodeCli implements Runnable {
 			return true;
 
 		case CMD_EXIT:
-			UtilString.printMessages("", "Good by blockchain!");
+			exit();
 			return false;
 
 		case CMD_SEND:
@@ -126,18 +100,47 @@ public class NodeCli implements Runnable {
 			listAllWallets();
 			return true;
 
-		case CMD_BCPRINT:
-			printBlockchain();
-			return true;
-
-		case CMD_UTXOPRINT:
-			printUtxo();
+		case CMD_PRINT:
+			printCmd(cmdLine);
 			return true;
 
 		default:
 			UtilString.printMessages("Unknow command.", "Type help.");
 			return true;
 		}
+	}
+
+	private void printCmd(String[] cmdLine) {
+		if (cmdLine.length == 1) {
+			UtilString.printMessages("BlockChain status: " + blockchain.status() + ".");
+			return;
+		}
+
+		switch (cmdLine[1]) {
+		case CMD_PRINT_BC:
+			printBlockchain();
+			return;
+
+		case CMD_PRINT_UTXO:
+			printUtxo();
+			return;
+
+		case CMD_PRINT_BLOCK:
+			printBlock(cmdLine);
+			return;
+
+		default:
+			UtilString.printMessages("Unknow command.", "Type help.");
+			return;
+		}
+	}
+
+	private void printBlock(String[] cmdLine) {
+		if (cmdLine.length != 3) {
+			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_PRINT));
+		}
+
+		UtilString.printMessages("This command is not implemented yet.");
 	}
 
 	private void printUtxo() {
@@ -245,6 +248,12 @@ public class NodeCli implements Runnable {
 		return newWallet;
 	}
 
+	private void exit() {
+		// TODO
+		// Save blockchain in file
+		UtilString.printMessages("", "Good by blockchain!");
+	}
+
 	private static class UtilString {
 
 		public static void printMessages(String... msgs) {
@@ -254,6 +263,36 @@ public class NodeCli implements Runnable {
 		}
 
 	}
+
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+	private static final String TAB_SIGN = "\t";
+
+	private static final String MINER_WALLET_NAME = "_miner";
+
+	private static final String CMD_HELP = "help";
+
+	private static final String CMD_EXIT = "exit";
+
+	private static final String CMD_WNEW = "wnew";
+
+	private static final String CMD_MWNEW = "mwnew";
+
+	private static final String CMD_WSTAT = "wstat";
+
+	private static final String CMD_WDEL = "wdel";
+
+	private static final String CMD_WLIST = "wlist";
+
+	private static final String CMD_SEND = "send";
+
+	private static final String CMD_PRINT = "print";
+
+	private static final String CMD_PRINT_BLOCK = "block";
+
+	private static final String CMD_PRINT_UTXO = "utxo";
+
+	private static final String CMD_PRINT_BC = "bc";
 
 	private static class HelpCommand {
 
@@ -271,8 +310,7 @@ public class NodeCli implements Runnable {
 			cmdHelp.put(CMD_WDEL, "Delete a wallet");
 			cmdHelp.put(CMD_WLIST, "List walletes and 'balances' for each wallet.");
 			cmdHelp.put(CMD_SEND, "Send coins from one to another wallet.");
-			cmdHelp.put(CMD_BCPRINT, "Print all blocks in blockchain.");
-			cmdHelp.put(CMD_UTXOPRINT, "Print all unpent tx outpusts.");
+			cmdHelp.put(CMD_PRINT, "Display data about blockchain, utxo pool, or a block.");
 		}
 
 		static {
@@ -281,6 +319,8 @@ public class NodeCli implements Runnable {
 			cmdHelpExample.put(CMD_WSTAT, CMD_WSTAT + " WALLET-NAME");
 			cmdHelpExample.put(CMD_WDEL, CMD_WDEL + " WALLET-NAME");
 			cmdHelpExample.put(CMD_SEND, CMD_SEND + " WALLET-NAME-1 WLLET-NAME-2 VALUE");
+			cmdHelpExample.put(CMD_PRINT,
+					CMD_PRINT + "\n" + CMD_PRINT + " bc\n" + CMD_PRINT + " utxo\n" + CMD_PRINT + " block [NUM]");
 		}
 
 		private static void printHelp() {
@@ -289,7 +329,7 @@ public class NodeCli implements Runnable {
 			cmdHelp.forEach((cmdName, helpDesc) -> {
 				UtilString.printMessages(cmdName + TAB_SIGN + " - " + helpDesc);
 				if (cmdHelpExample.containsKey(cmdName)) {
-					UtilString.printMessages(TAB_SIGN + cmdHelpExample.get(cmdName));
+					UtilString.printMessages(cmdHelpExample.get(cmdName));
 				}
 				UtilString.printMessages(LINE_SEPARATOR);
 			});
