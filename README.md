@@ -43,10 +43,14 @@ send [W1-NAME W2-NAME COINS]
     - send from W1 to W2 coins
 
 Blockchain status
-bcprint
-    - Display blocks.
-utxoprint
+pritn 
+    - Display blockchian status (length).
+print bc 
+    - Display all blocks.
+print utxo
     - Pritn UtxoPool - display all Utxos in pool.
+print block [NUM]
+    - Display a block.
 ```
 
 When NodeCli starts, it creates special miner wallet.  
@@ -71,12 +75,13 @@ wnew aaa
 send djm aaa 75
 wlist
 
-utxoprint
-bcprint
+print
+print bc
+print utxo
 
 exit
 ```
 
 ## Other
 
-[jBlockChain](https://gitlab.com/djm.im/jBlockChain) is implementation of blockchain in Java (without transaction).
+[jBlockChain](https://gitlab.com/djm.im/jBlockChain) is implementation of blockchain in Java (without transactions).
