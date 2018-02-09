@@ -1,5 +1,6 @@
 package im.djm.node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -171,7 +172,7 @@ public class NodeCli implements Runnable {
 			return;
 		}
 
-		Map<String, Payment> walletCoinMap = new HashMap<>();
+		List<Payment> payments = new ArrayList<>();
 		for (int i = 2; i < cmdLine.length; i += 2) {
 			String walletReceiverName = cmdLine[i].trim();
 			if (!this.wallets.containsKey(walletReceiverName)) {
@@ -185,11 +186,12 @@ public class NodeCli implements Runnable {
 			Wallet walletReceiver = this.wallets.get(walletReceiverName);
 			Payment payment = new Payment(walletReceiver.getWalletAddress(), coinValue);
 
-			walletCoinMap.put(walletReceiverName, payment);
+			payments.add(payment);
 		}
 
 		Wallet walletSender = this.wallets.get(senderWalletName);
-		Tx tx = walletSender.sendMultiCoins(walletCoinMap);
+
+		Tx tx = walletSender.sendMultiCoins(payments);
 		// TODO
 		// remove Sout
 		UtilString.printMessages("New multi output tx: " + tx);

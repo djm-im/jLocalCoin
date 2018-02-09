@@ -9,9 +9,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import im.djm.blockchain.BlockChain;
@@ -64,9 +62,10 @@ public class Wallet {
 		return this.walletAddress;
 	}
 
-	public Tx sendMultiCoins(Map<String, Payment> paymentMap) {
-		long totalSpent = paymentMap.values().stream()
-				.collect(Collectors.summarizingLong(payment -> payment.getCoinValue())).getSum();
+	public Tx sendMultiCoins(List<Payment> payments) {
+		long totalSpent = payments.stream().collect(Collectors.summarizingLong(payment -> payment.getCoinValue()))
+				.getSum();
+
 		if (totalSpent < 1) {
 			throw new TxException("Cannot send less or zero value for coin. Tried to send " + totalSpent + ".");
 		}
@@ -90,18 +89,8 @@ public class Wallet {
 			throw new TxException("Not enough coins for tx. Tried to send " + totalSpent + ". Utxo is " + sum + ".");
 		}
 
-		Tx newTx = createMultiOutputTx(paymentMap, spentOutputs, sum, totalSpent);
+		Tx newTx = createMultiOutputTx(payments, spentOutputs, sum, totalSpent);
 		this.blockChain.add(newTx, spentOutputs);
-
-		return newTx;
-	}
-
-	private Tx createMultiOutputTx(Map<String, Payment> paymentMap, List<Utxo> spendOutputs, long sum,
-			long totalSpent) {
-		Tx newTx = new Tx();
-		this.fillInputs(newTx, spendOutputs);
-		this.createOutputs(newTx, paymentMap, sum, totalSpent);
-		this.signTx(newTx);
 
 		return newTx;
 	}
@@ -114,9 +103,9 @@ public class Wallet {
 
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
 		List<Utxo> spendOutputs = new ArrayList<>();
-		long sum = 0;
+		long senderBalance = 0;
 		int index = 0;
-		while (sum < coinValue && index < utxoList.size()) {
+		while (senderBalance < coinValue && index < utxoList.size()) {
 			Utxo utxo = utxoList.get(index);
 			spendOutputs.add(utxo);
 			index++;
@@ -124,15 +113,28 @@ public class Wallet {
 			Tx tx = this.blockChain.getTxFromPool(utxo.getTxId());
 			Output txOutput = tx.getOutput(utxo.getOutputIndexd());
 			long outputCoinValue = txOutput.getCoinValue();
-			sum += outputCoinValue;
+			senderBalance += outputCoinValue;
 		}
 
-		if (sum < coinValue) {
-			throw new TxException("Not enough coins for tx. Tried to send " + coinValue + ". Utxo is " + sum + ".");
+		if (senderBalance < coinValue) {
+			throw new TxException(
+					"Not enough coins for tx. Tried to send " + coinValue + ". Utxo is " + senderBalance + ".");
 		}
 
-		Tx newTx = createNewTx(payment, sum, spendOutputs);
+		Tx newTx = createNewTx(payment, senderBalance, spendOutputs);
 		this.blockChain.add(newTx, spendOutputs);
+
+		return newTx;
+	}
+
+	private Tx createMultiOutputTx(List<Payment> payments, List<Utxo> spendOutputs, long senderBalance,
+			long totalSpent) {
+		Tx newTx = new Tx();
+		this.fillInputs(newTx, spendOutputs);
+
+		payments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
+		this.createOutputs(newTx, payments);
+		this.signTx(newTx);
 
 		return newTx;
 	}
@@ -141,10 +143,13 @@ public class Wallet {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spendOutputs);
 
-		Map<String, Payment> paymentMap = new HashMap<>();
-		paymentMap.put(payment.getWalletAddress().toString(), payment);
+		List<Payment> payments = createPaymentsForTx(payment, senderBalance);
+
 		long totalSpent = payment.getCoinValue();
-		this.createOutputs(newTx, paymentMap, senderBalance, totalSpent);
+		payments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
+
+		this.createOutputs(newTx, payments);
+
 		this.signTx(newTx);
 
 		return newTx;
@@ -156,25 +161,27 @@ public class Wallet {
 		});
 	}
 
-	private void createOutputs(Tx tx, Map<String, Payment> paymentMap, long senderBalance, long totalSpent) {
-		// TODO
-		// replace map with list
+	private void createOutputs(Tx tx, List<Payment> payments) {
+		payments.forEach(payment -> {
+			tx.addOutput(payment.getWalletAddress(), payment.getCoinValue());
+		});
+	}
+
+	private List<Payment> createPaymentsForTx(Payment payment, long senderBalance) {
 		List<Payment> payments = new ArrayList<>();
-		paymentMap.forEach((_walletName, payment) -> {
-			payments.add(payment);
-		});
+		payments.add(payment);
+		long totalSpent = payment.getCoinValue();
+		payments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
+		return payments;
+	}
 
-		paymentMap.forEach((_walletName, payment) -> {
-			long coinValue = payment.getCoinValue();
-			tx.addOutput(payment.getWalletAddress(), coinValue);
-		});
-
-		// TODO
-		// Add change to payment map
+	private List<Payment> adddChangeToOutputs(List<Payment> payments, long senderBalance, long totalSpent) {
 		if (senderBalance > totalSpent) {
 			long change = senderBalance - totalSpent;
-			tx.addOutput(this.walletAddress, change);
+			payments.add(new Payment(this.walletAddress, change));
 		}
+
+		return payments;
 	}
 
 	private void signTx(Tx newTx) {
