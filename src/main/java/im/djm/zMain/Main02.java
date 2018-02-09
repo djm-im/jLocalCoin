@@ -4,6 +4,7 @@ import static im.djm.zMain.SoutUtil.printlnParagraph;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
+import im.djm.node.Payment;
 import im.djm.tx.Tx;
 import im.djm.wallet.Wallet;
 
@@ -27,14 +28,14 @@ public class Main02 {
 
 		printlnParagraph("Wallets", "Miner " + minerWallet, "W1    " + w1, "W2    " + w2);
 
-		Tx tx0 = minerWallet.sendCoin(w1.getWalletAddress(), 100);
+		Tx tx0 = minerWallet.sendCoin(new Payment(w1.getWalletAddress(), 100));
 		printlnParagraph("New tx added to blockchain. Tx0: " + tx0);
 		printlnParagraph("Blockchain after tx0", blockChain.toString());
 
 		printlnParagraph("Miner coins: " + minerWallet.balance(), "W1 coins: " + w1.balance(),
 				"W2 coins: " + w2.balance());
 
-		Tx tx1 = w1.sendCoin(w2.getWalletAddress(), 50);
+		Tx tx1 = w1.sendCoin(new Payment(w2.getWalletAddress(), 50));
 
 		printlnParagraph("Tx1: " + tx1);
 		printlnParagraph("Miner coins: " + minerWallet.balance(), "W1 coins: " + w1.balance(),
@@ -44,14 +45,14 @@ public class Main02 {
 		// _miner: 200, w1: 50, w2: 50, w3: 0
 
 		try {
-			Tx tx2 = w1.sendCoin(w2.getWalletAddress(), 200);
+			Tx tx2 = w1.sendCoin(new Payment(w2.getWalletAddress(), 200));
 			printlnParagraph("Tx2: " + tx2);
 		} catch (TxException txEx) {
 			printlnParagraph("Error: " + txEx.getMessage());
 		}
 
 		try {
-			Tx tx3 = w3.sendCoin(w1.getWalletAddress(), 100);
+			Tx tx3 = w3.sendCoin(new Payment(w1.getWalletAddress(), 100));
 			printlnParagraph("Tx3: " + tx3);
 		} catch (TxException txEx) {
 			printlnParagraph("Error: " + txEx.getMessage());

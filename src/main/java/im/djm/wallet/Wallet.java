@@ -105,17 +105,8 @@ public class Wallet {
 		return newTx;
 	}
 
-	private void createMultipleOutput(Tx tx, Map<String, Payment> paymentMap, long sum, long totalSpent) {
-		paymentMap.forEach((walletName, payment) -> {
-			long coinValue = payment.getCoinValue();
-			tx.addOutput(payment.getWalletAddress(), coinValue);
-		});
-		if (sum > totalSpent) {
-			tx.addOutput(this.walletAddress, sum - totalSpent);
-		}
-	}
-
-	public Tx sendCoin(WalletAddress recieverAddress, long coinValue) {
+	public Tx sendCoin(Payment payment) {
+		long coinValue = payment.getCoinValue();
 		if (coinValue < 1) {
 			throw new TxException("Cannot send less or zero value for coin. Tried to send " + coinValue + ".");
 		}
@@ -139,16 +130,16 @@ public class Wallet {
 			throw new TxException("Not enough coins for tx. Tried to send " + coinValue + ". Utxo is " + sum + ".");
 		}
 
-		Tx newTx = createNewTx(recieverAddress, coinValue, sum, spendOutputs);
+		Tx newTx = createNewTx(payment, sum, spendOutputs);
 		this.blockChain.add(newTx, spendOutputs);
 
 		return newTx;
 	}
 
-	private Tx createNewTx(WalletAddress receiverAddress, long coinAmount, long sum, List<Utxo> spendOutputs) {
+	private Tx createNewTx(Payment payment, long sum, List<Utxo> spendOutputs) {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spendOutputs);
-		this.createOutput(newTx, receiverAddress, coinAmount, sum);
+		this.createOutput(newTx, payment, sum);
 		this.signTx(newTx);
 
 		return newTx;
@@ -160,10 +151,21 @@ public class Wallet {
 		});
 	}
 
-	private void createOutput(Tx tx, WalletAddress receiverAddress, long coinAmount, long sum) {
-		tx.addOutput(receiverAddress, coinAmount);
-		if (sum > coinAmount) {
-			tx.addOutput(this.walletAddress, sum - coinAmount);
+	private void createMultipleOutput(Tx tx, Map<String, Payment> paymentMap, long sum, long totalSpent) {
+		paymentMap.forEach((walletName, payment) -> {
+			long coinValue = payment.getCoinValue();
+			tx.addOutput(payment.getWalletAddress(), coinValue);
+		});
+		if (sum > totalSpent) {
+			tx.addOutput(this.walletAddress, sum - totalSpent);
+		}
+	}
+
+	private void createOutput(Tx tx, Payment payment, long sum) {
+		long coinValue = payment.getCoinValue();
+		tx.addOutput(payment.getWalletAddress(), coinValue);
+		if (sum > coinValue) {
+			tx.addOutput(this.walletAddress, sum - coinValue);
 		}
 	}
 

@@ -215,9 +215,10 @@ public class NodeCli implements Runnable {
 
 		Wallet wallet1 = this.wallets.get(wallet1Name);
 		Wallet wallet2 = this.wallets.get(wallet2Name);
-		int value = Integer.valueOf(cmdLine[3]);
+		int coinValue = Integer.valueOf(cmdLine[3]);
 
-		wallet1.sendCoin(wallet2.getWalletAddress(), value);
+		Payment payment = new Payment(wallet2.getWalletAddress(), coinValue);
+		wallet1.sendCoin(payment);
 	}
 
 	private void deleteWallet(String[] cmdLine) {
