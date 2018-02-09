@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
+import im.djm.tx.Tx;
 import im.djm.tx.Utxo;
 import im.djm.wallet.Wallet;
 
@@ -77,7 +78,7 @@ public class NodeCli implements Runnable {
 			return false;
 
 		case CMD_SEND:
-			sendCoins(cmdLine);
+			sendCoin(cmdLine);
 			return true;
 
 		case CMD_MSEND:
@@ -170,27 +171,31 @@ public class NodeCli implements Runnable {
 			return;
 		}
 
-		Map<String, Long> walletCoinMap = new HashMap<>();
+		Map<String, Payment> walletCoinMap = new HashMap<>();
 		for (int i = 2; i < cmdLine.length; i += 2) {
-			String walletReciver = cmdLine[i].trim();
-			if (!this.wallets.containsKey(walletReciver)) {
+			String walletReceiverName = cmdLine[i].trim();
+			if (!this.wallets.containsKey(walletReceiverName)) {
+				// TODO
+				// throw an exception
 				UtilString.printMessages("Wallet " + senderWalletName + " not exists in collection.");
 				return;
 			}
-			long coinValue = Long.valueOf(cmdLine[i + 1]);
 
-			walletCoinMap.put(walletReciver, coinValue);
+			long coinValue = Long.valueOf(cmdLine[i + 1]);
+			Wallet walletReceiver = this.wallets.get(walletReceiverName);
+			Payment payment = new Payment(walletReceiver.getWalletAddress(), coinValue);
+
+			walletCoinMap.put(walletReceiverName, payment);
 		}
 
 		Wallet walletSender = this.wallets.get(senderWalletName);
-		walletCoinMap.forEach((walletName, value) -> {
-			Wallet walletReciver = this.wallets.get(walletName);
-			walletSender.sendCoin(walletReciver.getWalletAddress(), value);
-		});
-
+		Tx tx = walletSender.sendMultiCoins(walletCoinMap);
+		// TODO
+		// remove Sout
+		UtilString.printMessages("New multi output tx: " + tx);
 	}
 
-	private void sendCoins(String[] cmdLine) {
+	private void sendCoin(String[] cmdLine) {
 		if (cmdLine.length != 4) {
 			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_SEND));
 			return;
