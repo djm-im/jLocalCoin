@@ -9,6 +9,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -99,7 +100,7 @@ public class Wallet {
 			long totalSpent) {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spendOutputs);
-		this.createMultipleOutput(newTx, paymentMap, sum, totalSpent);
+		this.createOutputs(newTx, paymentMap, sum, totalSpent);
 		this.signTx(newTx);
 
 		return newTx;
@@ -136,10 +137,14 @@ public class Wallet {
 		return newTx;
 	}
 
-	private Tx createNewTx(Payment payment, long sum, List<Utxo> spendOutputs) {
+	private Tx createNewTx(Payment payment, long senderBalance, List<Utxo> spendOutputs) {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spendOutputs);
-		this.createOutput(newTx, payment, sum);
+
+		Map<String, Payment> paymentMap = new HashMap<>();
+		paymentMap.put(payment.getWalletAddress().toString(), payment);
+		long totalSpent = payment.getCoinValue();
+		this.createOutputs(newTx, paymentMap, senderBalance, totalSpent);
 		this.signTx(newTx);
 
 		return newTx;
@@ -151,21 +156,24 @@ public class Wallet {
 		});
 	}
 
-	private void createMultipleOutput(Tx tx, Map<String, Payment> paymentMap, long sum, long totalSpent) {
-		paymentMap.forEach((walletName, payment) -> {
+	private void createOutputs(Tx tx, Map<String, Payment> paymentMap, long senderBalance, long totalSpent) {
+		// TODO
+		// replace map with list
+		List<Payment> payments = new ArrayList<>();
+		paymentMap.forEach((_walletName, payment) -> {
+			payments.add(payment);
+		});
+
+		paymentMap.forEach((_walletName, payment) -> {
 			long coinValue = payment.getCoinValue();
 			tx.addOutput(payment.getWalletAddress(), coinValue);
 		});
-		if (sum > totalSpent) {
-			tx.addOutput(this.walletAddress, sum - totalSpent);
-		}
-	}
 
-	private void createOutput(Tx tx, Payment payment, long sum) {
-		long coinValue = payment.getCoinValue();
-		tx.addOutput(payment.getWalletAddress(), coinValue);
-		if (sum > coinValue) {
-			tx.addOutput(this.walletAddress, sum - coinValue);
+		// TODO
+		// Add change to payment map
+		if (senderBalance > totalSpent) {
+			long change = senderBalance - totalSpent;
+			tx.addOutput(this.walletAddress, change);
 		}
 	}
 
@@ -175,6 +183,8 @@ public class Wallet {
 		newTx.addSignature(signature);
 	}
 
+	// TODO
+	// Make this method static
 	private byte[] txSignature(byte[] rawDataToSign) {
 		try {
 			Signature signature = Signature.getInstance("SHA256withRSA");
