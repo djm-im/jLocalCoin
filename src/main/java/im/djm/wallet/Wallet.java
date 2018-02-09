@@ -10,7 +10,6 @@ import java.security.SignatureException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
@@ -63,18 +62,20 @@ public class Wallet {
 	}
 
 	public Tx sendMultiCoins(List<Payment> payments) {
-		long totalSpent = payments.stream().collect(Collectors.summarizingLong(payment -> payment.getCoinValue()))
-				.getSum();
-
-		if (totalSpent < 1) {
-			throw new TxException("Cannot send less or zero value for coin. Tried to send " + totalSpent + ".");
+		int totalSpent = 0;
+		for (Payment payment : payments) {
+			long coinValue = payment.getCoinValue();
+			if (coinValue <= 0) {
+				throw new TxException("Cannot send zero or less value for coin. Tried to send " + coinValue + ".");
+			}
+			totalSpent += coinValue;
 		}
 
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
 		List<Utxo> spentOutputs = new ArrayList<>();
-		long sum = 0;
+		long senderBalance = 0;
 		int index = 0;
-		while (sum < totalSpent && index < utxoList.size()) {
+		while (senderBalance < totalSpent && index < utxoList.size()) {
 			Utxo utxo = utxoList.get(index);
 			spentOutputs.add(utxo);
 			index++;
@@ -82,14 +83,15 @@ public class Wallet {
 			Tx tx = this.blockChain.getTxFromPool(utxo.getTxId());
 			Output txOutput = tx.getOutput(utxo.getOutputIndexd());
 			long outputCoinValue = txOutput.getCoinValue();
-			sum += outputCoinValue;
+			senderBalance += outputCoinValue;
 		}
 
-		if (sum < totalSpent) {
-			throw new TxException("Not enough coins for tx. Tried to send " + totalSpent + ". Utxo is " + sum + ".");
+		if (senderBalance < totalSpent) {
+			throw new TxException(
+					"Not enough coins for tx. Tried to send " + totalSpent + ". Utxo is " + senderBalance + ".");
 		}
 
-		Tx newTx = createMultiOutputTx(payments, spentOutputs, sum, totalSpent);
+		Tx newTx = createMultiOutputTx(payments, spentOutputs, senderBalance, totalSpent);
 		this.blockChain.add(newTx, spentOutputs);
 
 		return newTx;
@@ -121,16 +123,16 @@ public class Wallet {
 					"Not enough coins for tx. Tried to send " + coinValue + ". Utxo is " + senderBalance + ".");
 		}
 
-		Tx newTx = createNewTx(payment, senderBalance, spendOutputs);
+		Tx newTx = createNewTx(payment, spendOutputs, senderBalance);
 		this.blockChain.add(newTx, spendOutputs);
 
 		return newTx;
 	}
 
-	private Tx createMultiOutputTx(List<Payment> payments, List<Utxo> spendOutputs, long senderBalance,
+	private Tx createMultiOutputTx(List<Payment> payments, List<Utxo> spentOutputs, long senderBalance,
 			long totalSpent) {
 		Tx newTx = new Tx();
-		this.fillInputs(newTx, spendOutputs);
+		this.fillInputs(newTx, spentOutputs);
 
 		payments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
 		this.createOutputs(newTx, payments);
@@ -139,7 +141,7 @@ public class Wallet {
 		return newTx;
 	}
 
-	private Tx createNewTx(Payment payment, long senderBalance, List<Utxo> spendOutputs) {
+	private Tx createNewTx(Payment payment, List<Utxo> spendOutputs, long senderBalance) {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spendOutputs);
 
