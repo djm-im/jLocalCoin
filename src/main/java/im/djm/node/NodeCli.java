@@ -80,6 +80,10 @@ public class NodeCli implements Runnable {
 			sendCoins(cmdLine);
 			return true;
 
+		case CMD_MSEND:
+			sendMultiCoins(cmdLine);
+			return true;
+
 		case CMD_WNEW:
 			createNewWallet(cmdLine);
 			return true;
@@ -152,6 +156,38 @@ public class NodeCli implements Runnable {
 
 	private void printBlockchain() {
 		UtilString.printMessages(this.blockchain.toString());
+	}
+
+	private void sendMultiCoins(String[] cmdLine) {
+		if (cmdLine.length < 4 || cmdLine.length % 2 != 0) {
+			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MSEND));
+			return;
+		}
+
+		String senderWalletName = cmdLine[1].trim();
+		if (!this.wallets.containsKey(senderWalletName)) {
+			UtilString.printMessages("Wallet " + senderWalletName + " not exists in collection.");
+			return;
+		}
+
+		Map<String, Long> walletCoinMap = new HashMap<>();
+		for (int i = 2; i < cmdLine.length; i += 2) {
+			String walletReciver = cmdLine[i].trim();
+			if (!this.wallets.containsKey(walletReciver)) {
+				UtilString.printMessages("Wallet " + senderWalletName + " not exists in collection.");
+				return;
+			}
+			long coinValue = Long.valueOf(cmdLine[i + 1]);
+
+			walletCoinMap.put(walletReciver, coinValue);
+		}
+
+		Wallet walletSender = this.wallets.get(senderWalletName);
+		walletCoinMap.forEach((walletName, value) -> {
+			Wallet walletReciver = this.wallets.get(walletName);
+			walletSender.sendCoin(walletReciver.getWalletAddress(), value);
+		});
+
 	}
 
 	private void sendCoins(String[] cmdLine) {
@@ -286,6 +322,8 @@ public class NodeCli implements Runnable {
 
 	private static final String CMD_SEND = "send";
 
+	private static final String CMD_MSEND = "msend";
+
 	private static final String CMD_PRINT = "print";
 
 	private static final String CMD_PRINT_BLOCK = "block";
@@ -310,6 +348,7 @@ public class NodeCli implements Runnable {
 			cmdHelp.put(CMD_WDEL, "Delete a wallet");
 			cmdHelp.put(CMD_WLIST, "List walletes and 'balances' for each wallet.");
 			cmdHelp.put(CMD_SEND, "Send coins from one to another wallet.");
+			cmdHelp.put(CMD_MSEND, "Send to multiple wallet addresses.");
 			cmdHelp.put(CMD_PRINT, "Display data about blockchain, utxo pool, or a block.");
 		}
 
@@ -321,6 +360,7 @@ public class NodeCli implements Runnable {
 			cmdHelpExample.put(CMD_SEND, CMD_SEND + " WALLET-NAME-1 WLLET-NAME-2 VALUE");
 			cmdHelpExample.put(CMD_PRINT,
 					CMD_PRINT + "\n" + CMD_PRINT + " bc\n" + CMD_PRINT + " utxo\n" + CMD_PRINT + " block [NUM]");
+			cmdHelpExample.put(CMD_MSEND, CMD_MSEND + " WALLET-SENDER WALLET-NAME-1 VALUE-1 ... WALLET-NAME-N VALUE-N");
 		}
 
 		private static void printHelp() {
