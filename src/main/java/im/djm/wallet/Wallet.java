@@ -91,7 +91,7 @@ public class Wallet {
 					"Not enough coins for tx. Tried to send " + totalSpent + ". Utxo is " + senderBalance + ".");
 		}
 
-		Tx newTx = createMultiOutputTx(payments, spentOutputs, senderBalance, totalSpent);
+		Tx newTx = createNewTx(payments, spentOutputs, senderBalance, totalSpent);
 		this.blockChain.add(newTx, spentOutputs);
 
 		return newTx;
@@ -123,35 +123,20 @@ public class Wallet {
 					"Not enough coins for tx. Tried to send " + coinValue + ". Utxo is " + senderBalance + ".");
 		}
 
-		Tx newTx = createNewTx(payment, spendOutputs, senderBalance);
+		List<Payment> payments = createPaymentsForTx(payment, senderBalance);
+		long totalSpent = payment.getCoinValue();
+		Tx newTx = createNewTx(payments, spendOutputs, senderBalance, totalSpent);
 		this.blockChain.add(newTx, spendOutputs);
 
 		return newTx;
 	}
 
-	private Tx createMultiOutputTx(List<Payment> payments, List<Utxo> spentOutputs, long senderBalance,
-			long totalSpent) {
+	private Tx createNewTx(List<Payment> payments, List<Utxo> spentOutputs, long senderBalance, long totalSpent) {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spentOutputs);
 
 		payments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
 		this.createOutputs(newTx, payments);
-		this.signTx(newTx);
-
-		return newTx;
-	}
-
-	private Tx createNewTx(Payment payment, List<Utxo> spendOutputs, long senderBalance) {
-		Tx newTx = new Tx();
-		this.fillInputs(newTx, spendOutputs);
-
-		List<Payment> payments = createPaymentsForTx(payment, senderBalance);
-
-		long totalSpent = payment.getCoinValue();
-		payments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
-
-		this.createOutputs(newTx, payments);
-
 		this.signTx(newTx);
 
 		return newTx;
