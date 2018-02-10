@@ -9,6 +9,8 @@ import im.djm.blockchain.BlockUtil;
 import im.djm.blockchain.hash.HashUtil;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.blockchain.hash.TxSignature;
+import im.djm.exception.TxInputException;
+import im.djm.exception.TxOutputException;
 import im.djm.wallet.WalletAddress;
 
 /**
@@ -106,11 +108,11 @@ public class Tx {
 		return this.inputs;
 	}
 
+	// TODO ???
+	// delete this method
 	public Input getInput(int index) {
 		if (0 > index || index > this.inputs.size()) {
-			// TODO
-			// throw exception
-			return null;
+			throw new TxInputException("Index out of range: " + index);
 		}
 
 		// TODO
@@ -134,9 +136,7 @@ public class Tx {
 
 	public Output getOutput(int index) {
 		if (index < 0 || index > this.outputs.size()) {
-			// TODO
-			// throw an exception
-			return null;
+			throw new TxOutputException("Index out of range: " + index);
 		}
 
 		// TODO
