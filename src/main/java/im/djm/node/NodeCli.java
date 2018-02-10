@@ -1,12 +1,13 @@
 package im.djm.node;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import com.google.common.collect.Lists;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
@@ -221,7 +222,7 @@ public class NodeCli implements Runnable {
 
 		Payment payment = new Payment(wallet2.getWalletAddress(), coinValue);
 
-		wallet1.send(Arrays.asList(payment));
+		wallet1.send(Lists.newArrayList(payment));
 	}
 
 	private void deleteWallet(String[] cmdLine) {
