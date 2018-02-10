@@ -9,7 +9,7 @@
 ### Run with gradlew
 * `git clone git@gitlab.com:djm.im/jLocalCoin.git`
 * `cd jLocalCoin`
-* `./gradlew -q run`
+* `./gradlew clean -q run`
 
 ### Run as a jar
 * `git clone git@gitlab.com:djm.im/jLocalCoin.git`
@@ -60,7 +60,7 @@ A miner gets reward for each block. The reward is 100 coins.
 
 #### jLocalCoin example
 ```text
-./gradlew -q run
+./gradlew clean -q run
 
 help
 wlist
