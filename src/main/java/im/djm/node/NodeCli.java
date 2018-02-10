@@ -13,6 +13,7 @@ import im.djm.exception.TxException;
 import im.djm.tx.Tx;
 import im.djm.tx.Utxo;
 import im.djm.wallet.Wallet;
+import im.djm.zMain.StdoutUtil;
 
 /**
  * 
@@ -42,12 +43,12 @@ public class NodeCli implements Runnable {
 
 		while (isRunning) {
 			try {
-				UtilString.printMessages("[BC length: " + blockchain.status() + "].$ ");
+				StdoutUtil.printMessages("[BC length: " + blockchain.status() + "].$ ");
 				isRunning = menuReadStdin(stdin);
 			} catch (TxException txEx) {
-				UtilString.printMessages("Error: " + txEx.getMessage());
+				StdoutUtil.printMessages("Error: " + txEx.getMessage());
 			}
-			UtilString.printMessages(NodeCli.LINE_SEPARATOR);
+			StdoutUtil.printMessages(NodeCli.LINE_SEPARATOR);
 		}
 		stdin.close();
 	}
@@ -57,7 +58,7 @@ public class NodeCli implements Runnable {
 	private boolean menuReadStdin(Scanner input) {
 		String inLine = input.nextLine();
 		if (inLine.trim().length() < 4) {
-			UtilString.printMessages("Invalid input");
+			StdoutUtil.printMessages("Invalid input");
 
 			// Continue with execution of the thread
 			return true;
@@ -112,14 +113,14 @@ public class NodeCli implements Runnable {
 			return true;
 
 		default:
-			UtilString.printMessages("Unknow command.", "Type help.");
+			StdoutUtil.printMessages("Unknow command.", "Type help.");
 			return true;
 		}
 	}
 
 	private void printCmd(String[] cmdLine) {
 		if (cmdLine.length == 1) {
-			UtilString.printMessages("BlockChain status: " + blockchain.status() + ".");
+			StdoutUtil.printMessages("BlockChain length: " + blockchain.status() + ".");
 			return;
 		}
 
@@ -137,39 +138,39 @@ public class NodeCli implements Runnable {
 			return;
 
 		default:
-			UtilString.printMessages("Unknow command.", "Type help.");
+			StdoutUtil.printMessages("Unknow command.", "Type help.");
 			return;
 		}
 	}
 
 	private void printBlock(String[] cmdLine) {
 		if (cmdLine.length != 3) {
-			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_PRINT));
+			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_PRINT));
 		}
 
-		UtilString.printMessages("This command is not implemented yet.");
+		StdoutUtil.printMessages("This command is not implemented yet.");
 	}
 
 	private void printUtxo() {
 		List<Utxo> allUtxo = this.blockchain.getAllUtxo();
 		for (Utxo utxo : allUtxo) {
-			UtilString.printMessages(utxo.toString());
+			StdoutUtil.printMessages(utxo.toString());
 		}
 	}
 
 	private void printBlockchain() {
-		UtilString.printMessages(this.blockchain.toString());
+		StdoutUtil.printMessages(this.blockchain.toString());
 	}
 
 	private void sendMultiCoins(String[] cmdLine) {
 		if (cmdLine.length < 4 || cmdLine.length % 2 != 0) {
-			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MSEND));
+			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MSEND));
 			return;
 		}
 
 		String senderWalletName = cmdLine[1].trim();
 		if (!this.wallets.containsKey(senderWalletName)) {
-			UtilString.printMessages("Wallet " + senderWalletName + " not exists in collection.");
+			StdoutUtil.printMessages("Wallet " + senderWalletName + " not exists in collection.");
 			return;
 		}
 
@@ -179,7 +180,7 @@ public class NodeCli implements Runnable {
 			if (!this.wallets.containsKey(walletReceiverName)) {
 				// TODO
 				// throw an exception
-				UtilString.printMessages("Wallet " + senderWalletName + " not exists in collection.");
+				StdoutUtil.printMessages("Wallet " + senderWalletName + " not exists in collection.");
 				return;
 			}
 
@@ -191,28 +192,25 @@ public class NodeCli implements Runnable {
 		}
 
 		Wallet walletSender = this.wallets.get(senderWalletName);
-
+		@SuppressWarnings("unused")
 		Tx tx = walletSender.send(payments);
-		// TODO
-		// remove Sout
-		UtilString.printMessages("New multi output tx: " + tx);
 	}
 
 	private void sendCoin(String[] cmdLine) {
 		if (cmdLine.length != 4) {
-			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_SEND));
+			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_SEND));
 			return;
 		}
 
 		String wallet1Name = cmdLine[1].trim();
 		if (!this.wallets.containsKey(wallet1Name)) {
-			UtilString.printMessages("Wallet " + wallet1Name + " not exists in collection.");
+			StdoutUtil.printMessages("Wallet " + wallet1Name + " not exists in collection.");
 			return;
 		}
 
 		String wallet2Name = cmdLine[2].trim();
 		if (!this.wallets.containsKey(wallet2Name)) {
-			UtilString.printMessages("Wallet " + wallet2Name + " does not exist in collection of wallets.");
+			StdoutUtil.printMessages("Wallet " + wallet2Name + " does not exist in collection of wallets.");
 			return;
 		}
 
@@ -227,7 +225,7 @@ public class NodeCli implements Runnable {
 
 	private void deleteWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
+			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
 			return;
 		}
 
@@ -238,24 +236,24 @@ public class NodeCli implements Runnable {
 
 	private void walletStatus(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WSTAT));
+			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WSTAT));
 			return;
 		}
 
 		String walletName = cmdLine[1].trim();
 		if (!this.wallets.containsKey(walletName)) {
-			UtilString.printMessages("Wallet with name " + walletName + " doesn't exist in collection.");
+			StdoutUtil.printMessages("Wallet with name " + walletName + " doesn't exist in collection.");
 			return;
 		}
 
 		Wallet wallet = this.wallets.get(walletName);
 
-		UtilString.printMessages(this.getWalletStatus(walletName, wallet));
+		StdoutUtil.printMessages(this.getWalletStatus(walletName, wallet));
 	}
 
 	private void listAllWallets() {
 		this.wallets.forEach((walletName, wallet) -> {
-			UtilString.printMessages(this.getWalletStatus(walletName, wallet));
+			StdoutUtil.printMessages(this.getWalletStatus(walletName, wallet));
 		});
 	}
 
@@ -265,7 +263,7 @@ public class NodeCli implements Runnable {
 
 	private void createMultiNewWallets(String[] cmdLine) {
 		if (cmdLine.length < 2) {
-			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MWNEW));
+			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MWNEW));
 			return;
 		}
 
@@ -276,7 +274,7 @@ public class NodeCli implements Runnable {
 
 	private void createNewWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			UtilString.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
+			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
 			return;
 		}
 
@@ -285,7 +283,7 @@ public class NodeCli implements Runnable {
 
 	private Wallet creatWalletWithName(String walletName) {
 		if (this.wallets.containsKey(walletName)) {
-			UtilString.printMessages("Wallet with name " + walletName + " already exists.");
+			StdoutUtil.printMessages("Wallet with name " + walletName + " already exists.");
 		}
 
 		Wallet newWallet = new Wallet(this.blockchain);
@@ -297,17 +295,7 @@ public class NodeCli implements Runnable {
 	private void exit() {
 		// TODO
 		// Save blockchain in file
-		UtilString.printMessages("", "Good by blockchain!");
-	}
-
-	private static class UtilString {
-
-		public static void printMessages(String... msgs) {
-			for (String msg : msgs) {
-				System.out.println(msg);
-			}
-		}
-
+		StdoutUtil.printMessages("", "Good by blockchain!");
 	}
 
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -374,14 +362,14 @@ public class NodeCli implements Runnable {
 		}
 
 		private static void printHelp() {
-			UtilString.printMessages("jLocalCooin - blockchain implementation in Java.");
+			StdoutUtil.printMessages("jLocalCooin - blockchain implementation in Java.");
 
 			cmdHelp.forEach((cmdName, helpDesc) -> {
-				UtilString.printMessages(cmdName + TAB_SIGN + " - " + helpDesc);
+				StdoutUtil.printMessages(cmdName + TAB_SIGN + " - " + helpDesc);
 				if (cmdHelpExample.containsKey(cmdName)) {
-					UtilString.printMessages(cmdHelpExample.get(cmdName));
+					StdoutUtil.printMessages(cmdHelpExample.get(cmdName));
 				}
-				UtilString.printMessages(LINE_SEPARATOR);
+				StdoutUtil.printMessages(LINE_SEPARATOR);
 			});
 		}
 	}
