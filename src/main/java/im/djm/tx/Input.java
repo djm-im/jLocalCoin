@@ -46,7 +46,7 @@ class Input {
 
 	@Override
 	public String toString() {
-		return "{ Input: {  TxId: " + this.prevTxId + ", OutputIndes: " + this.outputIndex + " } }";
+		return "{ Input: {  TxId: " + this.prevTxId + ", OutputIndex: " + this.outputIndex + " } }";
 	}
 
 }
