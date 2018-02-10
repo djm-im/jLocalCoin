@@ -43,6 +43,9 @@ public class Wallet {
 
 	private KeyPair createKeyPair() {
 		try {
+			// TOOD
+			// Generalize this method
+			// "RSA" and 512 move to constants
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(512);
 			KeyPair keyPair = keyPairGenerator.generateKeyPair();
@@ -128,6 +131,8 @@ public class Wallet {
 	}
 
 	private List<Payment> adddChangeToOutputs(List<Payment> payments, long senderBalance, long totalSpent) {
+		// TODO
+		// Throw exception if senderBalance < totalSpent
 		if (senderBalance > totalSpent) {
 			long change = senderBalance - totalSpent;
 			payments.add(new Payment(this.walletAddress, change));

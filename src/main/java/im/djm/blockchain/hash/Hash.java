@@ -14,8 +14,6 @@ import java.util.Arrays;
 // update to Hash be interface
 public abstract class Hash extends ByteArray {
 
-	protected byte[] content;
-
 	private int hashCode;
 
 	public Hash(byte[] bytes) {

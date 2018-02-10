@@ -1,7 +1,6 @@
 package im.djm.tx;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.primitives.Longs;
@@ -9,6 +8,7 @@ import com.google.common.primitives.Longs;
 import im.djm.blockchain.BlockUtil;
 import im.djm.blockchain.hash.HashUtil;
 import im.djm.blockchain.hash.TxHash;
+import im.djm.blockchain.hash.TxSignature;
 import im.djm.wallet.WalletAddress;
 
 /**
@@ -28,15 +28,14 @@ public class Tx {
 
 	private long timestamp;
 
-	@SuppressWarnings("unused")
-	private byte[] txSignature;
+	private TxSignature txSignature;
 
 	public Tx() {
 		this.inputs = new ArrayList<>();
 		this.outputs = new ArrayList<>();
 		this.coinbase = false;
 		this.timestamp = System.currentTimeMillis() / 1000;
-		// this.txSignature = null;
+		// this.txSignature = null; -- txSignature is later setup
 	}
 
 	public Tx(WalletAddress minerAddress, long coinValue) {
@@ -54,8 +53,6 @@ public class Tx {
 		Output output = new Output(address, coinAmount);
 		this.outputs.add(output);
 
-		// TODO ???
-		// wrap this call in method
 		byte[] txRawHash = HashUtil.calculateRawHash(this.getRawDataForSignature());
 		this.txId = new TxHash(txRawHash);
 	}
@@ -73,9 +70,6 @@ public class Tx {
 		byte[] inputRawByte = getInputRawBytes();
 		byte[] outputRawByte = getOutputRawBytes();
 		byte[] timestampRawWyte = Longs.toByteArray(this.timestamp);
-
-		// TODO
-		// Add tx signature - also part of tx
 
 		return BlockUtil.concatenateArrays(inputRawByte, outputRawByte, timestampRawWyte);
 	}
@@ -101,7 +95,7 @@ public class Tx {
 	}
 
 	public void addSignature(byte[] signature) {
-		this.txSignature = Arrays.copyOf(signature, signature.length);
+		this.txSignature = new TxSignature(signature);
 	}
 
 	public TxHash getTxId() {
@@ -124,10 +118,14 @@ public class Tx {
 		return this.inputs.get(index);
 	}
 
+	// TODO???
+	// remove the method
 	public int getInputSize() {
 		return this.inputs.size();
 	}
 
+	// TODO ???
+	// remove the method
 	public List<Output> getOutputs() {
 		// TODO
 		// return (immutable) array copy
