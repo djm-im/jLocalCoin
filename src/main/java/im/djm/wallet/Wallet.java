@@ -15,7 +15,6 @@ import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.TxException;
 import im.djm.exception.WrapperException;
-import im.djm.node.Payment;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.Utxo;

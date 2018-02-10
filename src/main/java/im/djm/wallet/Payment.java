@@ -1,6 +1,4 @@
-package im.djm.node;
-
-import im.djm.wallet.WalletAddress;
+package im.djm.wallet;
 
 public final class Payment {
 

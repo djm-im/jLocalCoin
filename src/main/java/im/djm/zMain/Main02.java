@@ -7,8 +7,8 @@ import java.util.List;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
-import im.djm.node.Payment;
 import im.djm.tx.Tx;
+import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;
 
 /**
