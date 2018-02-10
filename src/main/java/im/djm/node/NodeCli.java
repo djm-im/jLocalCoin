@@ -12,7 +12,7 @@ import com.google.common.collect.Lists;
 import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
 import im.djm.tx.Tx;
-import im.djm.tx.Utxo;
+import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;
 import im.djm.zMain.StdoutUtil;

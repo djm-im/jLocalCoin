@@ -18,8 +18,8 @@ import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
 import im.djm.tx.TxPool;
-import im.djm.tx.Utxo;
-import im.djm.tx.UtxoPool;
+import im.djm.utxo.Utxo;
+import im.djm.utxo.UtxoPool;
 import im.djm.wallet.WalletAddress;
 
 /**

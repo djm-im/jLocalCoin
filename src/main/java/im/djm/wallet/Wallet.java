@@ -17,7 +17,7 @@ import im.djm.exception.TxException;
 import im.djm.exception.WrapperException;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
-import im.djm.tx.Utxo;
+import im.djm.utxo.Utxo;
 
 /**
  * 

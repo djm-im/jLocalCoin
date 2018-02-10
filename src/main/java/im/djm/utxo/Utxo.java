@@ -1,4 +1,4 @@
-package im.djm.tx;
+package im.djm.utxo;
 
 import im.djm.blockchain.hash.TxHash;
 
