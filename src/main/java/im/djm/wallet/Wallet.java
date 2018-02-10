@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.djm.blockchain.BlockChain;
+import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.TxException;
 import im.djm.exception.WrapperException;
 import im.djm.node.Payment;
@@ -61,73 +62,58 @@ public class Wallet {
 		return this.walletAddress;
 	}
 
-	public Tx sendMultiCoins(List<Payment> payments) {
-		int totalSpent = 0;
-		for (Payment payment : payments) {
-			long coinValue = payment.getCoinValue();
-			if (coinValue <= 0) {
-				throw new TxException("Cannot send zero or less value for coin. Tried to send " + coinValue + ".");
-			}
-			totalSpent += coinValue;
-		}
+	public Tx send(List<Payment> payments) {
+		long totalSpent = totalSpent(payments);
 
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
+
 		List<Utxo> spentOutputs = new ArrayList<>();
 		long senderBalance = 0;
 		int index = 0;
 		while (senderBalance < totalSpent && index < utxoList.size()) {
 			Utxo utxo = utxoList.get(index);
 			spentOutputs.add(utxo);
-			index++;
 
-			Tx tx = this.blockChain.getTxFromPool(utxo.getTxId());
-			Output txOutput = tx.getOutput(utxo.getOutputIndexd());
-			long outputCoinValue = txOutput.getCoinValue();
-			senderBalance += outputCoinValue;
+			senderBalance = senderBalance + getCoinValueFor(utxo);
+
+			index++;
 		}
 
+		Tx newTx = createAndAddTx(payments, totalSpent, spentOutputs, senderBalance);
+		return newTx;
+	}
+
+	private long getCoinValueFor(Utxo utxo) {
+		TxHash txId = utxo.getTxId();
+		Tx txFromPool = this.blockChain.getTxFromPool(txId);
+		Output txOutput = txFromPool.getOutput(utxo.getOutputIndexd());
+		long coinValue = txOutput.getCoinValue();
+
+		return coinValue;
+	}
+
+	private long totalSpent(List<Payment> payments) {
+		long totalSpent = 0;
+		for (Payment payment : payments) {
+			long coinValue = payment.getCoinValue();
+			if (coinValue <= 0) {
+				throw new TxException("Cannot send zero or less value for coin. Tried to send " + coinValue + ".");
+			}
+
+			totalSpent = totalSpent + coinValue;
+		}
+
+		return totalSpent;
+	}
+
+	private Tx createAndAddTx(List<Payment> payments, long totalSpent, List<Utxo> spentOutputs, long senderBalance) {
 		if (senderBalance < totalSpent) {
-			throw new TxException(
-					"Not enough coins for tx. Tried to send " + totalSpent + ". Utxo is " + senderBalance + ".");
+			String errMsg = "Not enough coins for tx. Tried to send " + totalSpent + ". Utxo is " + senderBalance + ".";
+			throw new TxException(errMsg);
 		}
 
 		Tx newTx = createNewTx(payments, spentOutputs, senderBalance, totalSpent);
 		this.blockChain.add(newTx, spentOutputs);
-
-		return newTx;
-	}
-
-	public Tx sendCoin(Payment payment) {
-		long coinValue = payment.getCoinValue();
-		if (coinValue < 1) {
-			throw new TxException("Cannot send less or zero value for coin. Tried to send " + coinValue + ".");
-		}
-
-		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
-		List<Utxo> spendOutputs = new ArrayList<>();
-		long senderBalance = 0;
-		int index = 0;
-		while (senderBalance < coinValue && index < utxoList.size()) {
-			Utxo utxo = utxoList.get(index);
-			spendOutputs.add(utxo);
-			index++;
-
-			Tx tx = this.blockChain.getTxFromPool(utxo.getTxId());
-			Output txOutput = tx.getOutput(utxo.getOutputIndexd());
-			long outputCoinValue = txOutput.getCoinValue();
-			senderBalance += outputCoinValue;
-		}
-
-		if (senderBalance < coinValue) {
-			throw new TxException(
-					"Not enough coins for tx. Tried to send " + coinValue + ". Utxo is " + senderBalance + ".");
-		}
-
-		List<Payment> payments = createPaymentsForTx(payment, senderBalance);
-		long totalSpent = payment.getCoinValue();
-		Tx newTx = createNewTx(payments, spendOutputs, senderBalance, totalSpent);
-		this.blockChain.add(newTx, spendOutputs);
-
 		return newTx;
 	}
 
@@ -142,6 +128,15 @@ public class Wallet {
 		return newTx;
 	}
 
+	private List<Payment> adddChangeToOutputs(List<Payment> payments, long senderBalance, long totalSpent) {
+		if (senderBalance > totalSpent) {
+			long change = senderBalance - totalSpent;
+			payments.add(new Payment(this.walletAddress, change));
+		}
+
+		return payments;
+	}
+
 	private void fillInputs(Tx tx, List<Utxo> prevTxOutputs) {
 		prevTxOutputs.forEach(utxo -> {
 			tx.addInput(utxo.getTxId(), utxo.getOutputIndexd());
@@ -152,23 +147,6 @@ public class Wallet {
 		payments.forEach(payment -> {
 			tx.addOutput(payment.getWalletAddress(), payment.getCoinValue());
 		});
-	}
-
-	private List<Payment> createPaymentsForTx(Payment payment, long senderBalance) {
-		List<Payment> payments = new ArrayList<>();
-		payments.add(payment);
-		long totalSpent = payment.getCoinValue();
-		payments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
-		return payments;
-	}
-
-	private List<Payment> adddChangeToOutputs(List<Payment> payments, long senderBalance, long totalSpent) {
-		if (senderBalance > totalSpent) {
-			long change = senderBalance - totalSpent;
-			payments.add(new Payment(this.walletAddress, change));
-		}
-
-		return payments;
 	}
 
 	private void signTx(Tx newTx) {
