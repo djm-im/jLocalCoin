@@ -5,12 +5,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import com.google.common.collect.Lists;
 
 import im.djm.blockchain.BlockChain;
-import im.djm.exception.TxException;
 import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;
@@ -18,11 +16,9 @@ import im.djm.wallet.Wallet;
 import im.djm.zMain.StdoutUtil;
 
 /**
- * 
- * @author djm.im
- *
+ * @author djm
  */
-public class NodeCli implements Runnable {
+class BlockChainNode {
 
 	private BlockChain blockchain;
 
@@ -30,7 +26,9 @@ public class NodeCli implements Runnable {
 
 	private Map<String, Wallet> wallets = new HashMap<>();
 
-	public NodeCli() {
+	private static final String MINER_WALLET_NAME = "_miner";
+
+	public BlockChainNode() {
 		this.minerWallet = new Wallet(null);
 		this.blockchain = new BlockChain(minerWallet.getWalletAddress());
 		this.minerWallet.setBlockchain(this.blockchain);
@@ -38,39 +36,13 @@ public class NodeCli implements Runnable {
 		this.wallets.put(MINER_WALLET_NAME, this.minerWallet);
 	}
 
-	@Override
-	public void run() {
-		boolean isRunning = true;
-		Scanner stdin = new Scanner(System.in);
-
-		while (isRunning) {
-			try {
-				StdoutUtil.printMessages("[BC length: " + blockchain.status() + "].$ ");
-				isRunning = menuReadStdin(stdin);
-			} catch (TxException txEx) {
-				StdoutUtil.printMessages("Error: " + txEx.getMessage());
-			}
-			StdoutUtil.printMessages(NodeCli.LINE_SEPARATOR);
-		}
-		stdin.close();
+	public String status() {
+		return this.blockchain.status();
 	}
 
-	// ------------------------------------------------------------------------
-
-	private boolean menuReadStdin(Scanner input) {
-		String inLine = input.nextLine();
-		if (inLine.trim().length() < 4) {
-			StdoutUtil.printMessages("Invalid input");
-
-			// Continue with execution of the thread
-			return true;
-		}
-		String[] cmdLine = inLine.split("\\s+");
-
-		return menuSwitch(cmdLine);
-	}
-
-	private boolean menuSwitch(String[] cmdLine) {
+	// TODO
+	// Create class Command and use it instead string
+	boolean commandSwitch(String... cmdLine) {
 		String cmdName = cmdLine[0].trim();
 
 		switch (cmdName) {
@@ -300,12 +272,6 @@ public class NodeCli implements Runnable {
 		StdoutUtil.printMessages("", "Good by blockchain!");
 	}
 
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-	private static final String TAB_SIGN = "\t";
-
-	private static final String MINER_WALLET_NAME = "_miner";
-
 	private static final String CMD_HELP = "help";
 
 	private static final String CMD_EXIT = "exit";
@@ -332,6 +298,8 @@ public class NodeCli implements Runnable {
 
 	private static final String CMD_PRINT_BC = "bc";
 
+	// TODO
+	// split in another class
 	private static class HelpCommand {
 
 		private static Map<String, String> cmdHelp = new LinkedHashMap<>();
@@ -367,11 +335,11 @@ public class NodeCli implements Runnable {
 			StdoutUtil.printMessages("jLocalCooin - blockchain implementation in Java.");
 
 			cmdHelp.forEach((cmdName, helpDesc) -> {
-				StdoutUtil.printMessages(cmdName + TAB_SIGN + " - " + helpDesc);
+				StdoutUtil.printMessages(cmdName + GlobalConstants.TAB_SIGN + " - " + helpDesc);
 				if (cmdHelpExample.containsKey(cmdName)) {
 					StdoutUtil.printMessages(cmdHelpExample.get(cmdName));
 				}
-				StdoutUtil.printMessages(LINE_SEPARATOR);
+				StdoutUtil.printMessages(GlobalConstants.LINE_SEPARATOR);
 			});
 		}
 	}

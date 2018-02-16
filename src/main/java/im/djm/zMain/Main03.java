@@ -1,6 +1,6 @@
 package im.djm.zMain;
 
-import im.djm.node.NodeCli;
+import im.djm.node.NodeCliStdIn;
 
 /**
  * 
@@ -10,7 +10,7 @@ import im.djm.node.NodeCli;
 public class Main03 {
 
 	public static void main(String[] args) {
-		Thread nodeThread = new Thread(new NodeCli());
+		Thread nodeThread = new Thread(new NodeCliStdIn());
 		nodeThread.start();
 	}
 
