@@ -6,7 +6,7 @@ import im.djm.blockchain.block.nulls.NullData;
 import im.djm.blockchain.block.nulls.NullHash;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.DataHash;
-import im.djm.blockchain.hash.HashUtil;
+import im.djm.blockchain.hash.ByteArrayUtil;
 
 /**
  * @author djm.im
@@ -24,7 +24,7 @@ public class Block {
 
 		this.head = Miner.createHead(prevBlock, data);
 
-		this.hash = HashUtil.calculateBlockHash(this.getRawBlock());
+		this.hash = ByteArrayUtil.calculateBlockHash(this.getRawBlock());
 	}
 
 	/**
@@ -34,10 +34,10 @@ public class Block {
 		// TODO: 1510903985
 		this.data = nullData;
 
-		DataHash dataHash = HashUtil.calculateDataHash(data.getRawData());
+		DataHash dataHash = ByteArrayUtil.calculateDataHash(data.getRawData());
 		this.head = new Head(prevHash, 0, dataHash);
 
-		this.hash = HashUtil.calculateBlockHash(this.getRawBlock());
+		this.hash = ByteArrayUtil.calculateBlockHash(this.getRawBlock());
 	}
 
 	// Package visibility - package private constructor

@@ -1,4 +1,4 @@
-package im.djm.test.unit.blockchain.block;
+package im.djm.test.unit.blockchain.hash;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -8,6 +8,9 @@ import org.junit.Test;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.Hash;
 
+/**
+ * @author djm.im
+ */
 public class HashEqualsTest {
 
 	@Test

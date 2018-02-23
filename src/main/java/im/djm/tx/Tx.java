@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.common.primitives.Longs;
 
 import im.djm.blockchain.BlockUtil;
-import im.djm.blockchain.hash.HashUtil;
+import im.djm.blockchain.hash.ByteArrayUtil;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.blockchain.hash.TxSignature;
 import im.djm.exception.TxInputException;
@@ -55,8 +55,10 @@ public class Tx {
 		Output output = new Output(address, coinAmount);
 		this.outputs.add(output);
 
-		byte[] txRawHash = HashUtil.calculateRawHash(this.getRawDataForSignature());
-		this.txId = new TxHash(txRawHash);
+		// byte[] txRawHash =
+		// ByteArrayUtil.calculateRawHash(this.getRawDataForSignature());
+		// this.txId = new TxHash(txRawHash);
+		this.txId = ByteArrayUtil.calculateTxHash(this.getRawDataForSignature());
 	}
 
 	public boolean isCoinbase() {

@@ -23,6 +23,7 @@ public class BlockHash extends Hash {
 			}
 			counter += 8;
 		}
+
 		if (index < super.content.length) {
 			counter += countInByte(super.content[index]);
 		}

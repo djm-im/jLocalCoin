@@ -2,6 +2,8 @@ package im.djm.blockchain.hash;
 
 import java.util.Arrays;
 
+import im.djm.exception.NullHashException;
+
 /**
  * @author djm.im
  * 
@@ -17,6 +19,10 @@ public abstract class Hash extends ByteArray {
 	private int hashCode;
 
 	public Hash(byte[] bytes) {
+		if (bytes == null) {
+			throw new NullHashException("Hash cannot have null value.");
+		}
+
 		this.content = Arrays.copyOf(bytes, bytes.length);
 
 		this.hashCode = Arrays.hashCode(this.content);
@@ -52,16 +58,18 @@ public abstract class Hash extends ByteArray {
 				return true;
 			}
 			return false;
-		} else {
-			if (bytes == null) {
-				return false;
-			}
-			if (this.content.length != bytes.length) {
-				return false;
-			}
-
-			return Arrays.equals(this.content, bytes);
 		}
+
+		if (bytes == null) {
+			return false;
+		}
+
+		if (this.content.length != bytes.length) {
+			return false;
+		}
+
+		return Arrays.equals(this.content, bytes);
+
 	}
 
 	/**

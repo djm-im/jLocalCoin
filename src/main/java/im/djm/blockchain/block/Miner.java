@@ -8,7 +8,7 @@ import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.data.Validator;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.DataHash;
-import im.djm.blockchain.hash.HashUtil;
+import im.djm.blockchain.hash.ByteArrayUtil;
 
 /**
  * @author djm.im
@@ -27,12 +27,12 @@ public class Miner {
 
 		byte[] rawBlock = BlockUtil.concatenateArrays(head.getRawHead(), rawData);
 
-		BlockHash hash = HashUtil.calculateBlockHash(rawBlock);
+		BlockHash hash = ByteArrayUtil.calculateBlockHash(rawBlock);
 
 		while (!hashValidator.isValid(hash, rules)) {
 			head.incNonce();
 			rawBlock = BlockUtil.concatenateArrays(head.getRawHead(), rawData);
-			hash = HashUtil.calculateBlockHash(rawBlock);
+			hash = ByteArrayUtil.calculateBlockHash(rawBlock);
 		}
 
 		return Block.createBlock(head, data, hash);
@@ -42,7 +42,7 @@ public class Miner {
 		BlockHash prevHash = prevBlock.getBlockHash();
 
 		long length = prevBlock.getLength() + 1;
-		DataHash dataHash = HashUtil.calculateDataHash(data.getRawData());
+		DataHash dataHash = ByteArrayUtil.calculateDataHash(data.getRawData());
 
 		return new Head(prevHash, length, dataHash);
 	}
