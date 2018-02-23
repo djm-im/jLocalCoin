@@ -1,7 +1,7 @@
 /**
  * @author djm.im
  */
-package im.djm.test.block;
+package im.djm.test.unit.blockchain.block;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

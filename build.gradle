@@ -26,6 +26,11 @@ dependencies {
     testCompile 'org.assertj:assertj-core:3.9.0'
 }
 
+test {
+	dependsOn cleanTest
+	testLogging.showStandardStreams = true
+}
+
 jar {
 	manifest {
 		attributes "Main-Class": "$mainClassName"

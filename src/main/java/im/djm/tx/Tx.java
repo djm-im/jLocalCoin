@@ -158,6 +158,7 @@ public class Tx {
 		sb.append("\t\tInputs  : ").append(this.inputs).append("\n");
 		sb.append("\t\tOutputs : ").append(this.outputs).append("\n");
 		sb.append("\t\tSignarur: ").append(this.txSignature).append("\n");
+		sb.append("\t}\n");
 
 		return sb.toString();
 	}
