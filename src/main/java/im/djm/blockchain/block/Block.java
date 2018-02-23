@@ -40,24 +40,11 @@ public class Block {
 		this.hash = ByteArrayUtil.calculateBlockHash(this.getRawBlock());
 	}
 
-	// Package visibility - package private constructor
-	private Block(Head head, Data data, BlockHash hash) {
+	// package private constructor - Miner class call it
+	Block(Head head, Data data, BlockHash hash) {
 		this.head = head;
 		this.data = data;
 		this.hash = hash;
-	}
-
-	/**
-	 * 
-	 * @param head
-	 * @param data
-	 * @param hash
-	 * @return
-	 * 
-	 * 		Factory method.
-	 */
-	public static Block createBlock(Head head, Data data, BlockHash hash) {
-		return new Block(head, data, hash);
 	}
 
 	/**

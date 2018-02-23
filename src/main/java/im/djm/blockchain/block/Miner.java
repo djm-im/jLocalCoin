@@ -12,21 +12,16 @@ import im.djm.blockchain.hash.ByteArrayUtil;
 
 /**
  * @author djm.im
- *
  */
 public class Miner {
 
-	// TODO
-	// Replace Data with TxData
 	public static Block createNewBlock(Block prevBlock, Data data, Validator<BlockHash> hashValidator,
 			List<Predicate<BlockHash>> rules) {
 
 		Head head = createHead(prevBlock, data);
 
 		byte[] rawData = data.getRawData();
-
 		byte[] rawBlock = BlockUtil.concatenateArrays(head.getRawHead(), rawData);
-
 		BlockHash hash = ByteArrayUtil.calculateBlockHash(rawBlock);
 
 		while (!hashValidator.isValid(hash, rules)) {
@@ -35,7 +30,12 @@ public class Miner {
 			hash = ByteArrayUtil.calculateBlockHash(rawBlock);
 		}
 
-		return Block.createBlock(head, data, hash);
+		return Miner.createBlock(head, data, hash);
+	}
+
+	// Factory method.
+	private static Block createBlock(Head head, Data data, BlockHash hash) {
+		return new Block(head, data, hash);
 	}
 
 	static Head createHead(Block prevBlock, Data data) {
