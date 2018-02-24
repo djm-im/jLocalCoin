@@ -17,6 +17,9 @@
 * `./gradlew clean build`
 * `java -jar build/libs/jLocalCoin-0.2.jar`
 
+Or download the last [build](https://gitlab.com/djm.im/jLocalCoin/pipelines).
+* Unzip the build
+* `java -jar build/libs/jLocalCoin-0.2.jar`
 
 ### jLocalCoin commands 
 
