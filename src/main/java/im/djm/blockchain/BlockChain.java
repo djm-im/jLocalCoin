@@ -48,10 +48,10 @@ public class BlockChain {
 
 	private WalletAddress minerAddress;
 
-	private static Validator<BlockHash> hashValidator = new Validator<BlockHash>() {
+	public static Validator<BlockHash> hashValidator = new Validator<BlockHash>() {
 	};
 
-	private static List<Predicate<BlockHash>> hashValidationRules = new ArrayList<>();
+	public static List<Predicate<BlockHash>> hashValidationRules = new ArrayList<>();
 	static {
 		hashValidationRules.add(hash -> hash != null);
 		hashValidationRules.add(hash -> hash.getBinaryLeadingZeros() >= 16);
@@ -196,7 +196,7 @@ public class BlockChain {
 	@Deprecated
 	private Block generateNewBlock(Data data) {
 		Block prevBlock = this.getTopBlock();
-		Block block = Miner.createNewBlock(prevBlock, data, BlockChain.hashValidator, BlockChain.hashValidationRules);
+		Block block = Miner.createNewBlock(prevBlock, data);
 
 		return block;
 	}
@@ -217,7 +217,7 @@ public class BlockChain {
 
 		Block prevBlock = this.getTopBlock();
 
-		return Miner.createNewBlock(prevBlock, txData, BlockChain.hashValidator, BlockChain.hashValidationRules);
+		return Miner.createNewBlock(prevBlock, txData);
 	}
 
 	private TxData addCoinbaseTx(TxData txData) {
