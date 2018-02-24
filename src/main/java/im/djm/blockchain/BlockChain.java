@@ -28,6 +28,8 @@ import im.djm.wallet.WalletAddress;
  */
 public class BlockChain {
 
+	private static final int DIFFICULTY = 16;
+
 	private static final int REWARD = 100;
 
 	private Map<BlockHash, BlockWrapper> blocks = new HashMap<>();
@@ -60,7 +62,7 @@ public class BlockChain {
 	public static List<Predicate<BlockHash>> blockHashValidationRules = new ArrayList<>();
 	static {
 		blockHashValidationRules.add(blockHash -> blockHash != null);
-		blockHashValidationRules.add(blockHash -> blockHash.getBinaryLeadingZeros() >= 16);
+		blockHashValidationRules.add(blockHash -> blockHash.getBinaryLeadingZeros() >= DIFFICULTY);
 	}
 
 	private void initBlockValidationRules() {
