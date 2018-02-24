@@ -148,27 +148,32 @@ public class BlockChain {
 	 */
 	public boolean add(Block block) {
 		if (BlockChain.blockValidator.isValid(block, this.blockValidationRules)) {
-			BlockHash prevBlockHash = block.getPrevBlockHash();
-			BlockWrapper prevBlockWrapper = this.blocks.get(prevBlockHash);
-			if (prevBlockWrapper == null) {
-				// TODO
-				// throw an exception
-				return false;
-			}
-
-			this.wrapAndAddBlock(block, prevBlockWrapper);
-
-			return true;
+			return addValidBlock(block);
 		}
 
 		return false;
 	}
 
-	private void wrapAndAddBlock(Block block, BlockWrapper prevBlockWrapper) {
+	private boolean addValidBlock(Block block) {
+		BlockWrapper prevBlockWrapper = this.blocks.get(block.getPrevBlockHash());
+
+		if (prevBlockWrapper == null) {
+			// TODO
+			// throw an exception
+			return false;
+		}
+
+		return this.wrapAndAddBlock(block, prevBlockWrapper);
+	}
+
+	private boolean wrapAndAddBlock(Block block, BlockWrapper prevBlockWrapper) {
 		BlockHash mapKey = block.getBlockHash();
 		BlockWrapper blockWrapper = new BlockWrapper(block, prevBlockWrapper);
+
 		this.blocks.put(mapKey, blockWrapper);
 		this.topBlockWrapper = blockWrapper;
+
+		return true;
 	}
 
 	/**
