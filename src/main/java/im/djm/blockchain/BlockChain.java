@@ -95,19 +95,6 @@ public class BlockChain {
 
 	}
 
-	// TODO
-	// constructor should be private
-	@Deprecated
-	public BlockChain() {
-		this.initBlockValidationRules();
-
-		this.utxoPool = new UtxoPool();
-		this.txPool = new TxPool();
-
-		this.initNullBlock();
-		this.initNullTxBlock();
-	}
-
 	public BlockChain(WalletAddress walletAddress) {
 		this.initBlockValidationRules();
 
@@ -118,6 +105,15 @@ public class BlockChain {
 
 		this.initNullBlock();
 		this.initNullTxBlock();
+	}
+
+	// TODO
+	// constructor should be private
+	@Deprecated
+	public BlockChain() {
+		this.initBlockValidationRules();
+
+		this.initNullBlock();
 	}
 
 	// the null block has to be the same for in all nodes
@@ -152,7 +148,6 @@ public class BlockChain {
 	 */
 	public boolean add(Block block) {
 		if (BlockChain.blockValidator.isValid(block, this.blockValidationRules)) {
-
 			BlockHash prevBlockHash = block.getPrevBlockHash();
 			BlockWrapper prevBlockWrapper = this.blocks.get(prevBlockHash);
 			if (prevBlockWrapper == null) {

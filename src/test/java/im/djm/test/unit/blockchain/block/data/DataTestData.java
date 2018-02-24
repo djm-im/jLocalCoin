@@ -1,34 +1,32 @@
-package im.djm.zMain;
+package im.djm.test.unit.blockchain.block.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
+
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.block.data.Data;
 
-/**
- * @author djm.im
- *
- */
-public class Main01 {
-	private static class TestData implements Data {
-		private String txtData;
+class TestData implements Data {
+	private String txtData;
 
-		public TestData(String txtData) {
-			this.txtData = txtData;
-		}
-
-		@Override
-		public String toString() {
-			return this.txtData;
-		}
-
-		@Override
-		public byte[] getRawData() {
-			return txtData.getBytes();
-		}
-
+	public TestData(String txtData) {
+		this.txtData = txtData;
 	}
+
+	@Override
+	public String toString() {
+		return this.txtData;
+	}
+
+	@Override
+	public byte[] getRawData() {
+		return txtData.getBytes();
+	}
+}
+
+public class DataTestData {
 
 	private static List<Data> data = new ArrayList<>();
 	static {
@@ -42,18 +40,14 @@ public class Main01 {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void main(String[] args) {
-
-		// create block chain
+	@Test
+	public void test01() {
 		BlockChain blockChain = new BlockChain();
 
-		// add a few blocks
-		for (Data aData : data) {
+		for (Data aData : DataTestData.data) {
 			blockChain.add(aData);
 		}
 
-		// print content
 		System.out.println(blockChain);
-
 	}
 }
