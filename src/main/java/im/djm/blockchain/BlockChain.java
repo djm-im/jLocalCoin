@@ -28,9 +28,17 @@ import im.djm.wallet.WalletAddress;
  */
 public class BlockChain {
 
+	private static final int REWARD = 100;
+
 	private Map<BlockHash, BlockWrapper> blocks = new HashMap<>();
 
 	private BlockWrapper topBlockWrapper;
+
+	private UtxoPool utxoPool;
+
+	private TxPool txPool;
+
+	private WalletAddress minerAddress;
 
 	private static Validator<Data> dataValidator = new Validator<Data>() {
 	};
@@ -46,15 +54,13 @@ public class BlockChain {
 
 	private List<Predicate<Block>> blockValidationRules = new ArrayList<>();
 
-	private WalletAddress minerAddress;
-
-	public static Validator<BlockHash> hashValidator = new Validator<BlockHash>() {
+	public static Validator<BlockHash> blockHashValidator = new Validator<BlockHash>() {
 	};
 
-	public static List<Predicate<BlockHash>> hashValidationRules = new ArrayList<>();
+	public static List<Predicate<BlockHash>> blockHashValidationRules = new ArrayList<>();
 	static {
-		hashValidationRules.add(hash -> hash != null);
-		hashValidationRules.add(hash -> hash.getBinaryLeadingZeros() >= 16);
+		blockHashValidationRules.add(blockHash -> blockHash != null);
+		blockHashValidationRules.add(blockHash -> blockHash.getBinaryLeadingZeros() >= 16);
 	}
 
 	private void initBlockValidationRules() {
@@ -86,12 +92,6 @@ public class BlockChain {
 		});
 
 	}
-
-	private static final int REWARD = 100;
-
-	private UtxoPool utxoPool;
-
-	private TxPool txPool;
 
 	// TODO
 	// constructor should be private

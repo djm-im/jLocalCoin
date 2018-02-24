@@ -34,8 +34,8 @@ public class Miner {
 	}
 
 	private static BlockHash findNonce(Head head) {
-		Validator<BlockHash> hashValidator = BlockChain.hashValidator;
-		List<Predicate<BlockHash>> hashValidationRules = BlockChain.hashValidationRules;
+		Validator<BlockHash> hashValidator = BlockChain.blockHashValidator;
+		List<Predicate<BlockHash>> hashValidationRules = BlockChain.blockHashValidationRules;
 
 		BlockHash blockHash = calcBlockHash(head);
 		while (!hashValidator.isValid(blockHash, hashValidationRules)) {
