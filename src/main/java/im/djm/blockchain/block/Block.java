@@ -5,8 +5,10 @@ import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.nulls.NullData;
 import im.djm.blockchain.block.nulls.NullHash;
 import im.djm.blockchain.hash.BlockHash;
-import im.djm.blockchain.hash.DataHash;
 import im.djm.blockchain.hash.ByteArrayUtil;
+import im.djm.blockchain.hash.DataHash;
+import im.djm.exception.NullBlockException;
+import im.djm.exception.NullDataException;
 
 /**
  * @author djm.im
@@ -20,11 +22,24 @@ public class Block {
 	private final BlockHash hash;
 
 	public Block(final Block prevBlock, final Data data) {
+		this.validate(prevBlock, data);
+
 		this.data = data;
 
 		this.head = Miner.createHead(prevBlock, data);
 
 		this.hash = ByteArrayUtil.calculateBlockHash(this.getRawBlock());
+	}
+
+	private void validate(Block prevBlock, Data data) {
+		if (prevBlock == null) {
+			throw new NullBlockException("Previous block cannot have null value.");
+		}
+
+		if (data == null) {
+			throw new NullDataException("Data cannot be null.");
+		}
+
 	}
 
 	/**
