@@ -23,7 +23,6 @@ public class Main02 {
 
 		BlockChain blockChain = new BlockChain(minerWallet.getWalletAddress());
 		minerWallet.setBlockchain(blockChain);
-		blockChain.setMiner(minerWallet.getWalletAddress());
 
 		Wallet w1 = new Wallet(blockChain);
 		Wallet w2 = new Wallet(blockChain);

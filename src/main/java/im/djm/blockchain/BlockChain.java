@@ -135,12 +135,6 @@ public class BlockChain {
 		this.add(txBlock);
 	}
 
-	// TODO
-	// think about relation between Blockchain and Miner's wallet
-	public void setMiner(WalletAddress walletAddress) {
-		this.minerAddress = walletAddress;
-	}
-
 	// End: constructor area
 	// **************************************************************************************
 
