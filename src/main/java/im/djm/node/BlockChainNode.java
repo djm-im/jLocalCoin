@@ -23,18 +23,16 @@ class BlockChainNode {
 
 	private BlockChain blockchain;
 
-	private Wallet minerWallet;
-
 	private Map<String, Wallet> wallets = new HashMap<>();
 
 	private static final String MINER_WALLET_NAME = "_miner";
 
 	public BlockChainNode() {
-		this.minerWallet = new Wallet(null);
+		Wallet minerWallet = new Wallet(null);
 		this.blockchain = new BlockChain(minerWallet.getWalletAddress());
-		this.minerWallet.setBlockchain(this.blockchain);
+		minerWallet.setBlockchain(this.blockchain);
 
-		this.wallets.put(MINER_WALLET_NAME, this.minerWallet);
+		this.wallets.put(MINER_WALLET_NAME, minerWallet);
 	}
 
 	public String status() {
