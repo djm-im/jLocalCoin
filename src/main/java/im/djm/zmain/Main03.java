@@ -1,4 +1,4 @@
-package im.djm.zMain;
+package im.djm.zmain;
 
 import im.djm.node.NodeCliStdIn;
 

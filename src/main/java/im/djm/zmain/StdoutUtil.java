@@ -1,4 +1,4 @@
-package im.djm.zMain;
+package im.djm.zmain;
 
 /**
  *

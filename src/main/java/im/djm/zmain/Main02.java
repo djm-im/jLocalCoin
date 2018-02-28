@@ -1,6 +1,6 @@
-package im.djm.zMain;
+package im.djm.zmain;
 
-import static im.djm.zMain.StdoutUtil.printlnParagraph;
+import static im.djm.zmain.StdoutUtil.printlnParagraph;
 
 import java.util.ArrayList;
 import java.util.List;
