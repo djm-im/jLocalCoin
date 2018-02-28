@@ -54,11 +54,11 @@ public abstract class Hash extends ByteArray {
 
 		byte[] bytes = other.content;
 		if (this.content == null) {
-			if (bytes == null) {
-				return true;
-			}
-			return false;
+			// if (bytes == null) true else false
+			return bytes == null;
 		}
+
+		// ELSE: content is not null
 
 		if (bytes == null) {
 			return false;
@@ -69,7 +69,6 @@ public abstract class Hash extends ByteArray {
 		}
 
 		return Arrays.equals(this.content, bytes);
-
 	}
 
 	/**
