@@ -14,6 +14,7 @@ import im.djm.blockchain.block.nulls.NullBlock;
 import im.djm.blockchain.block.nulls.NullTxData;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.TxHash;
+import im.djm.exception.NullWalletAddressException;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
@@ -96,6 +97,10 @@ public class BlockChain {
 	}
 
 	public BlockChain(WalletAddress walletAddress) {
+		if (walletAddress == null) {
+			throw new NullWalletAddressException("Wallet address cannot be null.");
+		}
+
 		this.initBlockValidationRules();
 
 		this.minerAddress = walletAddress;
