@@ -1,9 +1,10 @@
 package im.djm.node;
 
+import static im.djm.zmain.StdoutUtil.printMessages;
+
 import java.util.Scanner;
 
 import im.djm.exception.TxException;
-import im.djm.zmain.StdoutUtil;
 
 /**
  * @author djm.im
@@ -19,12 +20,12 @@ public class NodeCliStdIn implements Runnable {
 
 		while (isRunning) {
 			try {
-				StdoutUtil.printMessages("[BC length: " + bcn.status() + "].$ ");
+				printMessages("[BC length: " + bcn.status() + "].$ ");
 				isRunning = this.menuReadStdin(stdin);
 			} catch (TxException txEx) {
-				StdoutUtil.printMessages("Error: " + txEx.getMessage());
+				printMessages("Error: " + txEx.getMessage());
 			}
-			StdoutUtil.printMessages(GlobalConstants.LINE_SEPARATOR);
+			printMessages(GlobalConstants.LINE_SEPARATOR);
 		}
 		stdin.close();
 	}
@@ -32,7 +33,7 @@ public class NodeCliStdIn implements Runnable {
 	private boolean menuReadStdin(Scanner input) {
 		String inLine = input.nextLine();
 		if (inLine.trim().length() < 4) {
-			StdoutUtil.printMessages("Invalid input");
+			printMessages("Invalid input");
 
 			// Continue with execution of the thread
 			return true;

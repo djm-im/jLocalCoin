@@ -1,5 +1,7 @@
 package im.djm.node;
 
+import static im.djm.zmain.StdoutUtil.printMessages;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,7 +15,6 @@ import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;
-import im.djm.zmain.StdoutUtil;
 
 /**
  * @author djm
@@ -87,14 +88,14 @@ class BlockChainNode {
 			return true;
 
 		default:
-			StdoutUtil.printMessages("Unknow command.", "Type help.");
+			printMessages("Unknow command.", "Type help.");
 			return true;
 		}
 	}
 
 	private void printCmd(String[] cmdLine) {
 		if (cmdLine.length == 1) {
-			StdoutUtil.printMessages("BlockChain length: " + blockchain.status() + ".");
+			printMessages("BlockChain length: " + blockchain.status() + ".");
 			return;
 		}
 
@@ -112,39 +113,39 @@ class BlockChainNode {
 			return;
 
 		default:
-			StdoutUtil.printMessages("Unknow command.", "Type help.");
+			printMessages("Unknow command.", "Type help.");
 			return;
 		}
 	}
 
 	private void printBlock(String[] cmdLine) {
 		if (cmdLine.length != 3) {
-			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_PRINT));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_PRINT));
 		}
 
-		StdoutUtil.printMessages("This command is not implemented yet.");
+		printMessages("This command is not implemented yet.");
 	}
 
 	private void printUtxo() {
 		List<Utxo> allUtxo = this.blockchain.getAllUtxo();
 		for (Utxo utxo : allUtxo) {
-			StdoutUtil.printMessages(utxo.toString());
+			printMessages(utxo.toString());
 		}
 	}
 
 	private void printBlockchain() {
-		StdoutUtil.printMessages(this.blockchain.toString());
+		printMessages(this.blockchain.toString());
 	}
 
 	private void sendMultiCoins(String[] cmdLine) {
 		if (cmdLine.length < 4 || cmdLine.length % 2 != 0) {
-			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MSEND));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MSEND));
 			return;
 		}
 
 		String senderWalletName = cmdLine[1].trim();
 		if (!this.wallets.containsKey(senderWalletName)) {
-			StdoutUtil.printMessages("Wallet " + senderWalletName + " not exists in collection.");
+			printMessages("Wallet " + senderWalletName + " not exists in collection.");
 			return;
 		}
 
@@ -154,7 +155,7 @@ class BlockChainNode {
 			if (!this.wallets.containsKey(walletReceiverName)) {
 				// TODO
 				// throw an exception
-				StdoutUtil.printMessages("Wallet " + senderWalletName + " not exists in collection.");
+				printMessages("Wallet " + senderWalletName + " not exists in collection.");
 				return;
 			}
 
@@ -172,19 +173,19 @@ class BlockChainNode {
 
 	private void sendCoin(String[] cmdLine) {
 		if (cmdLine.length != 4) {
-			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_SEND));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_SEND));
 			return;
 		}
 
 		String wallet1Name = cmdLine[1].trim();
 		if (!this.wallets.containsKey(wallet1Name)) {
-			StdoutUtil.printMessages("Wallet " + wallet1Name + " not exists in collection.");
+			printMessages("Wallet " + wallet1Name + " not exists in collection.");
 			return;
 		}
 
 		String wallet2Name = cmdLine[2].trim();
 		if (!this.wallets.containsKey(wallet2Name)) {
-			StdoutUtil.printMessages("Wallet " + wallet2Name + " does not exist in collection of wallets.");
+			printMessages("Wallet " + wallet2Name + " does not exist in collection of wallets.");
 			return;
 		}
 
@@ -199,7 +200,7 @@ class BlockChainNode {
 
 	private void deleteWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
 			return;
 		}
 
@@ -210,24 +211,24 @@ class BlockChainNode {
 
 	private void walletStatus(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WSTAT));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WSTAT));
 			return;
 		}
 
 		String walletName = cmdLine[1].trim();
 		if (!this.wallets.containsKey(walletName)) {
-			StdoutUtil.printMessages("Wallet with name " + walletName + " doesn't exist in collection.");
+			printMessages("Wallet with name " + walletName + " doesn't exist in collection.");
 			return;
 		}
 
 		Wallet wallet = this.wallets.get(walletName);
 
-		StdoutUtil.printMessages(this.getWalletStatus(walletName, wallet));
+		printMessages(this.getWalletStatus(walletName, wallet));
 	}
 
 	private void listAllWallets() {
 		this.wallets.forEach((walletName, wallet) -> {
-			StdoutUtil.printMessages(this.getWalletStatus(walletName, wallet));
+			printMessages(this.getWalletStatus(walletName, wallet));
 		});
 	}
 
@@ -237,7 +238,7 @@ class BlockChainNode {
 
 	private void createMultiNewWallets(String[] cmdLine) {
 		if (cmdLine.length < 2) {
-			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MWNEW));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MWNEW));
 			return;
 		}
 
@@ -248,7 +249,7 @@ class BlockChainNode {
 
 	private void createNewWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			StdoutUtil.printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
 			return;
 		}
 
@@ -257,7 +258,7 @@ class BlockChainNode {
 
 	private Wallet creatWalletWithName(String walletName) {
 		if (this.wallets.containsKey(walletName)) {
-			StdoutUtil.printMessages("Wallet with name " + walletName + " already exists.");
+			printMessages("Wallet with name " + walletName + " already exists.");
 		}
 
 		Wallet newWallet = new Wallet(this.blockchain);
@@ -269,7 +270,7 @@ class BlockChainNode {
 	private void exit() {
 		// TODO
 		// Save blockchain in file
-		StdoutUtil.printMessages("", "Good by blockchain!");
+		printMessages("", "Good by blockchain!");
 	}
 
 	private static final String CMD_HELP = "help";
@@ -332,14 +333,14 @@ class BlockChainNode {
 		}
 
 		private static void printHelp() {
-			StdoutUtil.printMessages("jLocalCooin - blockchain implementation in Java.");
+			printMessages("jLocalCooin - blockchain implementation in Java.");
 
 			cmdHelp.forEach((cmdName, helpDesc) -> {
-				StdoutUtil.printMessages(cmdName + GlobalConstants.TAB_SIGN + " - " + helpDesc);
+				printMessages(cmdName + GlobalConstants.TAB_SIGN + " - " + helpDesc);
 				if (cmdHelpExample.containsKey(cmdName)) {
-					StdoutUtil.printMessages(cmdHelpExample.get(cmdName));
+					printMessages(cmdHelpExample.get(cmdName));
 				}
-				StdoutUtil.printMessages(GlobalConstants.LINE_SEPARATOR);
+				printMessages(GlobalConstants.LINE_SEPARATOR);
 			});
 		}
 	}
