@@ -14,8 +14,8 @@ public final class ByteArrayUtil {
 		throw new IllegalStateException("It is not allowed to call private constructor.");
 	}
 
-	public static DataHash calculateDataHash(byte[] rawBlock) {
-		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawBlock);
+	public static DataHash calculateDataHash(byte[] rawData) {
+		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawData);
 
 		return new DataHash(hashBytes);
 	}
@@ -26,26 +26,24 @@ public final class ByteArrayUtil {
 		return new BlockHash(hashBytes);
 	}
 
-	public static AddressHash calculateAddressHash(byte[] rawBlock) {
-		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawBlock);
+	public static AddressHash calculateAddressHash(byte[] rawAddress) {
+		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawAddress);
 
 		return new AddressHash(hashBytes);
 	}
 
-	public static TxHash calculateTxHash(byte[] rawBlock) {
-		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawBlock);
+	public static TxHash calculateTxHash(byte[] rawTx) {
+		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawTx);
 
 		return new TxHash(hashBytes);
 	}
 
-	private static byte[] calculateRawHash(byte[] rawBlock) {
-		MessageDigest md;
+	private static byte[] calculateRawHash(byte[] rawBytes) {
 		try {
-			md = MessageDigest.getInstance("SHA-256");
-			md.update(rawBlock);
-			byte[] digest = md.digest();
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			md.update(rawBytes);
 
-			return digest;
+			return md.digest();
 		} catch (NoSuchAlgorithmException ex) {
 			throw new WrapperException(".calculateRawHash", ex);
 		}
