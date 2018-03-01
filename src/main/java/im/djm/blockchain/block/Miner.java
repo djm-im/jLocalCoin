@@ -37,18 +37,19 @@ public class Miner {
 		Validator<BlockHash> hashValidator = BlockChain.blockHashValidator;
 		List<Predicate<BlockHash>> hashValidationRules = BlockChain.blockHashValidationRules;
 
-		BlockHash blockHash = calcBlockHashFromHead(head);
+		BlockHash blockHash = Miner.calcBlockHashForHead(head);
 		while (!hashValidator.isValid(blockHash, hashValidationRules)) {
 			head.incNonce();
-			blockHash = calcBlockHashFromHead(head);
+			blockHash = Miner.calcBlockHashForHead(head);
 		}
 
 		return blockHash;
 	}
 
-	private static BlockHash calcBlockHashFromHead(Head head) {
+	public static BlockHash calcBlockHashForHead(Head head) {
 		byte[] rawHead = head.getRawHead();
-		BlockHash blockHash = ByteArrayUtil.calculateBlockHash(rawHead);
+		BlockHash blockHash = ByteArrayUtil.calculateBlockHashForHead(rawHead);
+
 		return blockHash;
 	}
 

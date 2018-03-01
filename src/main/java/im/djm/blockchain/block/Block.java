@@ -1,9 +1,8 @@
 package im.djm.blockchain.block;
 
-import im.djm.blockchain.BlockUtil;
 import im.djm.blockchain.block.data.Data;
-import im.djm.blockchain.block.nulls.NullData;
 import im.djm.blockchain.block.nulls.NullBlockHash;
+import im.djm.blockchain.block.nulls.NullData;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.ByteArrayUtil;
 import im.djm.blockchain.hash.DataHash;
@@ -28,7 +27,7 @@ public class Block {
 
 		this.head = Miner.createHead(prevBlock, data);
 
-		this.hash = ByteArrayUtil.calculateBlockHash(this.getRawBlock());
+		this.hash = Miner.calcBlockHashForHead(this.head);
 	}
 
 	private void validate(Block prevBlock, Data data) {
@@ -52,7 +51,7 @@ public class Block {
 		DataHash dataHash = ByteArrayUtil.calculateDataHash(data.getRawData());
 		this.head = new Head(prevHash, 0, dataHash);
 
-		this.hash = ByteArrayUtil.calculateBlockHash(this.getRawBlock());
+		this.hash = Miner.calcBlockHashForHead(this.head);
 	}
 
 	// package private constructor - Miner class call it
@@ -78,13 +77,6 @@ public class Block {
 	 */
 	public BlockHash getPrevBlockHash() {
 		return this.head.getPrevHash();
-	}
-
-	private byte[] getRawBlock() {
-		byte[] rawHead = this.head.getRawHead();
-		byte[] rawData = this.data.getRawData();
-
-		return BlockUtil.concatenateArrays(rawHead, rawData);
 	}
 
 	public long getLength() {

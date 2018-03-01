@@ -20,8 +20,8 @@ public final class ByteArrayUtil {
 		return new DataHash(hashBytes);
 	}
 
-	public static BlockHash calculateBlockHash(byte[] rawBlock) {
-		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawBlock);
+	public static BlockHash calculateBlockHashForHead(byte[] rawHead) {
+		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawHead);
 
 		return new BlockHash(hashBytes);
 	}
