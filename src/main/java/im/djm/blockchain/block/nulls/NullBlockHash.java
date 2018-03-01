@@ -3,13 +3,11 @@ package im.djm.blockchain.block.nulls;
 import im.djm.blockchain.hash.BlockHash;
 
 /**
- * 
  * @author djm.im
- *
  */
-public final class NullHash extends BlockHash {
+public final class NullBlockHash extends BlockHash {
 
-	public NullHash() {
+	public NullBlockHash() {
 		super(new byte[32]);
 	}
 

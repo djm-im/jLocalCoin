@@ -18,7 +18,7 @@ public final class NullBlock extends Block {
 	public NullBlock() {
 		// TODO
 		// 1510903985
-		super(new NullData(), new NullHash());
+		super(new NullData(), new NullBlockHash());
 	}
 
 }

@@ -3,7 +3,7 @@ package im.djm.blockchain.block;
 import im.djm.blockchain.BlockUtil;
 import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.nulls.NullData;
-import im.djm.blockchain.block.nulls.NullHash;
+import im.djm.blockchain.block.nulls.NullBlockHash;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.ByteArrayUtil;
 import im.djm.blockchain.hash.DataHash;
@@ -45,7 +45,7 @@ public class Block {
 	/**
 	 * Special constructor to create the first block - genesis (null) block.
 	 */
-	protected Block(NullData nullData, NullHash prevHash) {
+	protected Block(NullData nullData, NullBlockHash prevHash) {
 		// TODO: 1510903985
 		this.data = nullData;
 
