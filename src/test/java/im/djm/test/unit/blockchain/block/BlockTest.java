@@ -12,6 +12,9 @@ import im.djm.blockchain.hash.BlockHash;
 import im.djm.exception.NullBlockException;
 import im.djm.exception.NullDataException;
 
+/**
+ * @author djm
+ */
 public class BlockTest {
 
 	@Test
