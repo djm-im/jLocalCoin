@@ -211,14 +211,14 @@ public class BlockChain {
 		this.add(block);
 	}
 
-	private Block generateNewTxBlock(TxData txData, List<Utxo> spentOutputs) {
-		txData = this.addCoinbaseTx(txData);
+	private Block generateNewTxBlock(final TxData txData, List<Utxo> spentOutputs) {
+		TxData txDataLocal = this.addCoinbaseTx(txData);
 
-		this.updateTxPoolAndUtxoPool(txData, spentOutputs);
+		this.updateTxPoolAndUtxoPool(txDataLocal, spentOutputs);
 
 		Block prevBlock = this.getTopBlock();
 
-		return Miner.createNewBlock(prevBlock, txData);
+		return Miner.createNewBlock(prevBlock, txDataLocal);
 	}
 
 	private TxData addCoinbaseTx(TxData txData) {
