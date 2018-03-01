@@ -26,7 +26,10 @@ class TestData implements Data {
 	}
 }
 
-public class DataTestData {
+/**
+ * @author djm.im
+ */
+public class TestDataTest {
 
 	private static List<Data> data = new ArrayList<>();
 	static {
@@ -41,13 +44,16 @@ public class DataTestData {
 
 	@SuppressWarnings("deprecation")
 	@Test
-	public void test01() {
+	public void dataInterfaceImplementation() {
 		BlockChain blockChain = new BlockChain();
 
-		for (Data aData : DataTestData.data) {
+		for (Data aData : TestDataTest.data) {
 			blockChain.add(aData);
 		}
 
+		System.err.println();
+		System.out.println("TestDataTest:");
+		System.out.println();
 		System.out.println(blockChain);
 	}
 }

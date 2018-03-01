@@ -6,10 +6,13 @@ import im.djm.blockchain.block.data.Data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * @author djm.im
+ */
 public class DataTest {
 
 	@Test
-	public void test_dataInterface() {
+	public void dataInterfaceTest() {
 		Data data = new Data() {
 		};
 
