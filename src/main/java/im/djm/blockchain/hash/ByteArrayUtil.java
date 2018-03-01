@@ -40,14 +40,21 @@ public final class ByteArrayUtil {
 
 	private static byte[] calculateRawHash(byte[] rawBytes) {
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			md.update(rawBytes);
+			String hashAlgorithm = "SHA-256";
 
-			return md.digest();
+			return hash(hashAlgorithm, rawBytes);
 		} catch (NoSuchAlgorithmException ex) {
 			throw new WrapperException(".calculateRawHash", ex);
 		}
 
+	}
+
+	private static byte[] hash(String hashAlgorithm, byte[] rawBytes) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance(hashAlgorithm);
+		md.update(rawBytes);
+		byte[] digest = md.digest();
+
+		return digest;
 	}
 
 }
