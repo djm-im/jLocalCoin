@@ -21,6 +21,34 @@ import im.djm.wallet.Wallet;
  */
 class BlockChainNode {
 
+	private static final String CMD_HELP = "help";
+
+	private static final String CMD_EXIT = "exit";
+
+	private static final String CMD_WNEW = "wnew";
+
+	private static final String CMD_MWNEW = "mwnew";
+
+	private static final String CMD_WSTAT = "wstat";
+
+	private static final String CMD_WDEL = "wdel";
+
+	private static final String CMD_WLIST = "wlist";
+
+	private static final String CMD_SEND = "send";
+
+	private static final String CMD_MSEND = "msend";
+
+	private static final String CMD_PRINT = "print";
+
+	private static final String CMD_PRINT_BLOCK = "block";
+
+	private static final String CMD_PRINT_UTXO = "utxo";
+
+	private static final String CMD_PRINT_BC = "bc";
+
+	// ----
+
 	private BlockChain blockchain;
 
 	private Map<String, Wallet> wallets = new HashMap<>();
@@ -41,7 +69,7 @@ class BlockChainNode {
 
 	// TODO
 	// Create class Command and use it instead string
-	boolean commandSwitch(String... cmdLine) {
+	public boolean commandSwitch(String... cmdLine) {
 		String cmdName = cmdLine[0].trim();
 
 		switch (cmdName) {
@@ -270,32 +298,6 @@ class BlockChainNode {
 		// Save blockchain in file
 		printMessages("", "Good by blockchain!");
 	}
-
-	private static final String CMD_HELP = "help";
-
-	private static final String CMD_EXIT = "exit";
-
-	private static final String CMD_WNEW = "wnew";
-
-	private static final String CMD_MWNEW = "mwnew";
-
-	private static final String CMD_WSTAT = "wstat";
-
-	private static final String CMD_WDEL = "wdel";
-
-	private static final String CMD_WLIST = "wlist";
-
-	private static final String CMD_SEND = "send";
-
-	private static final String CMD_MSEND = "msend";
-
-	private static final String CMD_PRINT = "print";
-
-	private static final String CMD_PRINT_BLOCK = "block";
-
-	private static final String CMD_PRINT_UTXO = "utxo";
-
-	private static final String CMD_PRINT_BC = "bc";
 
 	// TODO
 	// split in another class

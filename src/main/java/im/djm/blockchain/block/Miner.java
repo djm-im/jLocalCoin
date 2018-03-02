@@ -15,7 +15,7 @@ import im.djm.blockchain.hash.DataHash;
  */
 public class Miner {
 
-	static Head createHead(Block prevBlock, Data data) {
+	public static Head createHead(Block prevBlock, Data data) {
 		BlockHash prevHash = prevBlock.getBlockHash();
 		long length = prevBlock.getLength() + 1;
 
