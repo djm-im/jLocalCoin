@@ -20,9 +20,7 @@ import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
 
 /**
- * 
  * @author djm.im
- *
  */
 public class Wallet {
 
@@ -36,6 +34,7 @@ public class Wallet {
 		this.blockChain = blockChain;
 
 		KeyPair keyPair = createKeyPair();
+
 		this.walletAddress = new WalletAddress((RSAPublicKey) keyPair.getPublic());
 
 		this.privateKey = keyPair.getPrivate();
@@ -43,17 +42,21 @@ public class Wallet {
 
 	private KeyPair createKeyPair() {
 		try {
-			// TOOD
-			// Generalize this method
-			// "RSA" and 512 move to constants
-			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(512);
-			KeyPair keyPair = keyPairGenerator.generateKeyPair();
+			String keyPairAlgorithm = "RSA";
+			int keysize = 512;
 
-			return keyPair;
+			return createKeyPair(keyPairAlgorithm, keysize);
 		} catch (NoSuchAlgorithmException ex) {
 			throw new WrapperException("Tried to create a new wallet", ex);
 		}
+	}
+
+	private KeyPair createKeyPair(String keyPairAlgorithm, int keysize) throws NoSuchAlgorithmException {
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(keyPairAlgorithm);
+		keyPairGenerator.initialize(keysize);
+		KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+		return keyPair;
 	}
 
 	public void setBlockchain(BlockChain blockChain) {
@@ -156,21 +159,28 @@ public class Wallet {
 	private void signTx(Tx newTx) {
 		byte[] inputSign = newTx.getRawDataForSignature();
 		byte[] signature = txSignature(inputSign);
+
 		newTx.addSignature(signature);
 	}
 
-	// TODO
-	// Make this method static
 	private byte[] txSignature(byte[] rawDataToSign) {
 		try {
-			Signature signature = Signature.getInstance("SHA256withRSA");
-			signature.initSign(this.privateKey);
-			signature.update(rawDataToSign);
+			String signatureAlgorithm = "SHA256withRSA";
 
-			return signature.sign();
+			return sign(rawDataToSign, signatureAlgorithm);
 		} catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
 			throw new WrapperException("txSignature", ex);
 		}
+	}
+
+	private byte[] sign(byte[] rawDataToSign, String signatureAlgorithm)
+			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+
+		Signature signature = Signature.getInstance(signatureAlgorithm);
+		signature.initSign(this.privateKey);
+		signature.update(rawDataToSign);
+
+		return signature.sign();
 	}
 
 	/**

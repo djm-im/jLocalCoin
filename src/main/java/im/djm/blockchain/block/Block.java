@@ -4,7 +4,7 @@ import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.nulls.NullBlockHash;
 import im.djm.blockchain.block.nulls.NullData;
 import im.djm.blockchain.hash.BlockHash;
-import im.djm.blockchain.hash.ByteArrayUtil;
+import im.djm.blockchain.hash.HashUtil;
 import im.djm.blockchain.hash.DataHash;
 import im.djm.exception.NullBlockException;
 import im.djm.exception.NullDataException;
@@ -48,7 +48,7 @@ public class Block {
 		// TODO: 1510903985
 		this.data = nullData;
 
-		DataHash dataHash = ByteArrayUtil.calculateDataHash(data.getRawData());
+		DataHash dataHash = HashUtil.calculateDataHash(data.getRawData());
 		this.head = new Head(prevHash, 0, dataHash);
 
 		this.hash = Miner.calcBlockHashForHead(this.head);

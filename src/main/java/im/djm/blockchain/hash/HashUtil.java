@@ -8,32 +8,32 @@ import im.djm.exception.WrapperException;
 /**
  * @author djm.im
  */
-public final class ByteArrayUtil {
+public final class HashUtil {
 
-	private ByteArrayUtil() {
+	private HashUtil() {
 		throw new IllegalStateException("It is not allowed to call private constructor.");
 	}
 
 	public static DataHash calculateDataHash(byte[] rawData) {
-		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawData);
+		byte[] hashBytes = HashUtil.calculateRawHash(rawData);
 
 		return new DataHash(hashBytes);
 	}
 
 	public static BlockHash calculateBlockHashForHead(byte[] rawHead) {
-		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawHead);
+		byte[] hashBytes = HashUtil.calculateRawHash(rawHead);
 
 		return new BlockHash(hashBytes);
 	}
 
 	public static AddressHash calculateAddressHash(byte[] rawAddress) {
-		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawAddress);
+		byte[] hashBytes = HashUtil.calculateRawHash(rawAddress);
 
 		return new AddressHash(hashBytes);
 	}
 
 	public static TxHash calculateTxHash(byte[] rawTx) {
-		byte[] hashBytes = ByteArrayUtil.calculateRawHash(rawTx);
+		byte[] hashBytes = HashUtil.calculateRawHash(rawTx);
 
 		return new TxHash(hashBytes);
 	}
