@@ -8,10 +8,18 @@ import im.djm.blockchain.hash.HashUtil;
  */
 public final class NullValues {
 
-	public final static NullBlockHash NULL_BLOCK_HASH = new NullBlockHash();
+	public static final NullBlockHash NULL_BLOCK_HASH = new NullBlockHash();
 
-	public final static NullData NULL_DATA = new NullData();
+	public static final NullData NULL_DATA = new NullData();
 
-	public final static DataHash NULL_DATA_HASH = HashUtil.calculateDataHash(NULL_DATA.getRawData());
+	public static final DataHash NULL_DATA_HASH = HashUtil.calculateDataHash(NULL_DATA.getRawData());
+
+	public static final long NULL_TIMESTAMP = 1510903985;
+
+	public static final long NULL_LENGTH = 0;
+
+	public static final NullHead NULL_HEAD = new NullHead();
+
+	// public static final NullBlock NULL_BLOCK = new NullBlock();
 
 }

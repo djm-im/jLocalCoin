@@ -3,6 +3,7 @@ package im.djm.blockchain.block;
 import com.google.common.primitives.Longs;
 
 import im.djm.blockchain.BlockUtil;
+import im.djm.blockchain.block.nulls.NullBlockHash;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.DataHash;
 
@@ -10,7 +11,7 @@ import im.djm.blockchain.hash.DataHash;
  * @author djm.im
  */
 public class Head {
-	private final BlockHash prevHash;
+	private final BlockHash prevBlockHash;
 
 	private final long length;
 
@@ -25,16 +26,23 @@ public class Head {
 	public Head(BlockHash prevHash, long lenght, DataHash hashData) {
 		this.timestamp = System.currentTimeMillis() / 1000;
 
-		this.prevHash = prevHash;
+		this.prevBlockHash = prevHash;
 		this.length = lenght;
 
 		this.dataHash = hashData;
 	}
 
+	protected Head(NullBlockHash nullBlockHash, long length, long nullTimestamp, DataHash nullDataHash) {
+		this.prevBlockHash = nullBlockHash;
+		this.length = length;
+		this.timestamp = nullTimestamp;
+		this.dataHash = nullDataHash;
+	}
+
 	public byte[] getRawHead() {
 		byte[] rawPrevHash = new byte[32];
-		if (this.prevHash != null) {
-			rawPrevHash = this.prevHash.getRawHash();
+		if (this.prevBlockHash != null) {
+			rawPrevHash = this.prevBlockHash.getRawHash();
 		}
 
 		byte[] rawLength = Longs.toByteArray(this.length);
@@ -50,7 +58,7 @@ public class Head {
 	}
 
 	public BlockHash getPrevHash() {
-		return this.prevHash;
+		return this.prevBlockHash;
 	}
 
 	public long getLength() {
@@ -59,6 +67,10 @@ public class Head {
 
 	public void incNonce() {
 		this.nonce++;
+	}
+
+	public long getTimestamp() {
+		return this.timestamp;
 	}
 
 	public int getDifficulty() {
@@ -71,7 +83,7 @@ public class Head {
 		sb.append("{");
 		sb.append(System.lineSeparator());
 
-		sb.append("\tPrev: " + this.prevHash);
+		sb.append("\tPrev: " + this.prevBlockHash);
 		sb.append(System.lineSeparator());
 
 		sb.append("\tLength: " + this.length);

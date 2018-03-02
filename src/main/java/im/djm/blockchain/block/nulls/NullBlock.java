@@ -10,9 +10,7 @@ import im.djm.blockchain.block.Block;
 public final class NullBlock extends Block {
 
 	public NullBlock() {
-		// TODO
-		// 1510903985
-		super(NullValues.NULL_DATA, NullValues.NULL_BLOCK_HASH);
+		super(NullValues.NULL_HEAD, NullValues.NULL_DATA, NullValues.NULL_BLOCK_HASH);
 	}
 
 }

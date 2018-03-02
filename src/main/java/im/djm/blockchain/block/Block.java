@@ -3,9 +3,8 @@ package im.djm.blockchain.block;
 import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.nulls.NullBlockHash;
 import im.djm.blockchain.block.nulls.NullData;
+import im.djm.blockchain.block.nulls.NullHead;
 import im.djm.blockchain.hash.BlockHash;
-import im.djm.blockchain.hash.HashUtil;
-import im.djm.blockchain.hash.DataHash;
 import im.djm.exception.NullBlockException;
 import im.djm.exception.NullDataException;
 
@@ -44,12 +43,10 @@ public class Block {
 	/**
 	 * Special constructor to create the first block - genesis (null) block.
 	 */
-	protected Block(NullData nullData, NullBlockHash prevHash) {
-		// TODO: 1510903985
+	protected Block(NullHead nullHead, NullData nullData, NullBlockHash prevHash) {
 		this.data = nullData;
 
-		DataHash dataHash = HashUtil.calculateDataHash(data.getRawData());
-		this.head = new Head(prevHash, 0, dataHash);
+		this.head = nullHead;
 
 		this.hash = Miner.calcBlockHashForHead(this.head);
 	}
