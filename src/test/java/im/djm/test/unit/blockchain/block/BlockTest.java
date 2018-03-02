@@ -2,12 +2,13 @@ package im.djm.test.unit.blockchain.block;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.Test;
 
 import im.djm.blockchain.block.Block;
 import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.nulls.NullBlock;
-import im.djm.blockchain.block.nulls.NullData;
+import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.exception.NullBlockException;
 import im.djm.exception.NullDataException;
@@ -20,7 +21,7 @@ public class BlockTest {
 	@Test
 	public void nullBlockTest() {
 		assertThatThrownBy(() -> {
-			Data data = new NullData();
+			Data data = NullValues.NULL_DATA;
 			new Block(null, data);
 		}).isInstanceOf(NullBlockException.class).hasMessage("Previous block cannot have null value.");
 	}
@@ -36,7 +37,7 @@ public class BlockTest {
 	@Test
 	public void firstBlock() {
 		Block prevBlock = new NullBlock();
-		Data data = new NullData();
+		Data data = NullValues.NULL_DATA;
 		Block block = new Block(prevBlock, data);
 
 		assertThat(block).isNotNull();

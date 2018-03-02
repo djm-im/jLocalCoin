@@ -5,15 +5,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
 import im.djm.blockchain.block.nulls.NullData;
+import im.djm.blockchain.block.nulls.NullValues;
 
 /**
- * @author djm
+ * @author djm.im
  */
 public class NullDataTest {
 
 	@Test
 	public void nullDataTest() {
-		NullData nullData = new NullData();
+		NullData nullData = NullValues.NULL_DATA;
 
 		assertThat(nullData).isNotNull();
 

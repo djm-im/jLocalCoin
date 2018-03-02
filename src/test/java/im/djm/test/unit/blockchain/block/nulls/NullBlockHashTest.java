@@ -5,15 +5,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
 import im.djm.blockchain.block.nulls.NullBlockHash;
+import im.djm.blockchain.block.nulls.NullValues;
 
 /**
- * @author djm
+ * @author djm.im
  */
 public class NullBlockHashTest {
 
 	@Test
 	public void nullBlockHash() {
-		NullBlockHash nullBlockHash = new NullBlockHash();
+		NullBlockHash nullBlockHash = NullValues.NULL_BLOCK_HASH;
 
 		assertThat(nullBlockHash).isNotNull();
 
