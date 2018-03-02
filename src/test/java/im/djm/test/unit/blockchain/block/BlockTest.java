@@ -7,14 +7,13 @@ import org.junit.Test;
 
 import im.djm.blockchain.block.Block;
 import im.djm.blockchain.block.data.Data;
-import im.djm.blockchain.block.nulls.NullBlock;
 import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.exception.NullBlockException;
 import im.djm.exception.NullDataException;
 
 /**
- * @author djm
+ * @author djm.im
  */
 public class BlockTest {
 
@@ -29,14 +28,14 @@ public class BlockTest {
 	@Test
 	public void nullDataTest() {
 		assertThatThrownBy(() -> {
-			Block prevBlock = new NullBlock();
+			Block prevBlock = NullValues.NULL_BLOCK;
 			new Block(prevBlock, null);
 		}).isInstanceOf(NullDataException.class).hasMessage("Data cannot be null.");
 	}
 
 	@Test
 	public void firstBlock() {
-		Block prevBlock = new NullBlock();
+		Block prevBlock = NullValues.NULL_BLOCK;
 		Data data = NullValues.NULL_DATA;
 		Block block = new Block(prevBlock, data);
 

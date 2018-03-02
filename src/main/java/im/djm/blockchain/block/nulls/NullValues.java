@@ -20,6 +20,6 @@ public final class NullValues {
 
 	public static final NullHead NULL_HEAD = new NullHead();
 
-	// public static final NullBlock NULL_BLOCK = new NullBlock();
+	public static final NullBlock NULL_BLOCK = new NullBlock();
 
 }
