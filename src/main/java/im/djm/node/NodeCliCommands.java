@@ -4,67 +4,39 @@ import static im.djm.zmain.StdoutUtil.printMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
 
-import im.djm.blockchain.BlockChain;
 import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;
 
 /**
- * @author djm
+ * @author djm.im
  */
-class BlockChainNode {
-
-	private static final String CMD_HELP = "help";
-
-	private static final String CMD_EXIT = "exit";
-
-	private static final String CMD_WNEW = "wnew";
-
-	private static final String CMD_MWNEW = "mwnew";
-
-	private static final String CMD_WSTAT = "wstat";
-
-	private static final String CMD_WDEL = "wdel";
-
-	private static final String CMD_WLIST = "wlist";
-
-	private static final String CMD_SEND = "send";
-
-	private static final String CMD_MSEND = "msend";
-
-	private static final String CMD_PRINT = "print";
-
-	private static final String CMD_PRINT_BLOCK = "block";
-
-	private static final String CMD_PRINT_UTXO = "utxo";
-
-	private static final String CMD_PRINT_BC = "bc";
-
-	// ----
-
-	private BlockChain blockchain;
+class NodeCliCommands {
 
 	private Map<String, Wallet> wallets = new HashMap<>();
 
+	private BlockchainNode blockChainNode;
+
 	private static final String MINER_WALLET_NAME = "_miner";
 
-	public BlockChainNode() {
+	public NodeCliCommands() {
 		Wallet minerWallet = new Wallet(null);
-		this.blockchain = new BlockChain(minerWallet.getWalletAddress());
-		minerWallet.setBlockchain(this.blockchain);
+
+		this.blockChainNode = new BlockchainNode(minerWallet.getWalletAddress());
+
+		minerWallet.setBlockchain(this.blockChainNode.getBlockchain());
 
 		this.wallets.put(MINER_WALLET_NAME, minerWallet);
 	}
 
 	public String status() {
-		return this.blockchain.status();
+		return this.blockChainNode.status();
 	}
 
 	// TODO
@@ -73,43 +45,43 @@ class BlockChainNode {
 		String cmdName = cmdLine[0].trim();
 
 		switch (cmdName) {
-		case CMD_HELP:
+		case CmdConstants.CMD_HELP:
 			HelpCommand.printHelp();
 			return true;
 
-		case CMD_EXIT:
+		case CmdConstants.CMD_EXIT:
 			exit();
 			return false;
 
-		case CMD_SEND:
+		case CmdConstants.CMD_SEND:
 			sendCoin(cmdLine);
 			return true;
 
-		case CMD_MSEND:
+		case CmdConstants.CMD_MSEND:
 			sendMultiCoins(cmdLine);
 			return true;
 
-		case CMD_WNEW:
+		case CmdConstants.CMD_WNEW:
 			createNewWallet(cmdLine);
 			return true;
 
-		case CMD_MWNEW:
+		case CmdConstants.CMD_MWNEW:
 			createMultiNewWallets(cmdLine);
 			return true;
 
-		case CMD_WSTAT:
+		case CmdConstants.CMD_WSTAT:
 			walletStatus(cmdLine);
 			return true;
 
-		case CMD_WDEL:
+		case CmdConstants.CMD_WDEL:
 			deleteWallet(cmdLine);
 			return true;
 
-		case CMD_WLIST:
+		case CmdConstants.CMD_WLIST:
 			listAllWallets();
 			return true;
 
-		case CMD_PRINT:
+		case CmdConstants.CMD_PRINT:
 			printCmd(cmdLine);
 			return true;
 
@@ -121,20 +93,20 @@ class BlockChainNode {
 
 	private void printCmd(String[] cmdLine) {
 		if (cmdLine.length == 1) {
-			printMessages("BlockChain length: " + blockchain.status() + ".");
+			printMessages("BlockChain length: " + this.blockChainNode.status() + ".");
 			return;
 		}
 
 		switch (cmdLine[1]) {
-		case CMD_PRINT_BC:
+		case CmdConstants.CMD_PRINT_BC:
 			printBlockchain();
 			return;
 
-		case CMD_PRINT_UTXO:
+		case CmdConstants.CMD_PRINT_UTXO:
 			printUtxo();
 			return;
 
-		case CMD_PRINT_BLOCK:
+		case CmdConstants.CMD_PRINT_BLOCK:
 			printBlock(cmdLine);
 			return;
 
@@ -146,26 +118,26 @@ class BlockChainNode {
 
 	private void printBlock(String[] cmdLine) {
 		if (cmdLine.length != 3) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_PRINT));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_PRINT));
 		}
 
 		printMessages("This command is not implemented yet.");
 	}
 
 	private void printUtxo() {
-		List<Utxo> allUtxo = this.blockchain.getAllUtxo();
+		List<Utxo> allUtxo = this.blockChainNode.getAllUtxo();
 		for (Utxo utxo : allUtxo) {
 			printMessages(utxo.toString());
 		}
 	}
 
 	private void printBlockchain() {
-		printMessages(this.blockchain.toString());
+		printMessages(this.blockChainNode.printBlockChain());
 	}
 
 	private void sendMultiCoins(String[] cmdLine) {
 		if (cmdLine.length < 4 || cmdLine.length % 2 != 0) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MSEND));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_MSEND));
 			return;
 		}
 
@@ -199,7 +171,7 @@ class BlockChainNode {
 
 	private void sendCoin(String[] cmdLine) {
 		if (cmdLine.length != 4) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_SEND));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_SEND));
 			return;
 		}
 
@@ -226,7 +198,7 @@ class BlockChainNode {
 
 	private void deleteWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WNEW));
 			return;
 		}
 
@@ -237,7 +209,7 @@ class BlockChainNode {
 
 	private void walletStatus(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WSTAT));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WSTAT));
 			return;
 		}
 
@@ -264,7 +236,7 @@ class BlockChainNode {
 
 	private void createMultiNewWallets(String[] cmdLine) {
 		if (cmdLine.length < 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_MWNEW));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_MWNEW));
 			return;
 		}
 
@@ -275,7 +247,7 @@ class BlockChainNode {
 
 	private void createNewWallet(String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CMD_WNEW));
+			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WNEW));
 			return;
 		}
 
@@ -287,7 +259,7 @@ class BlockChainNode {
 			printMessages("Wallet with name " + walletName + " already exists.");
 		}
 
-		Wallet newWallet = new Wallet(this.blockchain);
+		Wallet newWallet = new Wallet(this.blockChainNode.getBlockchain());
 		this.wallets.put(walletName, newWallet);
 
 		return newWallet;
@@ -297,52 +269,6 @@ class BlockChainNode {
 		// TODO
 		// Save blockchain in file
 		printMessages("", "Good by blockchain!");
-	}
-
-	// TODO
-	// split in another class
-	private static class HelpCommand {
-
-		private static Map<String, String> cmdHelp = new LinkedHashMap<>();
-
-		private static Map<String, String> cmdHelpExample = new LinkedHashMap<>();
-
-		static {
-			cmdHelp.put(CMD_HELP, "Help.");
-			cmdHelp.put(CMD_EXIT, "Stop and exit from the program.");
-			cmdHelp.put(CMD_WNEW, "Create a new wallet.");
-			cmdHelp.put(CMD_MWNEW,
-					"Create multiple new wallets. If any wallet with name alread exist it will be skiped.");
-			cmdHelp.put(CMD_WSTAT, "Display status for wallet.");
-			cmdHelp.put(CMD_WDEL, "Delete a wallet");
-			cmdHelp.put(CMD_WLIST, "List walletes and 'balances' for each wallet.");
-			cmdHelp.put(CMD_SEND, "Send coins from one to another wallet.");
-			cmdHelp.put(CMD_MSEND, "Send to multiple wallet addresses.");
-			cmdHelp.put(CMD_PRINT, "Display data about blockchain, utxo pool, or a block.");
-		}
-
-		static {
-			cmdHelpExample.put(CMD_WNEW, CMD_WNEW + " WALLET-NAME");
-			cmdHelpExample.put(CMD_MWNEW, CMD_MWNEW + " WALLET-NAME-1 WALLET-NAME-2 ... WALLET-NAME-N");
-			cmdHelpExample.put(CMD_WSTAT, CMD_WSTAT + " WALLET-NAME");
-			cmdHelpExample.put(CMD_WDEL, CMD_WDEL + " WALLET-NAME");
-			cmdHelpExample.put(CMD_SEND, CMD_SEND + " WALLET-NAME-1 WLLET-NAME-2 VALUE");
-			cmdHelpExample.put(CMD_PRINT,
-					CMD_PRINT + "\n" + CMD_PRINT + " bc\n" + CMD_PRINT + " utxo\n" + CMD_PRINT + " block [NUM]");
-			cmdHelpExample.put(CMD_MSEND, CMD_MSEND + " WALLET-SENDER WALLET-NAME-1 VALUE-1 ... WALLET-NAME-N VALUE-N");
-		}
-
-		private static void printHelp() {
-			printMessages("jLocalCooin - blockchain implementation in Java.");
-
-			cmdHelp.forEach((cmdName, helpDesc) -> {
-				printMessages(cmdName + GlobalConstants.TAB_SIGN + " - " + helpDesc);
-				if (cmdHelpExample.containsKey(cmdName)) {
-					printMessages(cmdHelpExample.get(cmdName));
-				}
-				printMessages(GlobalConstants.LINE_SEPARATOR);
-			});
-		}
 	}
 
 }

@@ -11,7 +11,7 @@ import im.djm.exception.TxException;
  */
 public class NodeCliStdIn implements Runnable {
 
-	private BlockChainNode bcn = new BlockChainNode();
+	private NodeCliCommands cliNode = new NodeCliCommands();
 
 	@Override
 	public void run() {
@@ -20,7 +20,7 @@ public class NodeCliStdIn implements Runnable {
 
 		while (isRunning) {
 			try {
-				printMessages("[BC length: " + bcn.status() + "].$ ");
+				printMessages("[BC length: " + cliNode.status() + "].$ ");
 				isRunning = this.menuReadStdin(stdin);
 			} catch (TxException txEx) {
 				printMessages("Error: " + txEx.getMessage());
@@ -40,7 +40,7 @@ public class NodeCliStdIn implements Runnable {
 		}
 
 		String[] cmdLine = inLine.split("\\s+");
-		boolean run = this.bcn.commandSwitch(cmdLine);
+		boolean run = this.cliNode.commandSwitch(cmdLine);
 
 		return run;
 	}
