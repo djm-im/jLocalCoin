@@ -21,14 +21,14 @@ class NodeCliCommands {
 
 	private Map<String, Wallet> wallets = new HashMap<>();
 
-	private BlockchainNode blockChainNode;
+	private BlockChainNode blockChainNode;
 
 	private static final String MINER_WALLET_NAME = "_miner";
 
 	public NodeCliCommands() {
 		Wallet minerWallet = new Wallet(null);
 
-		this.blockChainNode = new BlockchainNode(minerWallet.getWalletAddress());
+		this.blockChainNode = new BlockChainNode(minerWallet.getWalletAddress());
 
 		minerWallet.setBlockchain(this.blockChainNode.getBlockchain());
 

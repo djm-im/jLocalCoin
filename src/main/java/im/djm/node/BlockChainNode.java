@@ -9,11 +9,11 @@ import im.djm.wallet.WalletAddress;
 /**
  * @author djm.im
  */
-class BlockchainNode {
+public class BlockChainNode {
 
 	private BlockChain blockchain;
 
-	public BlockchainNode(WalletAddress minerWallet) {
+	public BlockChainNode(WalletAddress minerWallet) {
 		this.blockchain = new BlockChain(minerWallet);
 	}
 
