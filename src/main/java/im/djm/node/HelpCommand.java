@@ -12,7 +12,7 @@ class HelpCommand {
 
 	private static Map<String, String> cmdHelp = new LinkedHashMap<>();
 
-	static Map<String, String> cmdHelpExample = new LinkedHashMap<>();
+	public static Map<String, String> cmdHelpExample = new LinkedHashMap<>();
 
 	static {
 		cmdHelp.put(CmdConstants.CMD_HELP, "Help.");
@@ -41,7 +41,7 @@ class HelpCommand {
 				CmdConstants.CMD_MSEND + " WALLET-SENDER WALLET-NAME-1 VALUE-1 ... WALLET-NAME-N VALUE-N");
 	}
 
-	static void printHelp() {
+	public static void printHelp() {
 		printMessages("jLocalCooin - blockchain implementation in Java.");
 
 		cmdHelp.forEach((cmdName, helpDesc) -> {

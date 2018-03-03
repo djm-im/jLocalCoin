@@ -7,8 +7,7 @@ package im.djm.zmain;
  */
 public final class StdoutUtil {
 
-	// package
-	static void printlnParagraph(String... strs) {
+	public static void printlnParagraph(String... strs) {
 		System.out.println("#########################################################################################");
 		for (String str : strs) {
 			System.out.println(str);

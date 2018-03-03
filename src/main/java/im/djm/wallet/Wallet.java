@@ -126,8 +126,8 @@ public class Wallet {
 		Tx newTx = new Tx();
 		this.fillInputs(newTx, spentOutputs);
 
-		payments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
-		this.createOutputs(newTx, payments);
+		List<Payment> listPayments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
+		this.createOutputs(newTx, listPayments);
 		this.signTx(newTx);
 
 		return newTx;
