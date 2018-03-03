@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import im.djm.blockchain.block.Block;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.node.BlockChainNode;
 import im.djm.tx.Tx;
@@ -20,7 +21,6 @@ public class BlockChainNodeTest {
 	@Test
 	public void blockChainNode() {
 		Wallet miner = new Wallet(null);
-
 		BlockChainNode blockChainNode = new BlockChainNode(miner.getWalletAddress());
 
 		assertThat(blockChainNode).isNotNull();
@@ -38,6 +38,12 @@ public class BlockChainNodeTest {
 		assertThat(tx.getOutputs()).hasSize(1);
 
 		assertThat(tx.getOutput(0).getWalletAddres()).isEqualTo(miner.getWalletAddress());
+	}
+
+	@Test
+	public void blockChainNodeAnnonceBlock() {
+		Wallet miner = new Wallet(null);
+		BlockChainNode blockChainNode = new BlockChainNode(miner.getWalletAddress());
 	}
 
 }

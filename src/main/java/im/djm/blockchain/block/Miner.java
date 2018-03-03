@@ -52,8 +52,8 @@ public class Miner {
 	}
 
 	// Factory method.
-	private static Block createBlock(Head head, Data data, BlockHash hash) {
-		return new Block(head, data, hash);
+	private static Block createBlock(Head head, Data data, BlockHash blockHash) {
+		return new Block(head, data, blockHash);
 	}
 
 }
