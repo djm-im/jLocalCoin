@@ -15,18 +15,16 @@ import im.djm.blockchain.hash.DataHash;
  */
 public class Miner {
 
-	public static Head createHead(Block prevBlock, Data data) {
+	public static Head createHead(Block prevBlock, DataHash dataHash) {
 		BlockHash prevHash = prevBlock.getBlockHash();
 		long length = prevBlock.getLength() + 1;
-
-		byte[] rawData = data.getRawData();
-		DataHash dataHash = HashUtil.calculateDataHash(rawData);
 
 		return new Head(prevHash, length, dataHash, BlockChain.DIFFICULTY);
 	}
 
 	public static Block createNewBlock(Block prevBlock, Data data) {
-		Head head = createHead(prevBlock, data);
+		DataHash dataHash = HashUtil.calculateDataHash(data.getRawData());
+		Head head = createHead(prevBlock, dataHash);
 
 		BlockHash blockHash = findNonce(head);
 
