@@ -22,7 +22,7 @@ public class Miner {
 		byte[] rawData = data.getRawData();
 		DataHash dataHash = HashUtil.calculateDataHash(rawData);
 
-		return new Head(prevHash, length, dataHash);
+		return new Head(prevHash, length, dataHash, BlockChain.DIFFICULTY);
 	}
 
 	public static Block createNewBlock(Block prevBlock, Data data) {

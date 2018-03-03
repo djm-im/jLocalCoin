@@ -29,7 +29,7 @@ import im.djm.wallet.WalletAddress;
  */
 public class BlockChain {
 
-	private static final int DIFFICULTY = 16;
+	public static final int DIFFICULTY = 16;
 
 	private static final int REWARD = 100;
 

@@ -11,23 +11,27 @@ import im.djm.blockchain.hash.DataHash;
  * @author djm.im
  */
 public class Head {
+
+	private long timestamp;
+
 	private final BlockHash prevBlockHash;
 
 	private final long length;
 
-	private long nonce;
-
 	private int difficulty;
-
-	private long timestamp;
 
 	private DataHash dataHash;
 
-	public Head(BlockHash prevHash, long lenght, DataHash hashData) {
+	private long nonce;
+
+	public Head(BlockHash prevHash, long lenght, DataHash hashData, int difficulty) {
 		this.timestamp = System.currentTimeMillis() / 1000;
 
 		this.prevBlockHash = prevHash;
+
 		this.length = lenght;
+
+		this.difficulty = difficulty;
 
 		this.dataHash = hashData;
 	}
