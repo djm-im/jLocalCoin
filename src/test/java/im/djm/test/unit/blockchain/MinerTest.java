@@ -30,7 +30,7 @@ public class MinerTest {
 		TxData txData = mock(TxData.class);
 		when(txData.getRawData()).thenReturn(prevBlockHashByte);
 
-		DataHash dataHash = HashUtil.calculateDataHash(txData.getRawData());
+		DataHash dataHash = HashUtil.dataHash(txData.getRawData());
 		Head aHead = Miner.createHead(prevBlock, dataHash);
 
 		assertThat(aHead.getDifficulty()).isEqualTo(16);

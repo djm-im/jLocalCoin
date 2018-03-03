@@ -27,7 +27,7 @@ public class Block {
 		this.data = data;
 
 		byte[] rawData = data.getRawData();
-		DataHash dataHash = HashUtil.calculateDataHash(rawData);
+		DataHash dataHash = HashUtil.dataHash(rawData);
 		this.head = Miner.createHead(prevBlock, dataHash);
 
 		this.hash = Miner.calcBlockHashForHead(this.head);

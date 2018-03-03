@@ -23,7 +23,7 @@ public class Miner {
 	}
 
 	public static Block createNewBlock(Block prevBlock, Data data) {
-		DataHash dataHash = HashUtil.calculateDataHash(data.getRawData());
+		DataHash dataHash = HashUtil.dataHash(data.getRawData());
 		Head head = createHead(prevBlock, dataHash);
 
 		BlockHash blockHash = findNonce(head);
@@ -46,7 +46,7 @@ public class Miner {
 
 	public static BlockHash calcBlockHashForHead(Head head) {
 		byte[] rawHead = head.getRawHead();
-		BlockHash blockHash = HashUtil.calculateBlockHashForHead(rawHead);
+		BlockHash blockHash = HashUtil.blockHash(rawHead);
 
 		return blockHash;
 	}

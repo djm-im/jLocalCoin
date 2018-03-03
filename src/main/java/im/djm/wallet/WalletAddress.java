@@ -17,7 +17,7 @@ public final class WalletAddress {
 	public WalletAddress(RSAPublicKey publicKey) {
 		this.address = publicKey;
 
-		this.addressHash = HashUtil.calculateAddressHash(this.address.getEncoded());
+		this.addressHash = HashUtil.addressHash(this.address.getEncoded());
 	}
 
 	public RSAPublicKey getAddress() {

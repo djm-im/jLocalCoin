@@ -58,7 +58,7 @@ public class Tx {
 		// byte[] txRawHash =
 		// ByteArrayUtil.calculateRawHash(this.getRawDataForSignature());
 		// this.txId = new TxHash(txRawHash);
-		this.txId = HashUtil.calculateTxHash(this.getRawDataForSignature());
+		this.txId = HashUtil.txHash(this.getRawDataForSignature());
 	}
 
 	public boolean isCoinbase() {
