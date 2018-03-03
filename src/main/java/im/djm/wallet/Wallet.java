@@ -123,8 +123,7 @@ public class Wallet {
 	}
 
 	private Tx createNewTx(List<Payment> payments, List<Utxo> spentOutputs, long senderBalance, long totalSpent) {
-		Tx newTx = new Tx();
-		this.fillInputs(newTx, spentOutputs);
+		Tx newTx = this.fillInputs(spentOutputs);
 
 		List<Payment> listPayments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
 		this.createOutputs(newTx, listPayments);
@@ -144,10 +143,13 @@ public class Wallet {
 		return payments;
 	}
 
-	private void fillInputs(Tx tx, List<Utxo> prevTxOutputs) {
+	private Tx fillInputs(List<Utxo> prevTxOutputs) {
+		Tx tx = new Tx();
 		prevTxOutputs.forEach(utxo -> {
 			tx.addInput(utxo.getTxId(), utxo.getOutputIndexd());
 		});
+
+		return tx;
 	}
 
 	private void createOutputs(Tx tx, List<Payment> payments) {
