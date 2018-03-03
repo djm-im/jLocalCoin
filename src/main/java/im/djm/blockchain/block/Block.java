@@ -19,7 +19,7 @@ public class Block {
 
 	private final Data data;
 
-	private final BlockHash hash;
+	private final BlockHash blockHash;
 
 	public Block(final Block prevBlock, final Data data) {
 		this.validate(prevBlock, data);
@@ -30,7 +30,7 @@ public class Block {
 		DataHash dataHash = HashUtil.dataHash(rawData);
 		this.head = Miner.createHead(prevBlock, dataHash);
 
-		this.hash = Miner.calcBlockHashForHead(this.head);
+		this.blockHash = Miner.calcBlockHashForHead(this.head);
 	}
 
 	private void validate(Block prevBlock, Data data) {
@@ -41,7 +41,6 @@ public class Block {
 		if (data == null) {
 			throw new NullDataException("Data cannot be null.");
 		}
-
 	}
 
 	/**
@@ -49,17 +48,15 @@ public class Block {
 	 */
 	protected Block(NullHead nullHead, NullData nullData, NullBlockHash prevHash) {
 		this.data = nullData;
-
 		this.head = nullHead;
-
-		this.hash = Miner.calcBlockHashForHead(this.head);
+		this.blockHash = Miner.calcBlockHashForHead(this.head);
 	}
 
 	// package private constructor - Miner class call it
 	Block(Head head, Data data, BlockHash hash) {
 		this.head = head;
 		this.data = data;
-		this.hash = hash;
+		this.blockHash = hash;
 	}
 
 	/**
@@ -68,9 +65,7 @@ public class Block {
 	 * 		Method returns hash for the block.
 	 */
 	public BlockHash getBlockHash() {
-		// TODO ???
-		// Should it return copy?
-		return this.hash;
+		return this.blockHash;
 	}
 
 	/**
@@ -106,7 +101,7 @@ public class Block {
 		sb.append(System.lineSeparator());
 
 		sb.append("Hash: ");
-		sb.append(this.hash.toString());
+		sb.append(this.blockHash.toString());
 		sb.append(System.lineSeparator());
 
 		sb.append(dashes + "]]");
