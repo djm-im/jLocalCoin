@@ -1,9 +1,11 @@
-package im.djm.node;
+package im.djm.cli;
 
-import static im.djm.zmain.StdoutUtil.printMessages;
+import static im.djm.cli.StdOutUtil.printMessages;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import im.djm.blockchain.GlobalConstants;
 
 /**
  * @author djm.im

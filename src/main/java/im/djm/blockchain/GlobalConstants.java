@@ -1,9 +1,9 @@
-package im.djm.node;
+package im.djm.blockchain;
 
 /**
  * @author djm.im
  */
-class GlobalConstants {
+public class GlobalConstants {
 
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 

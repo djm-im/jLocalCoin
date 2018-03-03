@@ -1,9 +1,10 @@
-package im.djm.node;
+package im.djm.cli;
 
-import static im.djm.zmain.StdoutUtil.printMessages;
+import static im.djm.cli.StdOutUtil.printMessages;
 
 import java.util.Scanner;
 
+import im.djm.blockchain.GlobalConstants;
 import im.djm.exception.TxException;
 
 /**

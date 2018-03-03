@@ -1,6 +1,6 @@
-package im.djm.node;
+package im.djm.cli;
 
-import static im.djm.zmain.StdoutUtil.printMessages;
+import static im.djm.cli.StdOutUtil.printMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+import im.djm.node.BlockChainNode;
 import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;

@@ -1,6 +1,6 @@
 package im.djm.zmain;
 
-import im.djm.node.NodeCliStdIn;
+import im.djm.cli.NodeCliStdIn;
 
 /**
  * 
