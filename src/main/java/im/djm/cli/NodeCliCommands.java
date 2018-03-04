@@ -36,6 +36,9 @@ class NodeCliCommands {
 		return this.blockChainNode.status();
 	}
 
+	BlockChainCmd bcCmd = new BlockChainCmd();
+	WalletCmd wCmd = new WalletCmd();
+
 	// TODO
 	// Create class Command and use it instead string
 	public boolean commandSwitch(String... cmdLine) {
@@ -47,39 +50,39 @@ class NodeCliCommands {
 			return true;
 
 		case CmdConstants.CMD_EXIT:
-			exit();
+			bcCmd.exit();
 			return false;
 
 		case CmdConstants.CMD_SEND:
-			sendCoin(cmdLine);
+			wCmd.sendCoin(wallets, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_MSEND:
-			sendMultiCoins(cmdLine);
+			wCmd.sendMultiCoins(wallets, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_WNEW:
-			createNewWallet(cmdLine);
+			wCmd.createNewWallet(blockChainNode, wallets, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_MWNEW:
-			createMultiNewWallets(cmdLine);
+			wCmd.createMultiNewWallets(blockChainNode, wallets, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_WSTAT:
-			walletStatus(cmdLine);
+			wCmd.walletStatus(wallets, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_WDEL:
-			deleteWallet(cmdLine);
+			wCmd.deleteWallet(wallets, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_WLIST:
-			listAllWallets();
+			wCmd.listAllWallets(wallets);
 			return true;
 
 		case CmdConstants.CMD_PRINT:
-			printCmd(cmdLine);
+			bcCmd.printCmd(this.blockChainNode, cmdLine);
 			return true;
 
 		default:
@@ -94,54 +97,60 @@ class NodeCliCommands {
 
 	private BlockChainNode blockChainNode;
 
-	private void printCmd(String[] cmdLine) {
-		if (cmdLine.length == 1) {
-			printMessages("BlockChain length: " + this.blockChainNode.status() + ".");
-			return;
-		}
-
-		switch (cmdLine[1]) {
-		case CmdConstants.CMD_PRINT_BC:
-			printBlockchain();
-			return;
-
-		case CmdConstants.CMD_PRINT_UTXO:
-			printUtxo();
-			return;
-
-		case CmdConstants.CMD_PRINT_BLOCK:
-			printBlock(cmdLine);
-			return;
-
-		default:
-			printMessages("Unknow command.", "Type help.");
-			return;
-		}
+	static interface Commnad {
 	}
 
-	private void printBlock(String[] cmdLine) {
-		if (cmdLine.length != 3) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_PRINT));
+	static class BlockChainCmd implements Commnad {
+		private void printCmd(BlockChainNode blockChainNode, String[] cmdLine) {
+			if (cmdLine.length == 1) {
+				printMessages("BlockChain length: " + blockChainNode.status() + ".");
+				return;
+			}
+
+			switch (cmdLine[1]) {
+			case CmdConstants.CMD_PRINT_BC:
+				printBlockchain(blockChainNode);
+				return;
+
+			case CmdConstants.CMD_PRINT_UTXO:
+				printUtxo(blockChainNode);
+				return;
+
+			case CmdConstants.CMD_PRINT_BLOCK:
+				printBlock(cmdLine);
+				return;
+
+			default:
+				printMessages("Unknow command.", "Type help.");
+				return;
+			}
 		}
 
-		printMessages("This command is not implemented yet.");
-	}
+		private void printBlock(String[] cmdLine) {
+			if (cmdLine.length != 3) {
+				printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_PRINT));
+			}
 
-	private void printUtxo() {
-		List<Utxo> allUtxo = this.blockChainNode.getAllUtxo();
-		for (Utxo utxo : allUtxo) {
-			printMessages(utxo.toString());
+			printMessages("This command is not implemented yet.");
 		}
-	}
 
-	private void printBlockchain() {
-		printMessages(this.blockChainNode.printBlockChain());
-	}
+		private void printUtxo(BlockChainNode blockChainNode) {
+			List<Utxo> allUtxo = blockChainNode.getAllUtxo();
+			for (Utxo utxo : allUtxo) {
+				printMessages(utxo.toString());
+			}
+		}
 
-	private void exit() {
-		// TODO
-		// Save blockchain in file
-		printMessages("", "Good by blockchain!");
+		private void printBlockchain(BlockChainNode blockChainNode) {
+			printMessages(blockChainNode.printBlockChain());
+		}
+
+		private void exit() {
+			// TODO
+			// Save blockchain in file
+			printMessages("", "Good by blockchain!");
+		}
+
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------
@@ -150,136 +159,140 @@ class NodeCliCommands {
 
 	private Map<String, Wallet> wallets = new HashMap<>();
 
-	private void sendMultiCoins(String[] cmdLine) {
-		if (cmdLine.length < 4 || cmdLine.length % 2 != 0) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_MSEND));
-			return;
-		}
+	static class WalletCmd implements Commnad {
 
-		String senderWalletName = cmdLine[1].trim();
-		if (!this.wallets.containsKey(senderWalletName)) {
-			printMessages("Wallet " + senderWalletName + " not exists in collection.");
-			return;
-		}
+		private void sendMultiCoins(Map<String, Wallet> wallets, String[] cmdLine) {
+			if (cmdLine.length < 4 || cmdLine.length % 2 != 0) {
+				printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_MSEND));
+				return;
+			}
 
-		List<Payment> payments = new ArrayList<>();
-		for (int i = 2; i < cmdLine.length; i += 2) {
-			String walletReceiverName = cmdLine[i].trim();
-			if (!this.wallets.containsKey(walletReceiverName)) {
-				// TODO
-				// throw an exception
+			String senderWalletName = cmdLine[1].trim();
+			if (!wallets.containsKey(senderWalletName)) {
 				printMessages("Wallet " + senderWalletName + " not exists in collection.");
 				return;
 			}
 
-			long coinValue = Long.valueOf(cmdLine[i + 1]);
-			Wallet walletReceiver = this.wallets.get(walletReceiverName);
-			Payment payment = new Payment(walletReceiver.getWalletAddress(), coinValue);
+			List<Payment> payments = new ArrayList<>();
+			for (int i = 2; i < cmdLine.length; i += 2) {
+				String walletReceiverName = cmdLine[i].trim();
+				if (!wallets.containsKey(walletReceiverName)) {
+					// TODO
+					// throw an exception
+					printMessages("Wallet " + senderWalletName + " not exists in collection.");
+					return;
+				}
 
-			payments.add(payment);
+				long coinValue = Long.valueOf(cmdLine[i + 1]);
+				Wallet walletReceiver = wallets.get(walletReceiverName);
+				Payment payment = new Payment(walletReceiver.getWalletAddress(), coinValue);
+
+				payments.add(payment);
+			}
+
+			Wallet walletSender = wallets.get(senderWalletName);
+			@SuppressWarnings("unused")
+			Tx tx = walletSender.send(payments);
 		}
 
-		Wallet walletSender = this.wallets.get(senderWalletName);
-		@SuppressWarnings("unused")
-		Tx tx = walletSender.send(payments);
-	}
+		private void sendCoin(Map<String, Wallet> wallets, String[] cmdLine) {
+			if (cmdLine.length != 4) {
+				printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_SEND));
+				return;
+			}
 
-	private void sendCoin(String[] cmdLine) {
-		if (cmdLine.length != 4) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_SEND));
-			return;
+			String wallet1Name = cmdLine[1].trim();
+			if (!wallets.containsKey(wallet1Name)) {
+				printMessages("Wallet " + wallet1Name + " not exists in collection.");
+				return;
+			}
+
+			String wallet2Name = cmdLine[2].trim();
+			if (!wallets.containsKey(wallet2Name)) {
+				printMessages("Wallet " + wallet2Name + " does not exist in collection of wallets.");
+				return;
+			}
+
+			Wallet wallet1 = wallets.get(wallet1Name);
+			Wallet wallet2 = wallets.get(wallet2Name);
+			int coinValue = Integer.valueOf(cmdLine[3]);
+
+			Payment payment = new Payment(wallet2.getWalletAddress(), coinValue);
+
+			wallet1.send(Lists.newArrayList(payment));
 		}
 
-		String wallet1Name = cmdLine[1].trim();
-		if (!this.wallets.containsKey(wallet1Name)) {
-			printMessages("Wallet " + wallet1Name + " not exists in collection.");
-			return;
+		private void deleteWallet(Map<String, Wallet> wallets, String[] cmdLine) {
+			if (cmdLine.length != 2) {
+				printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WNEW));
+				return;
+			}
+
+			// TODO
+			// Add question to user confirm
+			wallets.remove(cmdLine[1].trim());
 		}
 
-		String wallet2Name = cmdLine[2].trim();
-		if (!this.wallets.containsKey(wallet2Name)) {
-			printMessages("Wallet " + wallet2Name + " does not exist in collection of wallets.");
-			return;
-		}
+		private void walletStatus(Map<String, Wallet> wallets, String[] cmdLine) {
+			if (cmdLine.length != 2) {
+				printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WSTAT));
+				return;
+			}
 
-		Wallet wallet1 = this.wallets.get(wallet1Name);
-		Wallet wallet2 = this.wallets.get(wallet2Name);
-		int coinValue = Integer.valueOf(cmdLine[3]);
+			String walletName = cmdLine[1].trim();
+			if (!wallets.containsKey(walletName)) {
+				printMessages("Wallet with name " + walletName + " doesn't exist in collection.");
+				return;
+			}
 
-		Payment payment = new Payment(wallet2.getWalletAddress(), coinValue);
+			Wallet wallet = wallets.get(walletName);
 
-		wallet1.send(Lists.newArrayList(payment));
-	}
-
-	private void deleteWallet(String[] cmdLine) {
-		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WNEW));
-			return;
-		}
-
-		// TODO
-		// Add question to user confirm
-		this.wallets.remove(cmdLine[1].trim());
-	}
-
-	private void walletStatus(String[] cmdLine) {
-		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WSTAT));
-			return;
-		}
-
-		String walletName = cmdLine[1].trim();
-		if (!this.wallets.containsKey(walletName)) {
-			printMessages("Wallet with name " + walletName + " doesn't exist in collection.");
-			return;
-		}
-
-		Wallet wallet = this.wallets.get(walletName);
-
-		printMessages(this.getWalletStatus(walletName, wallet));
-	}
-
-	private void listAllWallets() {
-		this.wallets.forEach((walletName, wallet) -> {
 			printMessages(this.getWalletStatus(walletName, wallet));
-		});
-	}
-
-	private String getWalletStatus(String walletName, Wallet wallet) {
-		return "{ Wallet Name: " + walletName + " " + wallet + ", Balance: " + wallet.balance() + " }";
-	}
-
-	private void createMultiNewWallets(String[] cmdLine) {
-		if (cmdLine.length < 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_MWNEW));
-			return;
 		}
 
-		for (int i = 1; i < cmdLine.length; i++) {
-			this.creatWalletWithName(cmdLine[i].trim());
-		}
-	}
-
-	private void createNewWallet(String[] cmdLine) {
-		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WNEW));
-			return;
+		private void listAllWallets(Map<String, Wallet> wallets) {
+			wallets.forEach((walletName, wallet) -> {
+				printMessages(this.getWalletStatus(walletName, wallet));
+			});
 		}
 
-		creatWalletWithName(cmdLine[1].trim());
-	}
-
-	private Wallet creatWalletWithName(String walletName) {
-		if (this.wallets.containsKey(walletName)) {
-			printMessages("Wallet with name " + walletName + " already exists.");
+		private String getWalletStatus(String walletName, Wallet wallet) {
+			return "{ Wallet Name: " + walletName + " " + wallet + ", Balance: " + wallet.balance() + " }";
 		}
 
-		Wallet newWallet = new Wallet(this.blockChainNode.getBlockchain());
-		this.wallets.put(walletName, newWallet);
+		private void createMultiNewWallets(BlockChainNode blockChainNode, Map<String, Wallet> wallets,
+				String[] cmdLine) {
+			if (cmdLine.length < 2) {
+				printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_MWNEW));
+				return;
+			}
 
-		return newWallet;
+			for (int i = 1; i < cmdLine.length; i++) {
+				this.creatWalletWithName(blockChainNode, wallets, cmdLine[i].trim());
+			}
+		}
+
+		private void createNewWallet(BlockChainNode blockChainNode, Map<String, Wallet> wallets, String[] cmdLine) {
+			if (cmdLine.length != 2) {
+				printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WNEW));
+				return;
+			}
+
+			creatWalletWithName(blockChainNode, wallets, cmdLine[1].trim());
+		}
+
+		private Wallet creatWalletWithName(BlockChainNode blockChainNode, Map<String, Wallet> wallets,
+				String walletName) {
+			if (wallets.containsKey(walletName)) {
+				printMessages("Wallet with name " + walletName + " already exists.");
+			}
+
+			Wallet newWallet = new Wallet(blockChainNode.getBlockchain());
+			wallets.put(walletName, newWallet);
+
+			return newWallet;
+		}
 	}
-
 	// ------------------------------------------------------------------------------------------------------------------------
 
 }
