@@ -20,10 +20,6 @@ import im.djm.wallet.Wallet;
  */
 class NodeCliCommands {
 
-	private Map<String, Wallet> wallets = new HashMap<>();
-
-	private BlockChainNode blockChainNode;
-
 	private static final String MINER_WALLET_NAME = "_miner";
 
 	public NodeCliCommands() {
@@ -92,6 +88,12 @@ class NodeCliCommands {
 		}
 	}
 
+	// ------------------------------------------------------------------------------------------------------------------------
+	// Blockchain commands
+	// ------------------------------------------------------------------------------------------------------------------------
+
+	private BlockChainNode blockChainNode;
+
 	private void printCmd(String[] cmdLine) {
 		if (cmdLine.length == 1) {
 			printMessages("BlockChain length: " + this.blockChainNode.status() + ".");
@@ -135,6 +137,18 @@ class NodeCliCommands {
 	private void printBlockchain() {
 		printMessages(this.blockChainNode.printBlockChain());
 	}
+
+	private void exit() {
+		// TODO
+		// Save blockchain in file
+		printMessages("", "Good by blockchain!");
+	}
+
+	// ------------------------------------------------------------------------------------------------------------------------
+	// Wallet commands
+	// ------------------------------------------------------------------------------------------------------------------------
+
+	private Map<String, Wallet> wallets = new HashMap<>();
 
 	private void sendMultiCoins(String[] cmdLine) {
 		if (cmdLine.length < 4 || cmdLine.length % 2 != 0) {
@@ -266,10 +280,6 @@ class NodeCliCommands {
 		return newWallet;
 	}
 
-	private void exit() {
-		// TODO
-		// Save blockchain in file
-		printMessages("", "Good by blockchain!");
-	}
+	// ------------------------------------------------------------------------------------------------------------------------
 
 }
