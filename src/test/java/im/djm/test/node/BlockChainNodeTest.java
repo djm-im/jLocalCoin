@@ -19,7 +19,7 @@ public class BlockChainNodeTest {
 
 	@Test
 	public void blockChainNode() {
-		Wallet miner = new Wallet(null);
+		Wallet miner = Wallet.createNewWallet();
 		BlockChainNode blockChainNode = new BlockChainNode(miner.getWalletAddress());
 
 		assertThat(blockChainNode).isNotNull();

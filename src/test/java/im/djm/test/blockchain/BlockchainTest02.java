@@ -21,16 +21,16 @@ import im.djm.wallet.Wallet;
  */
 public class BlockchainTest02 {
 
-	Wallet miner = new Wallet(null);
+	Wallet miner = Wallet.createNewWallet();
 
 	@Test
 	public void testMain2() {
 		BlockChain blockChain = new BlockChain(miner.getWalletAddress());
 		miner.setBlockchain(blockChain);
 
-		Wallet w1 = new Wallet(blockChain);
-		Wallet w2 = new Wallet(blockChain);
-		Wallet w3 = new Wallet(blockChain);
+		Wallet w1 = Wallet.createNewWallet().setBlockchain(blockChain);
+		Wallet w2 = Wallet.createNewWallet().setBlockchain(blockChain);
+		Wallet w3 = Wallet.createNewWallet().setBlockchain(blockChain);
 
 		List<Payment> pm0 = Lists.newArrayList(new Payment(w1.getWalletAddress(), 100));
 		Tx tx0 = miner.send(pm0);

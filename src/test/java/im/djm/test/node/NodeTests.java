@@ -21,7 +21,7 @@ public class NodeTests {
 
 	@Test
 	public void nullTx() {
-		Wallet miner = new Wallet(null);
+		Wallet miner = Wallet.createNewWallet();
 		BlockChain bc = new BlockChain(miner.getWalletAddress());
 		miner.setBlockchain(bc);
 
@@ -44,11 +44,11 @@ public class NodeTests {
 
 	@Test
 	public void noEnoughCoins() {
-		Wallet miner = new Wallet(null);
+		Wallet miner = Wallet.createNewWallet();
 		BlockChain blockChain = new BlockChain(miner.getWalletAddress());
 		miner.setBlockchain(blockChain);
 
-		Wallet w1 = new Wallet(blockChain);
+		Wallet w1 = Wallet.createNewWallet();
 		assertThatThrownBy(() -> {
 			Payment payment = new Payment(w1.getWalletAddress(), 101);
 			miner.send(Lists.newArrayList(payment));
@@ -59,11 +59,11 @@ public class NodeTests {
 
 	@Test
 	public void txMore() {
-		Wallet miner = new Wallet(null);
+		Wallet miner = Wallet.createNewWallet();
 		BlockChain blockChain = new BlockChain(miner.getWalletAddress());
 		miner.setBlockchain(blockChain);
 
-		Wallet w1 = new Wallet(blockChain);
+		Wallet w1 = Wallet.createNewWallet();
 		Payment payment = new Payment(w1.getWalletAddress(), 100);
 		Tx tx = miner.send(Lists.newArrayList(payment));
 

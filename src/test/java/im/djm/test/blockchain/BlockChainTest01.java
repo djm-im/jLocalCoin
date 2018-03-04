@@ -28,7 +28,7 @@ public class BlockChainTest01 {
 
 	@Test
 	public void oneBlockTest() {
-		Wallet miner = new Wallet(null);
+		Wallet miner = Wallet.createNewWallet();
 		BlockChain blockChain = new BlockChain(miner.getWalletAddress());
 		miner.setBlockchain(blockChain);
 

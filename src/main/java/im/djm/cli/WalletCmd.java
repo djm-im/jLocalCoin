@@ -134,7 +134,7 @@ class WalletCmd implements Cmd {
 			return;
 		}
 
-		creatWalletWithName(blockChainNode, trezor, cmdLine[1].trim());
+		this.creatWalletWithName(blockChainNode, trezor, cmdLine[1].trim());
 	}
 
 	private Wallet creatWalletWithName(BlockChainNode blockChainNode, Trezor trezor, String walletName) {
@@ -142,7 +142,7 @@ class WalletCmd implements Cmd {
 			printMessages("Wallet with name " + walletName + " already exists.");
 		}
 
-		Wallet newWallet = new Wallet(blockChainNode.getBlockchain());
+		Wallet newWallet = Wallet.createNewWallet().setBlockchain(blockChainNode.getBlockchain());
 		trezor.put(walletName, newWallet);
 
 		return newWallet;

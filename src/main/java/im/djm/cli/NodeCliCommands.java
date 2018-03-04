@@ -18,7 +18,7 @@ class NodeCliCommands {
 	private Trezor trezor;
 
 	public NodeCliCommands() {
-		Wallet minerWallet = new Wallet(null);
+		Wallet minerWallet = Wallet.createNewWallet();
 
 		this.blockChainNode = new BlockChainNode(minerWallet.getWalletAddress());
 

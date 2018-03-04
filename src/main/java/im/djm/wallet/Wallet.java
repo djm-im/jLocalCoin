@@ -13,6 +13,7 @@ import java.util.List;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.hash.TxHash;
+import im.djm.exception.NullBlockChainException;
 import im.djm.exception.TxException;
 import im.djm.exception.WrapperException;
 import im.djm.tx.Output;
@@ -30,9 +31,11 @@ public class Wallet {
 
 	private BlockChain blockChain;
 
-	public Wallet(BlockChain blockChain) {
-		this.blockChain = blockChain;
+	public static Wallet createNewWallet() {
+		return new Wallet();
+	}
 
+	private Wallet() {
 		KeyPair keyPair = createKeyPair();
 
 		this.walletAddress = new WalletAddress((RSAPublicKey) keyPair.getPublic());
@@ -59,8 +62,9 @@ public class Wallet {
 		return keyPair;
 	}
 
-	public void setBlockchain(BlockChain blockChain) {
+	public Wallet setBlockchain(BlockChain blockChain) {
 		this.blockChain = blockChain;
+		return this;
 	}
 
 	public WalletAddress getWalletAddress() {
@@ -68,6 +72,10 @@ public class Wallet {
 	}
 
 	public Tx send(List<Payment> payments) {
+		if (this.blockChain == null) {
+			throw new NullBlockChainException("Cannot send coins: blockchain is not set.");
+		}
+
 		long totalSpent = totalSpent(payments);
 
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
@@ -185,14 +193,11 @@ public class Wallet {
 		return signature.sign();
 	}
 
-	/**
-	 * 
-	 * @param blockChain
-	 * @return
-	 *
-	 * 		Return number of coins that Wallet address can spend
-	 */
 	public long balance() {
+		if (this.blockChain == null) {
+			throw new NullBlockChainException("Cannot check balance: blockchain is not set.");
+		}
+
 		return this.blockChain.getBalance(this.walletAddress);
 	}
 
@@ -200,4 +205,5 @@ public class Wallet {
 	public String toString() {
 		return "{ Wallet : " + this.walletAddress + " }";
 	}
+
 }
