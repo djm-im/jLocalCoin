@@ -1,4 +1,4 @@
-package im.djm.cli;
+package im.djm.cli.cmd;
 
 /**
  * @author djm.im

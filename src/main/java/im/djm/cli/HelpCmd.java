@@ -6,11 +6,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import im.djm.blockchain.GlobalConstants;
+import im.djm.cli.cmd.Cmd;
 
 /**
  * @author djm.im
  */
-class HelpCommand {
+class HelpCmd implements Cmd {
 
 	private static Map<String, String> cmdHelp = new LinkedHashMap<>();
 

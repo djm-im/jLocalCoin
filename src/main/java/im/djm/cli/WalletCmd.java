@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import im.djm.cli.cmd.Cmd;
 import im.djm.node.BlockChainNode;
 import im.djm.tx.Tx;
 import im.djm.wallet.Payment;
@@ -20,7 +21,7 @@ class WalletCmd implements Cmd {
 
 	public void sendMultiCoins(Trezor trezor, String[] cmdLine) {
 		if (cmdLine.length < 4 || cmdLine.length % 2 != 0) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_MSEND));
+			printMessages("Wrong command format.", HelpCmd.cmdHelpExample.get(CmdConstants.CMD_MSEND));
 			return;
 		}
 
@@ -54,7 +55,7 @@ class WalletCmd implements Cmd {
 
 	public void sendCoin(Trezor trezor, String[] cmdLine) {
 		if (cmdLine.length != 4) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_SEND));
+			printMessages("Wrong command format.", HelpCmd.cmdHelpExample.get(CmdConstants.CMD_SEND));
 			return;
 		}
 
@@ -81,7 +82,7 @@ class WalletCmd implements Cmd {
 
 	public void deleteWallet(Trezor trezor, String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WNEW));
+			printMessages("Wrong command format.", HelpCmd.cmdHelpExample.get(CmdConstants.CMD_WNEW));
 			return;
 		}
 
@@ -92,7 +93,7 @@ class WalletCmd implements Cmd {
 
 	public void walletStatus(Trezor trezor, String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WSTAT));
+			printMessages("Wrong command format.", HelpCmd.cmdHelpExample.get(CmdConstants.CMD_WSTAT));
 			return;
 		}
 
@@ -119,7 +120,7 @@ class WalletCmd implements Cmd {
 
 	public void createMultiNewWallets(BlockChainNode blockChainNode, Trezor trezor, String[] cmdLine) {
 		if (cmdLine.length < 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_MWNEW));
+			printMessages("Wrong command format.", HelpCmd.cmdHelpExample.get(CmdConstants.CMD_MWNEW));
 			return;
 		}
 
@@ -130,7 +131,7 @@ class WalletCmd implements Cmd {
 
 	public void createNewWallet(BlockChainNode blockChainNode, Trezor trezor, String[] cmdLine) {
 		if (cmdLine.length != 2) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_WNEW));
+			printMessages("Wrong command format.", HelpCmd.cmdHelpExample.get(CmdConstants.CMD_WNEW));
 			return;
 		}
 

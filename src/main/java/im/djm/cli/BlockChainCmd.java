@@ -4,6 +4,7 @@ import static im.djm.cli.StdOutUtil.printMessages;
 
 import java.util.List;
 
+import im.djm.cli.cmd.Cmd;
 import im.djm.node.BlockChainNode;
 import im.djm.utxo.Utxo;
 
@@ -39,7 +40,7 @@ class BlockChainCmd implements Cmd {
 
 	private void printBlock(String[] cmdLine) {
 		if (cmdLine.length != 3) {
-			printMessages("Wrong command format.", HelpCommand.cmdHelpExample.get(CmdConstants.CMD_PRINT));
+			printMessages("Wrong command format.", HelpCmd.cmdHelpExample.get(CmdConstants.CMD_PRINT));
 		}
 
 		printMessages("This command is not implemented yet.");
@@ -54,12 +55,6 @@ class BlockChainCmd implements Cmd {
 
 	private void printBlockchain(BlockChainNode blockChainNode) {
 		printMessages(blockChainNode.printBlockChain());
-	}
-
-	public void exit() {
-		// TODO
-		// Save blockchain in file
-		printMessages("", "Good by blockchain!");
 	}
 
 }
