@@ -1,4 +1,4 @@
-package im.djm.test.unit.blockchain.hash;
+package im.djm.test.blockchain.hash;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -8,7 +8,7 @@ import im.djm.blockchain.hash.DataHash;
 import im.djm.exception.NullHashException;
 
 /**
- * @author djm
+ * @author djm.im
  */
 public class DataHashTest {
 

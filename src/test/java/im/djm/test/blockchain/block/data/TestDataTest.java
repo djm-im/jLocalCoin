@@ -1,4 +1,4 @@
-package im.djm.test.unit.blockchain.block.data;
+package im.djm.test.blockchain.block.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,9 @@ import org.junit.Test;
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.block.data.Data;
 
+/**
+ * @author djm.im
+ */
 class TestData implements Data {
 	private String txtData;
 

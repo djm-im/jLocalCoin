@@ -1,4 +1,4 @@
-package im.djm.test.unit.blockchain.block.data;
+package im.djm.test.blockchain.block.data;
 
 import org.junit.Test;
 

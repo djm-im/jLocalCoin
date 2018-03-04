@@ -1,4 +1,4 @@
-package im.djm.test.unit.node;
+package im.djm.test.node;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

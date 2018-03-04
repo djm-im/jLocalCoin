@@ -1,4 +1,4 @@
-package im.djm.test.unit.blockchain;
+package im.djm.test.blockchain;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

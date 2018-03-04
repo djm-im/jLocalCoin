@@ -1,4 +1,4 @@
-package im.djm.test.unit.blockchain.block.nulls;
+package im.djm.test.blockchain.block.nulls;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

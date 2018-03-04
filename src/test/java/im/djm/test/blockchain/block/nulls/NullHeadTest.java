@@ -1,4 +1,4 @@
-package im.djm.test.unit.blockchain.block.nulls;
+package im.djm.test.blockchain.block.nulls;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,6 +7,9 @@ import org.junit.Test;
 import im.djm.blockchain.block.nulls.NullHead;
 import im.djm.blockchain.block.nulls.NullValues;
 
+/**
+ * @author djm.im
+ */
 public class NullHeadTest {
 
 	@Test

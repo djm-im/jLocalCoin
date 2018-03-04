@@ -1,4 +1,4 @@
-package im.djm.test.integration.node;
+package im.djm.test.node;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -20,7 +20,7 @@ import im.djm.wallet.Wallet;
 public class NodeTests {
 
 	@Test
-	public void test_NullTx() {
+	public void nullTx() {
 		Wallet miner = new Wallet(null);
 		BlockChain bc = new BlockChain(miner.getWalletAddress());
 		miner.setBlockchain(bc);
@@ -43,7 +43,7 @@ public class NodeTests {
 	}
 
 	@Test
-	public void test_NoEnoughCoins() {
+	public void noEnoughCoins() {
 		Wallet miner = new Wallet(null);
 		BlockChain blockChain = new BlockChain(miner.getWalletAddress());
 		miner.setBlockchain(blockChain);
@@ -58,7 +58,7 @@ public class NodeTests {
 	}
 
 	@Test
-	public void test_txMore() {
+	public void txMore() {
 		Wallet miner = new Wallet(null);
 		BlockChain blockChain = new BlockChain(miner.getWalletAddress());
 		miner.setBlockchain(blockChain);

@@ -1,4 +1,4 @@
-package im.djm.test.unit.wallet;
+package im.djm.test.wallet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import im.djm.wallet.Trezor;
 
+/**
+ * @author djm.im
+ */
 public class TrezorTest {
 
 	@Test

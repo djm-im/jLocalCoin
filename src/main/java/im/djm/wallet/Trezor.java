@@ -3,6 +3,9 @@ package im.djm.wallet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author djm.im
+ */
 public class Trezor {
 
 	private Map<String, Wallet> wallets = new HashMap<>();

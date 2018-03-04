@@ -1,4 +1,4 @@
-package im.djm.test.unit.blockchain.hash;
+package im.djm.test.blockchain.hash;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -13,20 +13,15 @@ import im.djm.blockchain.hash.Hash;
  */
 public class HashEqualsTest {
 
-	@Test
-	public void test_true() {
-		assertThat(true).isEqualTo(true);
-	}
-
 	@SuppressWarnings("null")
 	@Test
-	public void test_null_hash() {
+	public void nullHash() {
 		Hash h = null;
 		assertThatThrownBy(() -> h.toString()).isInstanceOf(NullPointerException.class).hasNoCause();
 	}
 
 	@Test
-	public void test_reflexive() {
+	public void reflexive() {
 		// 1) It is reflexive: for any non-null reference value x, x.equals(x) should
 		// return true.
 
@@ -35,7 +30,7 @@ public class HashEqualsTest {
 	}
 
 	@Test
-	public void test_symmetric() {
+	public void symmetric() {
 		// 2) It is symmetric: for any non-null reference values x and y, x.equals(y)
 		// should return true if and only if y.equals(x) returns true.
 
@@ -52,7 +47,7 @@ public class HashEqualsTest {
 	}
 
 	@Test
-	public void test_transitive() {
+	public void transitive() {
 		// 3) It is transitive: for any non-null reference values x, y, and z, if
 		// x.equals(y) returns true and y.equals(z) returns true, then x.equals(z)
 		// should return true.
@@ -75,7 +70,7 @@ public class HashEqualsTest {
 	}
 
 	@Test
-	public void test_consistent() {
+	public void consistent() {
 		// 4) It is consistent:for any non-null reference values x and y,multiple
 		// invocations of x.equals(y)consistently return true or consistently return
 		// false, provided no information used in equals comparisons on the objects is
@@ -84,7 +79,7 @@ public class HashEqualsTest {
 	}
 
 	@Test
-	public void test_null() {
+	public void aNull() {
 		// 5) For any non-null reference value x,x.equals(null)should return false.
 
 		byte[] bytesX = new byte[32];

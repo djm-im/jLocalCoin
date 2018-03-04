@@ -1,4 +1,4 @@
-package im.djm.test.integration;
+package im.djm.test.blockchain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -19,7 +19,7 @@ import im.djm.wallet.Wallet;
 /**
  * @author djm.im
  */
-public class BlockchainTest {
+public class BlockchainTest02 {
 
 	Wallet miner = new Wallet(null);
 
