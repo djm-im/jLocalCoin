@@ -2,10 +2,8 @@ package im.djm.cli;
 
 import static im.djm.cli.StdOutUtil.printMessages;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import im.djm.node.BlockChainNode;
+import im.djm.wallet.Trezor;
 import im.djm.wallet.Wallet;
 
 /**
@@ -15,9 +13,9 @@ class NodeCliCommands {
 
 	private static final String MINER_WALLET_NAME = "_miner";
 
-	private Map<String, Wallet> wallets = new HashMap<>();
-
 	private BlockChainNode blockChainNode;
+
+	private Trezor trezor;
 
 	public NodeCliCommands() {
 		Wallet minerWallet = new Wallet(null);
@@ -26,7 +24,8 @@ class NodeCliCommands {
 
 		minerWallet.setBlockchain(this.blockChainNode.getBlockchain());
 
-		this.wallets.put(MINER_WALLET_NAME, minerWallet);
+		this.trezor = new Trezor();
+		this.trezor.addMinerWallet(NodeCliCommands.MINER_WALLET_NAME, minerWallet);
 	}
 
 	public String status() {
@@ -51,31 +50,31 @@ class NodeCliCommands {
 			return false;
 
 		case CmdConstants.CMD_SEND:
-			wCmd.sendCoin(wallets, cmdLine);
+			wCmd.sendCoin(this.trezor, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_MSEND:
-			wCmd.sendMultiCoins(wallets, cmdLine);
+			wCmd.sendMultiCoins(this.trezor, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_WNEW:
-			wCmd.createNewWallet(blockChainNode, wallets, cmdLine);
+			wCmd.createNewWallet(this.blockChainNode, this.trezor, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_MWNEW:
-			wCmd.createMultiNewWallets(blockChainNode, wallets, cmdLine);
+			wCmd.createMultiNewWallets(blockChainNode, this.trezor, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_WSTAT:
-			wCmd.walletStatus(wallets, cmdLine);
+			wCmd.walletStatus(this.trezor, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_WDEL:
-			wCmd.deleteWallet(wallets, cmdLine);
+			wCmd.deleteWallet(this.trezor, cmdLine);
 			return true;
 
 		case CmdConstants.CMD_WLIST:
-			wCmd.listAllWallets(wallets);
+			wCmd.listAllWallets(this.trezor);
 			return true;
 
 		case CmdConstants.CMD_PRINT:
