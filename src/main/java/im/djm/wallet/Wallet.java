@@ -11,6 +11,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.NullBlockChainException;
@@ -72,6 +74,8 @@ public class Wallet {
 	}
 
 	public Tx send(List<Payment> payments) {
+		// TODO
+		// Use immutable payments ==> Java 9
 		if (this.blockChain == null) {
 			throw new NullBlockChainException("Cannot send coins: blockchain is not set.");
 		}
@@ -131,33 +135,53 @@ public class Wallet {
 
 		Tx newTx = createNewTx(payments, spentOutputs, senderBalance, totalSpent);
 		this.blockChain.add(newTx);
+
 		return newTx;
 	}
 
 	private Tx createNewTx(List<Payment> payments, List<Utxo> spentOutputs, long senderBalance, long totalSpent) {
-		Tx newTx = this.fillInputs(spentOutputs);
+		Tx newTx = fillInputsAndSign(spentOutputs);
 
-		List<Payment> listPayments = this.adddChangeToOutputs(payments, senderBalance, totalSpent);
-		this.createOutputs(newTx, listPayments);
-		this.signTx(newTx);
+		List<Payment> allPayments = addChangePayment(payments, senderBalance, totalSpent);
+
+		this.createOutputs(newTx, allPayments);
 
 		return newTx;
 	}
 
-	private List<Payment> adddChangeToOutputs(List<Payment> payments, long senderBalance, long totalSpent) {
-		// TODO
-		// Throw exception if senderBalance < totalSpent
-		if (senderBalance > totalSpent) {
-			long change = senderBalance - totalSpent;
-			payments.add(new Payment(this.walletAddress, change));
+	private List<Payment> addChangePayment(List<Payment> payments, long senderBalance, long totalSpent) {
+		if (senderBalance == totalSpent) {
+			return payments;
 		}
 
-		return payments;
+		// TODO
+		// Throw exception if senderBalance < totalSpent
+		// if (senderBalance > totalSpent) {
+		Payment changePayment = this.createChangePayment(senderBalance, totalSpent);
+		List<Payment> newPayments = Lists.newArrayList(payments);
+		newPayments.add(changePayment);
+
+		return newPayments;
 	}
 
-	private Tx fillInputs(List<Utxo> prevTxOutputs) {
+	private Tx fillInputsAndSign(List<Utxo> spentOutputs) {
+		Tx newTx = this.fillInputs(spentOutputs);
+
+		newTx = this.signTx(newTx);
+
+		return newTx;
+	}
+
+	private Payment createChangePayment(long senderBalance, long totalSpent) {
+		long change = senderBalance - totalSpent;
+		Payment changePayment = new Payment(this.walletAddress, change);
+
+		return changePayment;
+	}
+
+	private Tx fillInputs(List<Utxo> txOutputs) {
 		Tx tx = new Tx();
-		prevTxOutputs.forEach(utxo -> {
+		txOutputs.forEach(utxo -> {
 			tx.addInput(utxo.getTxId(), utxo.getOutputIndexd());
 		});
 
@@ -170,11 +194,13 @@ public class Wallet {
 		});
 	}
 
-	private void signTx(Tx newTx) {
+	private Tx signTx(Tx newTx) {
 		byte[] inputSign = newTx.getRawDataForSignature();
 		byte[] signature = txSignature(inputSign);
 
 		newTx.addSignature(signature);
+
+		return newTx;
 	}
 
 	private byte[] txSignature(byte[] rawDataToSign) {

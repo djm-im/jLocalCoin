@@ -150,6 +150,10 @@ public class Tx {
 		return this.outputs.size();
 	}
 
+	public TxSignature getSignature() {
+		return this.txSignature;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
