@@ -25,14 +25,14 @@ public class BlockchainTest02 {
 
 	@Test
 	public void testMain2() {
-		BlockChain blockChain = new BlockChain(miner.getWalletAddress());
+		BlockChain blockChain = new BlockChain(miner.address());
 		miner.setBlockchain(blockChain);
 
 		Wallet w1 = Wallet.createNewWallet().setBlockchain(blockChain);
 		Wallet w2 = Wallet.createNewWallet().setBlockchain(blockChain);
 		Wallet w3 = Wallet.createNewWallet().setBlockchain(blockChain);
 
-		List<Payment> pm0 = Lists.newArrayList(new Payment(w1.getWalletAddress(), 100));
+		List<Payment> pm0 = Lists.newArrayList(new Payment(w1.address(), 100));
 		Tx tx0 = miner.send(pm0);
 
 		assertThat(tx0).isNotNull();
@@ -40,14 +40,14 @@ public class BlockchainTest02 {
 		assertThat(tx0.getOutputSize()).isEqualTo(1);
 
 		Output out0 = tx0.getOutput(0);
-		assertThat(out0.getWalletAddres()).isEqualTo(w1.getWalletAddress());
+		assertThat(out0.getWalletAddres()).isEqualTo(w1.address());
 		assertThat(out0.getCoinValue()).isEqualTo(100);
 
 		assertThat(miner.balance()).isEqualTo(100);
 		assertThat(w1.balance()).isEqualTo(100);
 		assertThat(w2.balance()).isEqualTo(0);
 
-		List<Payment> pm1 = Lists.newArrayList(new Payment(w2.getWalletAddress(), 49));
+		List<Payment> pm1 = Lists.newArrayList(new Payment(w2.address(), 49));
 		Tx tx1 = w1.send(pm1);
 
 		assertThat(tx1).isNotNull();
@@ -56,11 +56,11 @@ public class BlockchainTest02 {
 
 		Output out1 = tx1.getOutput(0);
 		assertThat(out1.getCoinValue()).isEqualTo(49);
-		assertThat(out1.getWalletAddres()).isEqualTo(w2.getWalletAddress());
+		assertThat(out1.getWalletAddres()).isEqualTo(w2.address());
 
 		Output out2 = tx1.getOutput(1);
 		assertThat(out2.getCoinValue()).isEqualTo(51);
-		assertThat(out2.getWalletAddres()).isEqualTo(w1.getWalletAddress());
+		assertThat(out2.getWalletAddres()).isEqualTo(w1.address());
 
 		assertThat(miner.balance()).isEqualTo(200);
 		assertThat(w1.balance()).isEqualTo(51);
@@ -68,12 +68,12 @@ public class BlockchainTest02 {
 		assertThat(w3.balance()).isEqualTo(0);
 
 		assertThatThrownBy(() -> {
-			List<Payment> pm2 = Lists.newArrayList(new Payment(w2.getWalletAddress(), 200));
+			List<Payment> pm2 = Lists.newArrayList(new Payment(w2.address(), 200));
 			w1.send(pm2);
 		}).isInstanceOf(TxException.class).hasMessage("Not enough coins for tx. Tried to send 200. Utxo is 51.");
 
 		assertThatThrownBy(() -> {
-			List<Payment> pm3 = Lists.newArrayList(new Payment(w1.getWalletAddress(), 100));
+			List<Payment> pm3 = Lists.newArrayList(new Payment(w1.address(), 100));
 			w3.send(pm3);
 		}).isInstanceOf(TxException.class).hasMessage("Not enough coins for tx. Tried to send 100. Utxo is 0.");
 	}

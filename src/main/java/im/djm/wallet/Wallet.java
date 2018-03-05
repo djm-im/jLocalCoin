@@ -67,7 +67,7 @@ public class Wallet {
 		return this;
 	}
 
-	public WalletAddress getWalletAddress() {
+	public WalletAddress address() {
 		return this.walletAddress;
 	}
 

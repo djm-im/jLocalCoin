@@ -43,7 +43,7 @@ class WalletCmd implements Cmd {
 
 			long coinValue = Long.valueOf(cmdLine[i + 1]);
 			Wallet walletReceiver = trezor.get(walletReceiverName);
-			Payment payment = new Payment(walletReceiver.getWalletAddress(), coinValue);
+			Payment payment = new Payment(walletReceiver.address(), coinValue);
 
 			payments.add(payment);
 		}
@@ -75,7 +75,7 @@ class WalletCmd implements Cmd {
 		Wallet wallet2 = trezor.get(wallet2Name);
 		int coinValue = Integer.valueOf(cmdLine[3]);
 
-		Payment payment = new Payment(wallet2.getWalletAddress(), coinValue);
+		Payment payment = new Payment(wallet2.address(), coinValue);
 
 		wallet1.send(Lists.newArrayList(payment));
 	}

@@ -20,7 +20,7 @@ public class BlockChainNodeTest {
 	@Test
 	public void blockChainNode() {
 		Wallet miner = Wallet.createNewWallet();
-		BlockChainNode blockChainNode = new BlockChainNode(miner.getWalletAddress());
+		BlockChainNode blockChainNode = new BlockChainNode(miner.address());
 
 		assertThat(blockChainNode).isNotNull();
 
@@ -36,7 +36,7 @@ public class BlockChainNodeTest {
 		Tx tx = blockChainNode.getBlockchain().getTxFromPool(txId);
 		assertThat(tx.getOutputs()).hasSize(1);
 
-		assertThat(tx.getOutput(0).getWalletAddres()).isEqualTo(miner.getWalletAddress());
+		assertThat(tx.getOutput(0).getWalletAddres()).isEqualTo(miner.address());
 	}
 
 }

@@ -32,13 +32,13 @@ public class WalletTest {
 	public void initVariables() {
 		this.wallet = Wallet.createNewWallet();
 
-		this.blockchain = new BlockChain(this.wallet.getWalletAddress());
+		this.blockchain = new BlockChain(this.wallet.address());
 	}
 
 	@Test
 	public void sendNotSetBlockchain() {
 		assertThatThrownBy(() -> {
-			WalletAddress walletAddress = Wallet.createNewWallet().getWalletAddress();
+			WalletAddress walletAddress = Wallet.createNewWallet().address();
 			Payment paymet = new Payment(walletAddress, 10);
 			List<Payment> payments = Lists.newArrayList(paymet);
 
@@ -69,7 +69,7 @@ public class WalletTest {
 		assertThatThrownBy(() -> {
 			this.wallet.setBlockchain(this.blockchain);
 
-			WalletAddress walletAddress = Wallet.createNewWallet().getWalletAddress();
+			WalletAddress walletAddress = Wallet.createNewWallet().address();
 			Payment pm0 = new Payment(walletAddress, 10);
 			Payment pm1 = null;
 			Payment pm2 = new Payment(walletAddress, 20);
@@ -86,7 +86,7 @@ public class WalletTest {
 		assertThatThrownBy(() -> {
 			this.wallet.setBlockchain(this.blockchain);
 
-			Payment payment = new Payment(Wallet.createNewWallet().getWalletAddress(), -1);
+			Payment payment = new Payment(Wallet.createNewWallet().address(), -1);
 			List<Payment> payments = Lists.newArrayList(payment);
 			this.wallet.send(payments);
 		}).isInstanceOf(TxException.class).hasMessage("Cannot send zero or less value for coin. Tried to send -1.");
