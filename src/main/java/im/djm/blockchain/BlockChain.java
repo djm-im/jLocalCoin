@@ -173,33 +173,6 @@ public class BlockChain {
 		return true;
 	}
 
-	/**
-	 * 
-	 * @param data
-	 * 
-	 *            Deprecated method if used in the first version of blockchain
-	 *            (without tx)
-	 */
-	@Deprecated
-	public void add(Data data) {
-		if (!BlockChain.dataValidator.isValid(data, BlockChain.dataValidationRules)) {
-			// TODO: throw exception
-			// Cannot add invalid data
-			return;
-		}
-
-		Block block = generateNewBlock(data);
-		this.add(block);
-	}
-
-	@Deprecated
-	private Block generateNewBlock(Data data) {
-		Block prevBlock = this.getTopBlock();
-		Block block = Miner.createNewBlock(prevBlock, data);
-
-		return block;
-	}
-
 	public void add(Tx tx, List<Utxo> spentOutputs) {
 		TxData txData = new TxData();
 		txData.add(tx);
