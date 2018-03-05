@@ -15,6 +15,7 @@ import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.NullWalletAddressException;
+import im.djm.tx.Input;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
@@ -129,7 +130,7 @@ public class BlockChain {
 	private void initNullTxBlock() {
 		NullTxData nullTxData = new NullTxData();
 
-		Block txBlock = generateNewTxBlock(nullTxData, new ArrayList<>());
+		Block txBlock = generateNewTxBlock(nullTxData);
 		this.add(txBlock);
 	}
 
@@ -173,19 +174,19 @@ public class BlockChain {
 		return true;
 	}
 
-	public void add(Tx tx, List<Utxo> spentOutputs) {
+	public void add(Tx tx) {
 		TxData txData = new TxData();
 		txData.add(tx);
 
-		Block block = generateNewTxBlock(txData, spentOutputs);
+		Block block = generateNewTxBlock(txData);
 
 		this.add(block);
 	}
 
-	private Block generateNewTxBlock(final TxData txData, List<Utxo> spentOutputs) {
+	private Block generateNewTxBlock(final TxData txData) {
 		TxData txDataLocal = this.addCoinbaseTx(txData);
 
-		this.updateTxPoolAndUtxoPool(txDataLocal, spentOutputs);
+		this.updateTxPoolAndUtxoPool(txDataLocal);
 
 		Block prevBlock = this.getTopBlock();
 
@@ -199,18 +200,22 @@ public class BlockChain {
 		return txData;
 	}
 
-	private void updateTxPoolAndUtxoPool(TxData txData, List<Utxo> spentOutputs) {
-		for (Tx tx : txData.getTxs()) {
+	private void updateTxPoolAndUtxoPool(TxData txData) {
+		txData.getTxs().forEach(tx -> {
 			this.txPool.add(tx);
+
 			for (int index = 0; index < tx.getOutputSize(); index++) {
 				Utxo utxo = new Utxo(tx.getTxId(), index);
 				this.utxoPool.add(utxo);
 			}
-		}
 
-		for (Utxo utxo : spentOutputs) {
-			this.utxoPool.remove(utxo);
-		}
+			List<Input> inputs = tx.getInputs();
+			inputs.forEach(input -> {
+				Utxo utxo = new Utxo(input.getPrevTxId(), input.getOutputIndex());
+				this.utxoPool.remove(utxo);
+			});
+
+		});
 	}
 
 	private Block getTopBlock() {

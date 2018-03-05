@@ -6,18 +6,16 @@ import im.djm.blockchain.BlockUtil;
 import im.djm.blockchain.hash.TxHash;
 
 /**
- * 
  * @author djm.im
- *
  */
 // Package-private class
-class Input {
+public class Input {
 
 	private TxHash prevTxId;
 
-	private long outputIndex;
+	private int outputIndex;
 
-	public Input(TxHash prevTxId, long outputIndex) {
+	public Input(TxHash prevTxId, int outputIndex) {
 		// TODO
 		// Check is previous tx null - throw exception
 		this.prevTxId = new TxHash(prevTxId);
@@ -32,7 +30,7 @@ class Input {
 		return this.prevTxId;
 	}
 
-	public long getOutputIndex() {
+	public int getOutputIndex() {
 		return this.outputIndex;
 	}
 

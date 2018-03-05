@@ -126,7 +126,7 @@ public class Wallet {
 		}
 
 		Tx newTx = createNewTx(payments, spentOutputs, senderBalance, totalSpent);
-		this.blockChain.add(newTx, spentOutputs);
+		this.blockChain.add(newTx);
 		return newTx;
 	}
 
