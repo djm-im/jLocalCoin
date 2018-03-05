@@ -15,7 +15,6 @@ import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.NullWalletAddressException;
-import im.djm.tx.Input;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
@@ -202,19 +201,29 @@ public class BlockChain {
 
 	private void updateTxPoolAndUtxoPool(TxData txData) {
 		txData.getTxs().forEach(tx -> {
-			this.txPool.add(tx);
+			this.updateUtxoPoolByTx(tx);
+		});
+	}
 
-			for (int index = 0; index < tx.getOutputSize(); index++) {
-				Utxo utxo = new Utxo(tx.getTxId(), index);
-				this.utxoPool.add(utxo);
-			}
+	private void updateUtxoPoolByTx(Tx tx) {
+		this.txPool.add(tx);
 
-			List<Input> inputs = tx.getInputs();
-			inputs.forEach(input -> {
-				Utxo utxo = new Utxo(input.getPrevTxId(), input.getOutputIndex());
-				this.utxoPool.remove(utxo);
-			});
+		this.utxoPoolAddUtxos(tx);
 
+		this.utxoPoolRemoveUtxos(tx);
+	}
+
+	private void utxoPoolAddUtxos(Tx tx) {
+		for (int index = 0; index < tx.getOutputSize(); index++) {
+			Utxo utxo = new Utxo(tx.getTxId(), index);
+			this.utxoPool.add(utxo);
+		}
+	}
+
+	private void utxoPoolRemoveUtxos(Tx tx) {
+		tx.getInputs().forEach(input -> {
+			Utxo utxo = new Utxo(input.getPrevTxId(), input.getOutputIndex());
+			this.utxoPool.remove(utxo);
 		});
 	}
 
