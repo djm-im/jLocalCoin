@@ -108,6 +108,10 @@ public class Wallet {
 	private long totalSpent(List<Payment> payments) {
 		long totalSpent = 0;
 		for (Payment payment : payments) {
+			if (payment == null) {
+				throw new NullPaymentException("Payment cannot be null.");
+			}
+
 			long coinValue = payment.getCoinValue();
 			if (coinValue <= 0) {
 				throw new TxException("Cannot send zero or less value for coin. Tried to send " + coinValue + ".");

@@ -18,4 +18,9 @@ public final class Payment {
 	public long getCoinValue() {
 		return this.coinValue;
 	}
+
+	@Override
+	public String toString() {
+		return "{ Payment: " + this.walletAddress + " receives " + this.coinValue + "}";
+	}
 }
