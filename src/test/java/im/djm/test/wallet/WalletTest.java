@@ -12,7 +12,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import im.djm.blockchain.BlockChain;
-import im.djm.exception.NullBlockChainException;
 import im.djm.exception.TxException;
 import im.djm.tx.Tx;
 import im.djm.wallet.NullPaymentException;
@@ -27,8 +26,6 @@ public class WalletTest {
 
 	private Wallet wallet;
 
-	// TODO
-	// Split into two class
 	private BlockChain blockchain;
 
 	@Before
@@ -36,31 +33,12 @@ public class WalletTest {
 		this.wallet = Wallet.createNewWallet();
 
 		this.blockchain = new BlockChain(this.wallet.address());
-	}
-
-	@Test
-	public void sendNotSetBlockchain() {
-		assertThatThrownBy(() -> {
-			WalletAddress walletAddress = Wallet.createNewWallet().address();
-			Payment paymet = new Payment(walletAddress, 10);
-			List<Payment> payments = Lists.newArrayList(paymet);
-
-			this.wallet.send(payments);
-		}).isInstanceOf(NullBlockChainException.class).hasMessage("Cannot send coins: blockchain is not set.");
-	}
-
-	@Test
-	public void balanceBlockChainNotSet() {
-		assertThatThrownBy(() -> {
-			this.wallet.balance();
-		}).isInstanceOf(NullBlockChainException.class).hasMessage("Cannot check balance: blockchain is not set.");
+		this.wallet.setBlockchain(this.blockchain);
 	}
 
 	@Test
 	public void sendNullPayment() {
 		assertThatThrownBy(() -> {
-			this.wallet.setBlockchain(this.blockchain);
-
 			Payment payment = null;
 			List<Payment> payments = Lists.newArrayList(payment);
 			this.wallet.send(payments);
@@ -70,8 +48,6 @@ public class WalletTest {
 	@Test
 	public void sendMultipleNullPayments() {
 		assertThatThrownBy(() -> {
-			this.wallet.setBlockchain(this.blockchain);
-
 			WalletAddress walletAddress = Wallet.createNewWallet().address();
 			Payment pm0 = new Payment(walletAddress, 10);
 			Payment pm1 = null;
@@ -84,8 +60,6 @@ public class WalletTest {
 
 	@Test
 	public void sendNegativePayment() {
-		this.wallet.setBlockchain(this.blockchain);
-
 		assertThatThrownBy(() -> {
 			this.wallet.setBlockchain(this.blockchain);
 
@@ -97,8 +71,6 @@ public class WalletTest {
 
 	@Test
 	public void sendImmutablePayments() {
-		this.wallet.setBlockchain(this.blockchain);
-
 		Payment payment = new Payment(Wallet.createNewWallet().address(), 10);
 		List<Payment> payments = ImmutableList.of(payment);
 		Tx txSent = this.wallet.send(payments);
@@ -108,8 +80,6 @@ public class WalletTest {
 
 	@Test
 	public void checkSignature() {
-		this.wallet.setBlockchain(this.blockchain);
-
 		Payment payment = new Payment(Wallet.createNewWallet().address(), 20);
 		List<Payment> payments = Lists.newArrayList(payment);
 		Tx txSent = this.wallet.send(payments);
