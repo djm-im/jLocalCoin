@@ -112,15 +112,6 @@ public class BlockChain {
 		this.initNullTxBlock();
 	}
 
-	// TODO
-	// constructor should be private
-	@Deprecated
-	public BlockChain() {
-		this.initBlockValidationRules();
-
-		this.initNullBlock();
-	}
-
 	// the null block has to be the same for in all nodes
 	private void initNullBlock() {
 		this.wrapAndAddBlock(NullValues.NULL_BLOCK, null);
