@@ -1,4 +1,4 @@
-package im.djm.test.node;
+package im.djm.test.blockchain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,7 +17,7 @@ import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;
 
-public class NodeTests {
+public class BlockChainTest03 {
 
 	@Test
 	public void nullTx() {
