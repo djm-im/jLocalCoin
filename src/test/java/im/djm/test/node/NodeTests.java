@@ -28,8 +28,6 @@ public class NodeTests {
 		List<Utxo> allUtxo = bc.getAllUtxo();
 		assertThat(allUtxo).hasSize(1);
 
-		System.out.println(allUtxo);
-
 		Tx txNull = bc.getTxFromPool(allUtxo.get(0).getTxId());
 		assertThat(txNull.isCoinbase()).isTrue();
 		assertThat(txNull.getInputSize()).isEqualTo(0);
@@ -38,8 +36,6 @@ public class NodeTests {
 		Output txOutput = txNull.getOutput(0);
 		assertThat(txOutput.getWalletAddres()).isEqualTo(miner.address());
 		assertThat(txOutput.getCoinValue()).isEqualTo(100);
-
-		System.out.println(txNull);
 	}
 
 	@Test
@@ -65,11 +61,10 @@ public class NodeTests {
 
 		Wallet w1 = Wallet.createNewWallet();
 		Payment payment = new Payment(w1.address(), 100);
-		Tx tx = miner.send(Lists.newArrayList(payment));
+		miner.send(Lists.newArrayList(payment));
 
 		assertThat(miner.balance()).isEqualTo(100);
 		assertThat(miner.balance()).isEqualTo(100);
-		System.out.println(tx);
 	}
 
 	// TODO

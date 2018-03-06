@@ -46,8 +46,6 @@ public class BlockTest {
 		assertThat(blockHash).isNotNull();
 		assertThat(blockHash.getBinaryLeadingZeros()).isGreaterThanOrEqualTo(0);
 		assertThat(blockHash.getRawHash()).hasSize(32);
-
-		System.out.println("Block " + block);
 	}
 
 }

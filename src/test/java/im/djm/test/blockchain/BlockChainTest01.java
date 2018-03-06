@@ -42,12 +42,6 @@ public class BlockChainTest01 {
 
 		Tx txFromPool = blockChain.getTxFromPool(txId);
 		assertThat(txFromPool).isNotNull();
-
-		System.out.println();
-		System.out.println(blockChain);
-		System.out.println();
-		System.out.println(allUtxo);
-		System.out.println();
 	}
 
 }
