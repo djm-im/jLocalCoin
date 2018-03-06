@@ -75,7 +75,6 @@ public class HashEqualsTest {
 		// invocations of x.equals(y)consistently return true or consistently return
 		// false, provided no information used in equals comparisons on the objects is
 		// modified.
-
 	}
 
 	@Test

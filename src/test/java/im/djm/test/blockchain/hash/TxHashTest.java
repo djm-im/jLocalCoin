@@ -13,7 +13,7 @@ import im.djm.exception.NullHashException;
 public class TxHashTest {
 
 	@Test
-	public void test_nullHash() {
+	public void nullHash() {
 		assertThatThrownBy(() -> {
 			byte[] arr = null;
 			new TxHash(arr);
@@ -21,7 +21,7 @@ public class TxHashTest {
 	}
 
 	@Test
-	public void test_emptyArray() {
+	public void emptyArray() {
 		byte[] bytes = new byte[0];
 		new TxHash(bytes);
 	}

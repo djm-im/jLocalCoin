@@ -13,16 +13,10 @@ import im.djm.exception.NullHashException;
 public class DataHashTest {
 
 	@Test
-	public void test_nullHash() {
+	public void nullHash() {
 		assertThatThrownBy(() -> {
 			new DataHash(null);
 		}).isInstanceOf(NullHashException.class).hasMessage("Hash cannot have null value.").hasNoCause();
-	}
-
-	@Test
-	public void test_emptyArray() {
-		byte[] bytes = new byte[0];
-		new DataHash(bytes);
 	}
 
 }

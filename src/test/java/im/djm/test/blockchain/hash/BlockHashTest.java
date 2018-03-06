@@ -17,14 +17,14 @@ import im.djm.exception.NullHashException;
 public class BlockHashTest {
 
 	@Test
-	public void test_nullHash() {
+	public void nullHash() {
 		assertThatThrownBy(() -> {
 			new BlockHash(null);
 		}).isInstanceOf(NullHashException.class).hasMessage("Hash cannot have null value.").hasNoCause();
 	}
 
 	@Test
-	public void test_isSame() throws NoSuchAlgorithmException {
+	public void isSame() throws NoSuchAlgorithmException {
 		byte[] rawArr = new byte[32];
 
 		BlockHash h1 = new BlockHash(rawArr);
@@ -32,7 +32,7 @@ public class BlockHashTest {
 	}
 
 	@Test
-	public void testHashEquals() {
+	public void hashEquals() {
 		byte[] zeros = new byte[32];
 		Hash h0 = new BlockHash(zeros);
 		Hash h1 = new BlockHash(zeros);
@@ -47,7 +47,7 @@ public class BlockHashTest {
 	}
 
 	@Test
-	public void testToString() {
+	public void toStringTest() {
 		byte[] rawArr = new byte[32];
 
 		Hash h0 = new BlockHash(rawArr);

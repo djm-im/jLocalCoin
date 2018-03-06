@@ -13,7 +13,7 @@ import im.djm.exception.NullHashException;
 public class AddressHashTest {
 
 	@Test
-	public void test_nullHash() {
+	public void nullHash() {
 		assertThatThrownBy(() -> {
 			new AddressHash(null);
 		}).isInstanceOf(NullHashException.class);
