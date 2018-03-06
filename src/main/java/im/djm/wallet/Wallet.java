@@ -74,20 +74,20 @@ public class Wallet {
 	}
 
 	public Tx send(List<Payment> payments) {
+		PaymentList paymentList = new PaymentList(payments);
+
 		// TODO
 		// Use immutable payments ==> Java 9
 		if (this.blockChain == null) {
 			throw new NullBlockChainException("Cannot send coins: blockchain is not set.");
 		}
 
-		long totalSpent = totalSpent(payments);
-
 		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
 
 		List<Utxo> spentOutputs = new ArrayList<>();
 		long senderBalance = 0;
 		int index = 0;
-		while (senderBalance < totalSpent && index < utxoList.size()) {
+		while (senderBalance < paymentList.total() && index < utxoList.size()) {
 			Utxo utxo = utxoList.get(index);
 			spentOutputs.add(utxo);
 
@@ -96,7 +96,7 @@ public class Wallet {
 			index++;
 		}
 
-		Tx newTx = createAndAddTx(payments, totalSpent, spentOutputs, senderBalance);
+		Tx newTx = createAndAddTx(paymentList, spentOutputs, senderBalance);
 		return newTx;
 	}
 
@@ -109,59 +109,41 @@ public class Wallet {
 		return coinValue;
 	}
 
-	private long totalSpent(List<Payment> payments) {
-		long totalSpent = 0;
-		for (Payment payment : payments) {
-			if (payment == null) {
-				throw new NullPaymentException("Payment cannot be null.");
-			}
+	private Tx createAndAddTx(PaymentList paymentList, List<Utxo> spentOutputs, long senderBalance) {
 
-			long coinValue = payment.getCoinValue();
-			if (coinValue <= 0) {
-				throw new TxException("Cannot send zero or less value for coin. Tried to send " + coinValue + ".");
-			}
-
-			totalSpent = totalSpent + coinValue;
-		}
-
-		return totalSpent;
-	}
-
-	private Tx createAndAddTx(List<Payment> payments, long totalSpent, List<Utxo> spentOutputs, long senderBalance) {
-		if (senderBalance < totalSpent) {
-			String errMsg = "Not enough coins for tx. Tried to send " + totalSpent + ". Utxo is " + senderBalance + ".";
+		if (senderBalance < paymentList.total()) {
+			String errMsg = "Not enough coins for tx. Tried to send " + paymentList.total() + ". Utxo is "
+					+ senderBalance + ".";
 			throw new TxException(errMsg);
 		}
 
-		Tx newTx = createNewTx(payments, spentOutputs, senderBalance, totalSpent);
+		Tx newTx = createNewTx(paymentList, spentOutputs, senderBalance);
 		this.blockChain.add(newTx);
 
 		return newTx;
 	}
 
-	private Tx createNewTx(List<Payment> payments, List<Utxo> spentOutputs, long senderBalance, long totalSpent) {
+	private Tx createNewTx(PaymentList paymentList, List<Utxo> spentOutputs, long senderBalance) {
 		Tx newTx = fillInputsAndSign(spentOutputs);
 
-		List<Payment> allPayments = addChangePayment(payments, senderBalance, totalSpent);
+		PaymentList paymentListWithChange = addChangePayment(paymentList, senderBalance);
 
-		this.createOutputs(newTx, allPayments);
+		this.createOutputs(newTx, paymentListWithChange);
 
 		return newTx;
 	}
 
-	private List<Payment> addChangePayment(List<Payment> payments, long senderBalance, long totalSpent) {
-		if (senderBalance == totalSpent) {
-			return payments;
+	private PaymentList addChangePayment(PaymentList paymentList, long senderBalance) {
+		if (senderBalance == paymentList.total()) {
+			return paymentList;
 		}
 
-		// TODO
-		// Throw exception if senderBalance < totalSpent
 		// if (senderBalance > totalSpent) {
-		Payment changePayment = this.createChangePayment(senderBalance, totalSpent);
-		List<Payment> newPayments = Lists.newArrayList(payments);
-		newPayments.add(changePayment);
+		Payment changePayment = this.createChangePayment(senderBalance, paymentList.total());
+		List<Payment> paymentsWithChange = Lists.newArrayList(paymentList.getPayments());
+		paymentsWithChange.add(changePayment);
 
-		return newPayments;
+		return new PaymentList(paymentsWithChange);
 	}
 
 	private Tx fillInputsAndSign(List<Utxo> spentOutputs) {
@@ -188,8 +170,8 @@ public class Wallet {
 		return tx;
 	}
 
-	private void createOutputs(Tx tx, List<Payment> payments) {
-		payments.forEach(payment -> {
+	private void createOutputs(Tx tx, PaymentList allPaymentList) {
+		allPaymentList.getPayments().forEach(payment -> {
 			tx.addOutput(payment.getWalletAddress(), payment.getCoinValue());
 		});
 	}
