@@ -23,21 +23,23 @@ public final class PaymentList {
 	}
 
 	private long totalSpent(List<Payment> payments) {
-		long totalSpent = 0;
-		for (Payment payment : payments) {
-			if (payment == null) {
-				throw new NullPaymentException("Payment cannot be null.");
-			}
+		return payments.stream().reduce(0L, (sum, payment) -> {
+			this.validatePayment(payment);
 
-			long coinValue = payment.getCoinValue();
-			if (coinValue <= 0) {
-				throw new TxException("Cannot send zero or less value for coin. Tried to send " + coinValue + ".");
-			}
+			sum = sum + payment.getCoinValue();
+			return sum;
+		}, (x, y) -> x + y);
+	}
 
-			totalSpent = totalSpent + coinValue;
+	private void validatePayment(Payment payment) {
+		if (payment == null) {
+			throw new NullPaymentException("Payment cannot be null.");
 		}
 
-		return totalSpent;
+		long coinValue = payment.getCoinValue();
+		if (coinValue <= 0) {
+			throw new TxException("Cannot send zero or less value for coin. Tried to send " + coinValue + ".");
+		}
 	}
 
 	public List<Payment> getPayments() {
