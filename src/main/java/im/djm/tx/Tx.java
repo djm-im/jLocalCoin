@@ -36,7 +36,7 @@ public class Tx {
 		this.inputs = new ArrayList<>();
 		this.outputs = new ArrayList<>();
 		this.coinbase = false;
-		this.timestamp = System.currentTimeMillis() / 1000;
+		this.timestamp = timeNow();
 		// this.txSignature = null; -- txSignature is later setup
 	}
 
@@ -47,8 +47,13 @@ public class Tx {
 		// Create NullArrayList
 		this.inputs = new ArrayList<>();
 		this.outputs = new ArrayList<>();
-		this.timestamp = System.currentTimeMillis() / 1000;
+		this.timestamp = timeNow();
+
 		this.addOutput(minerAddress, coinValue);
+	}
+
+	private long timeNow() {
+		return System.currentTimeMillis() / 1000;
 	}
 
 	public void addOutput(WalletAddress address, long coinAmount) {
