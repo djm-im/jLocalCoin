@@ -143,7 +143,7 @@ class WalletCmd implements Cmd {
 			printMessages("Wallet with name " + walletName + " already exists.");
 		}
 
-		Wallet newWallet = Wallet.createNewWallet().setBlockchain(blockChainNode.getBlockchain());
+		Wallet newWallet = Wallet.createNewWallet().setBlockchainNode(blockChainNode);
 		trezor.put(walletName, newWallet);
 
 		return newWallet;

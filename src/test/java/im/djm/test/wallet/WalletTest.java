@@ -11,8 +11,8 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
+import im.djm.node.BlockChainNode;
 import im.djm.tx.Tx;
 import im.djm.wallet.NullPaymentException;
 import im.djm.wallet.Payment;
@@ -26,14 +26,14 @@ public class WalletTest {
 
 	private Wallet wallet;
 
-	private BlockChain blockchain;
+	private BlockChainNode blockChainNode;
 
 	@Before
 	public void initVariables() {
 		this.wallet = Wallet.createNewWallet();
 
-		this.blockchain = new BlockChain(this.wallet.address());
-		this.wallet.setBlockchain(this.blockchain);
+		this.blockChainNode = new BlockChainNode(this.wallet.address());
+		this.wallet.setBlockchainNode(this.blockChainNode);
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class WalletTest {
 	@Test
 	public void sendNegativePayment() {
 		assertThatThrownBy(() -> {
-			this.wallet.setBlockchain(this.blockchain);
+			this.wallet.setBlockchainNode(this.blockChainNode);
 
 			Payment payment = new Payment(Wallet.createNewWallet().address(), -1);
 			List<Payment> payments = Lists.newArrayList(payment);

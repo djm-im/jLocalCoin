@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
+import im.djm.node.BlockChainNode;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.wallet.Payment;
@@ -25,12 +25,12 @@ public class BlockchainTest02 {
 
 	@Test
 	public void testMain2() {
-		BlockChain blockChain = new BlockChain(miner.address());
-		miner.setBlockchain(blockChain);
+		BlockChainNode blockChainNode = new BlockChainNode(miner.address());
+		miner.setBlockchainNode(blockChainNode);
 
-		Wallet w1 = Wallet.createNewWallet().setBlockchain(blockChain);
-		Wallet w2 = Wallet.createNewWallet().setBlockchain(blockChain);
-		Wallet w3 = Wallet.createNewWallet().setBlockchain(blockChain);
+		Wallet w1 = Wallet.createNewWallet().setBlockchainNode(blockChainNode);
+		Wallet w2 = Wallet.createNewWallet().setBlockchainNode(blockChainNode);
+		Wallet w3 = Wallet.createNewWallet().setBlockchainNode(blockChainNode);
 
 		List<Payment> pm0 = Lists.newArrayList(new Payment(w1.address(), 100));
 		Tx tx0 = miner.send(pm0);

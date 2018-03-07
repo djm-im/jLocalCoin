@@ -10,6 +10,7 @@ import org.junit.Test;
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.NullWalletAddressException;
+import im.djm.node.BlockChainNode;
 import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.Wallet;
@@ -29,18 +30,18 @@ public class BlockChainTest01 {
 	@Test
 	public void oneBlockTest() {
 		Wallet miner = Wallet.createNewWallet();
-		BlockChain blockChain = new BlockChain(miner.address());
-		miner.setBlockchain(blockChain);
+		BlockChainNode blockChainNode = new BlockChainNode(miner.address());
+		miner.setBlockchainNode(blockChainNode);
 
-		assertThat(blockChain).isNotNull();
-		assertThat(blockChain.status()).isEqualTo("1");
+		assertThat(blockChainNode).isNotNull();
+		assertThat(blockChainNode.status()).isEqualTo("1");
 
-		List<Utxo> allUtxo = blockChain.getAllUtxo();
+		List<Utxo> allUtxo = blockChainNode.getAllUtxo();
 		assertThat(allUtxo).hasSize(1);
 
 		TxHash txId = allUtxo.get(0).getTxId();
 
-		Tx txFromPool = blockChain.getTxFromPool(txId);
+		Tx txFromPool = blockChainNode.getBlockchain().getTxFromPool(txId);
 		assertThat(txFromPool).isNotNull();
 	}
 

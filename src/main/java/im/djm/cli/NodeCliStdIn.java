@@ -29,7 +29,7 @@ public class NodeCliStdIn implements Runnable {
 		Wallet minerWallet = Wallet.createNewWallet();
 
 		this.blockChainNode = new BlockChainNode(minerWallet.address());
-		minerWallet.setBlockchain(this.blockChainNode.getBlockchain());
+		minerWallet.setBlockchainNode(this.blockChainNode);
 
 		this.trezor = new Trezor();
 		this.trezor.addMinerWallet(MINER_WALLET_NAME, minerWallet);

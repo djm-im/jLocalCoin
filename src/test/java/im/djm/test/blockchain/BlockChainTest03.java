@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import im.djm.blockchain.BlockChain;
 import im.djm.exception.TxException;
+import im.djm.node.BlockChainNode;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
@@ -22,13 +22,13 @@ public class BlockChainTest03 {
 	@Test
 	public void nullTx() {
 		Wallet miner = Wallet.createNewWallet();
-		BlockChain bc = new BlockChain(miner.address());
-		miner.setBlockchain(bc);
+		BlockChainNode bcn = new BlockChainNode(miner.address());
+		miner.setBlockchainNode(bcn);
 
-		List<Utxo> allUtxo = bc.getAllUtxo();
+		List<Utxo> allUtxo = bcn.getAllUtxo();
 		assertThat(allUtxo).hasSize(1);
 
-		Tx txNull = bc.getTxFromPool(allUtxo.get(0).getTxId());
+		Tx txNull = bcn.getBlockchain().getTxFromPool(allUtxo.get(0).getTxId());
 		assertThat(txNull.isCoinbase()).isTrue();
 		assertThat(txNull.getInputSize()).isEqualTo(0);
 		assertThat(txNull.getOutputSize()).isEqualTo(1);
@@ -41,8 +41,8 @@ public class BlockChainTest03 {
 	@Test
 	public void noEnoughCoins() {
 		Wallet miner = Wallet.createNewWallet();
-		BlockChain blockChain = new BlockChain(miner.address());
-		miner.setBlockchain(blockChain);
+		BlockChainNode blockChainNode = new BlockChainNode(miner.address());
+		miner.setBlockchainNode(blockChainNode);
 
 		Wallet w1 = Wallet.createNewWallet();
 		assertThatThrownBy(() -> {
@@ -56,8 +56,8 @@ public class BlockChainTest03 {
 	@Test
 	public void txMore() {
 		Wallet miner = Wallet.createNewWallet();
-		BlockChain blockChain = new BlockChain(miner.address());
-		miner.setBlockchain(blockChain);
+		BlockChainNode blockChainNode = new BlockChainNode(miner.address());
+		miner.setBlockchainNode(blockChainNode);
 
 		Wallet w1 = Wallet.createNewWallet();
 		Payment payment = new Payment(w1.address(), 100);

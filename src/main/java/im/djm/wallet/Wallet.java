@@ -13,11 +13,11 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.hash.TxHash;
-import im.djm.exception.NullBlockChainException;
 import im.djm.exception.TxException;
 import im.djm.exception.WrapperException;
+import im.djm.node.BlockChainNode;
+import im.djm.node.NullBlockChainNodeException;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
@@ -31,7 +31,7 @@ public class Wallet {
 
 	private PrivateKey privateKey;
 
-	private BlockChain blockChain;
+	private BlockChainNode blockChainNode;
 
 	public static Wallet createNewWallet() {
 		return new Wallet();
@@ -64,8 +64,9 @@ public class Wallet {
 		return keyPair;
 	}
 
-	public Wallet setBlockchain(BlockChain blockChain) {
-		this.blockChain = blockChain;
+	public Wallet setBlockchainNode(BlockChainNode blockChainNode) {
+		this.blockChainNode = blockChainNode;
+
 		return this;
 	}
 
@@ -78,11 +79,11 @@ public class Wallet {
 
 		// TODO
 		// Use immutable payments ==> Java 9
-		if (this.blockChain == null) {
-			throw new NullBlockChainException("Cannot send coins: blockchain is not set.");
+		if (this.blockChainNode == null) {
+			throw new NullBlockChainNodeException("Cannot send coins: BlockChainNode is not set.");
 		}
 
-		List<Utxo> utxoList = this.blockChain.getUtxoFor(this.walletAddress);
+		List<Utxo> utxoList = this.blockChainNode.getBlockchain().getUtxoFor(this.walletAddress);
 
 		List<Utxo> spentOutputs = new ArrayList<>();
 		long senderBalance = 0;
@@ -102,7 +103,7 @@ public class Wallet {
 
 	private long getCoinValueFor(Utxo utxo) {
 		TxHash txId = utxo.getTxId();
-		Tx txFromPool = this.blockChain.getTxFromPool(txId);
+		Tx txFromPool = this.blockChainNode.getBlockchain().getTxFromPool(txId);
 		Output txOutput = txFromPool.getOutput(utxo.getOutputIndexd());
 		long coinValue = txOutput.getCoinValue();
 
@@ -118,7 +119,8 @@ public class Wallet {
 		}
 
 		Tx newTx = createNewTx(paymentList, spentOutputs, senderBalance);
-		this.blockChain.add(newTx);
+
+		this.blockChainNode.sendCoin(newTx);
 
 		return newTx;
 	}
@@ -206,11 +208,11 @@ public class Wallet {
 	}
 
 	public long balance() {
-		if (this.blockChain == null) {
-			throw new NullBlockChainException("Cannot check balance: blockchain is not set.");
+		if (this.blockChainNode == null) {
+			throw new NullBlockChainNodeException("Cannot check balance: BlockChainNode is not set.");
 		}
 
-		return this.blockChain.getBalance(this.walletAddress);
+		return this.blockChainNode.getBalance(this.walletAddress);
 	}
 
 	@Override

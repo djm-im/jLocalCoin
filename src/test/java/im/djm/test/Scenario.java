@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.hash.TxHash;
+import im.djm.node.BlockChainNode;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
@@ -25,16 +25,16 @@ public class Scenario {
 
 	private Wallet miner;
 	private WalletAddress minerAddress;
-	private BlockChain blockChain;
+	private BlockChainNode blockChainNode;
 
 	@Before
 	public void init() {
 		this.miner = Wallet.createNewWallet();
 		this.minerAddress = this.miner.address();
 
-		this.blockChain = new BlockChain(this.minerAddress);
+		this.blockChainNode = new BlockChainNode(this.minerAddress);
 
-		this.miner.setBlockchain(this.blockChain);
+		this.miner.setBlockchainNode(this.blockChainNode);
 	}
 
 	@Test
@@ -43,17 +43,17 @@ public class Scenario {
 		// Length: 0
 		// Null Data Block
 
-		assertThat(this.blockChain).isNotNull();
+		assertThat(this.blockChainNode).isNotNull();
 
 		// ---------------------------------------------------------------------------------------
 		// Length: 1
 		// Null Tx Block
 
-		assertThat(this.blockChain.status()).isEqualTo("1");
+		assertThat(this.blockChainNode.status()).isEqualTo("1");
 
-		assertThat(this.blockChain.getBalance(this.minerAddress)).isEqualTo(100);
+		assertThat(this.blockChainNode.getBalance(this.minerAddress)).isEqualTo(100);
 
-		List<Utxo> airAllUtxo = this.blockChain.getAllUtxo();
+		List<Utxo> airAllUtxo = this.blockChainNode.getAllUtxo();
 		assertThat(airAllUtxo.size()).isEqualTo(1);
 
 		Utxo airUtxo = airAllUtxo.get(0);
@@ -62,7 +62,7 @@ public class Scenario {
 		TxHash airTxId = airUtxo.getTxId();
 		assertThat(airTxId.toString()).hasSize(66);
 
-		Tx airCoinbaseTx = this.blockChain.getTxFromPool(airTxId);
+		Tx airCoinbaseTx = this.blockChainNode.getBlockchain().getTxFromPool(airTxId);
 		this.assertCoinbaseTx(airCoinbaseTx, this.minerAddress);
 
 		// ---------------------------------------------------------------------------------------
@@ -71,18 +71,18 @@ public class Scenario {
 		// ---------------------------------------------------------------------------------------
 		// Length: 2
 		// Tx 0 Block
-		Wallet djm = Wallet.createNewWallet().setBlockchain(this.blockChain);
+		Wallet djm = Wallet.createNewWallet().setBlockchainNode(this.blockChainNode);
 		List<Payment> tx0Payments = ImmutableList.of(new Payment(djm.address(), 99));
 		Tx tx0Send = this.miner.send(tx0Payments);
 
 		assertThat(tx0Send).isNotNull();
 
-		assertThat(this.blockChain.status()).isEqualTo("2");
+		assertThat(this.blockChainNode.status()).isEqualTo("2");
 
-		assertThat(this.blockChain.getBalance(this.minerAddress)).isEqualTo(101);
-		assertThat(this.blockChain.getBalance(djm.address())).isEqualTo(99);
+		assertThat(this.blockChainNode.getBalance(this.minerAddress)).isEqualTo(101);
+		assertThat(this.blockChainNode.getBalance(djm.address())).isEqualTo(99);
 
-		List<Utxo> tx0allUtxo = this.blockChain.getAllUtxo();
+		List<Utxo> tx0allUtxo = this.blockChainNode.getAllUtxo();
 		assertThat(tx0allUtxo.size()).isEqualTo(3);
 
 		for (Utxo utxo : tx0allUtxo) {
@@ -91,7 +91,7 @@ public class Scenario {
 
 		Tx tx0Coinbase = null;
 		for (Utxo utxo : tx0allUtxo) {
-			Tx tx = this.blockChain.getTxFromPool(utxo.getTxId());
+			Tx tx = this.blockChainNode.getBlockchain().getTxFromPool(utxo.getTxId());
 			if (tx.isCoinbase()) {
 				tx0Coinbase = tx;
 			}
@@ -119,14 +119,14 @@ public class Scenario {
 
 		assertThat(tx1Send).isNotNull();
 
-		assertThat(this.blockChain.status()).isEqualTo("3");
+		assertThat(this.blockChainNode.status()).isEqualTo("3");
 
 		assertThat(this.miner.balance()).isEqualTo(201);
 		assertThat(djm.balance()).isEqualTo(89);
-		assertThat(this.blockChain.getBalance(a.address())).isEqualTo(1);
-		assertThat(this.blockChain.getBalance(b.address())).isEqualTo(2);
-		assertThat(this.blockChain.getBalance(c.address())).isEqualTo(3);
-		assertThat(this.blockChain.getBalance(d.address())).isEqualTo(4);
+		assertThat(this.blockChainNode.getBalance(a.address())).isEqualTo(1);
+		assertThat(this.blockChainNode.getBalance(b.address())).isEqualTo(2);
+		assertThat(this.blockChainNode.getBalance(c.address())).isEqualTo(3);
+		assertThat(this.blockChainNode.getBalance(d.address())).isEqualTo(4);
 
 	}
 
