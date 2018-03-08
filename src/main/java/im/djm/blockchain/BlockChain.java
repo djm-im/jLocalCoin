@@ -25,7 +25,6 @@ import im.djm.wallet.WalletAddress;
 
 /**
  * @author djm.im
- *
  */
 public class BlockChain {
 
@@ -37,14 +36,92 @@ public class BlockChain {
 
 	private BlockWrapper topBlockWrapper;
 
-	private UtxoPool utxoPool;
-
-	private TxPool txPool;
-
 	private WalletAddress minerAddress;
 
 	private static Validator<Data> dataValidator = new Validator<Data>() {
 	};
+
+	public static class TxUtxoPoolsNode {
+
+		private UtxoPool utxoPool;
+
+		private TxPool txPool;
+
+		public TxUtxoPoolsNode() {
+			this.txPool = new TxPool();
+
+			this.utxoPool = new UtxoPool();
+		}
+
+		private void updateTxPoolAndUtxoPool(TxData txData) {
+			txData.getTxs().forEach(tx -> {
+				this.updateUtxoPoolByTx(tx);
+			});
+		}
+
+		private void updateUtxoPoolByTx(Tx tx) {
+			this.txPool.add(tx);
+
+			this.utxoPoolAddUtxos(tx);
+
+			this.utxoPoolRemoveUtxos(tx);
+		}
+
+		private void utxoPoolAddUtxos(Tx tx) {
+			for (int index = 0; index < tx.getOutputSize(); index++) {
+				Utxo utxo = new Utxo(tx.getTxId(), index);
+				this.utxoPool.add(utxo);
+			}
+		}
+
+		private void utxoPoolRemoveUtxos(Tx tx) {
+			tx.getInputs().forEach(input -> {
+				Utxo utxo = new Utxo(input.getPrevTxId(), input.getOutputIndex());
+				this.utxoPool.remove(utxo);
+			});
+		}
+
+		public List<Utxo> getUtxoFor(WalletAddress walletAddress) {
+			List<Utxo> utxoList = new ArrayList<>();
+			// TODO
+			// use fileter method
+			for (Utxo utxo : this.utxoPool.getAll()) {
+				Tx tx = this.txPool.getTx(utxo.getTxId());
+				Output output = tx.getOutput(utxo.getOutputIndexd());
+				if (walletAddress.equals(output.getWalletAddres())) {
+					utxoList.add(new Utxo(utxo));
+				}
+			}
+
+			return utxoList;
+		}
+
+		public long getBalance(WalletAddress walletAddress) {
+			long sum = 0;
+			List<Utxo> utxos = this.getUtxoFor(walletAddress);
+			for (Utxo utxo : utxos) {
+				Tx tx = this.txPool.getTx(utxo.getTxId());
+				Output output = tx.getOutput(utxo.getOutputIndexd());
+				if (walletAddress.equals(output.getWalletAddres())) {
+					sum += output.getCoinValue();
+				}
+			}
+
+			return sum;
+		}
+
+		// TODO
+		// Group getter methods
+		public Tx getTxFromPool(TxHash txId) {
+			return this.txPool.getTx(txId);
+		}
+
+		public List<Utxo> getAllUtxo() {
+			return this.utxoPool.getAll();
+		}
+	}
+
+	private TxUtxoPoolsNode txNode;
 
 	private static List<Predicate<Data>> dataValidationRules = new ArrayList<>();
 	static {
@@ -105,8 +182,7 @@ public class BlockChain {
 
 		this.minerAddress = walletAddress;
 
-		this.utxoPool = new UtxoPool();
-		this.txPool = new TxPool();
+		this.txNode = new TxUtxoPoolsNode();
 
 		this.initNullBlock();
 		this.initNullTxBlock();
@@ -176,7 +252,7 @@ public class BlockChain {
 	private Block generateNewTxBlock(final TxData txData) {
 		TxData txDataLocal = this.addCoinbaseTx(txData);
 
-		this.updateTxPoolAndUtxoPool(txDataLocal);
+		this.txNode.updateTxPoolAndUtxoPool(txDataLocal);
 
 		Block prevBlock = this.getTopBlock();
 
@@ -190,75 +266,24 @@ public class BlockChain {
 		return txData;
 	}
 
-	private void updateTxPoolAndUtxoPool(TxData txData) {
-		txData.getTxs().forEach(tx -> {
-			this.updateUtxoPoolByTx(tx);
-		});
-	}
-
-	private void updateUtxoPoolByTx(Tx tx) {
-		this.txPool.add(tx);
-
-		this.utxoPoolAddUtxos(tx);
-
-		this.utxoPoolRemoveUtxos(tx);
-	}
-
-	private void utxoPoolAddUtxos(Tx tx) {
-		for (int index = 0; index < tx.getOutputSize(); index++) {
-			Utxo utxo = new Utxo(tx.getTxId(), index);
-			this.utxoPool.add(utxo);
-		}
-	}
-
-	private void utxoPoolRemoveUtxos(Tx tx) {
-		tx.getInputs().forEach(input -> {
-			Utxo utxo = new Utxo(input.getPrevTxId(), input.getOutputIndex());
-			this.utxoPool.remove(utxo);
-		});
-	}
-
 	private Block getTopBlock() {
 		return this.topBlockWrapper.getBlock();
 	}
 
 	public List<Utxo> getAllUtxo() {
-		return this.utxoPool.getAll();
+		return this.txNode.getAllUtxo();
+	}
+
+	public Tx getTxFromPool(TxHash txId) {
+		return this.txNode.getTxFromPool(txId);
 	}
 
 	public List<Utxo> getUtxoFor(WalletAddress walletAddress) {
-		List<Utxo> utxoList = new ArrayList<>();
-		// TODO
-		// use fileter method
-		for (Utxo utxo : this.utxoPool.getAll()) {
-			Tx tx = this.txPool.getTx(utxo.getTxId());
-			Output output = tx.getOutput(utxo.getOutputIndexd());
-			if (walletAddress.equals(output.getWalletAddres())) {
-				utxoList.add(new Utxo(utxo));
-			}
-		}
-
-		return utxoList;
+		return this.txNode.getUtxoFor(walletAddress);
 	}
 
 	public long getBalance(WalletAddress walletAddress) {
-		long sum = 0;
-		List<Utxo> utxos = this.getUtxoFor(walletAddress);
-		for (Utxo utxo : utxos) {
-			Tx tx = this.txPool.getTx(utxo.getTxId());
-			Output output = tx.getOutput(utxo.getOutputIndexd());
-			if (walletAddress.equals(output.getWalletAddres())) {
-				sum += output.getCoinValue();
-			}
-		}
-
-		return sum;
-	}
-
-	// TODO
-	// Group getter methods
-	public Tx getTxFromPool(TxHash txId) {
-		return this.txPool.getTx(txId);
+		return this.txNode.getBalance(walletAddress);
 	}
 
 	public String status() {
