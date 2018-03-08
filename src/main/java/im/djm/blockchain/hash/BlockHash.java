@@ -48,4 +48,10 @@ public class BlockHash extends Hash {
 		return this.binaryLeadingZeros;
 	}
 
+	public static BlockHash hash(byte[] rawHead) {
+		byte[] hashBytes = HashUtil.calculateRawHash(rawHead);
+
+		return new BlockHash(hashBytes);
+	}
+
 }

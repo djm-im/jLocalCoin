@@ -1,7 +1,6 @@
 package im.djm.blockchain.block.nulls;
 
 import im.djm.blockchain.hash.DataHash;
-import im.djm.blockchain.hash.HashUtil;
 
 /**
  * @author djm.im
@@ -12,7 +11,7 @@ public final class NullValues {
 
 	public static final NullData NULL_DATA = new NullData();
 
-	public static final DataHash NULL_DATA_HASH = HashUtil.dataHash(NULL_DATA.getRawData());
+	public static final DataHash NULL_DATA_HASH = DataHash.hash(NULL_DATA.getRawData());
 
 	public static final long NULL_TIMESTAMP = 1510903985;
 

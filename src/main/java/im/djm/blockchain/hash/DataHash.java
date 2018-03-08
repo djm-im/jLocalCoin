@@ -9,4 +9,10 @@ public class DataHash extends Hash {
 		super(bytes);
 	}
 
+	public static DataHash hash(byte[] rawData) {
+		byte[] hashBytes = HashUtil.calculateRawHash(rawData);
+
+		return new DataHash(hashBytes);
+	}
+
 }

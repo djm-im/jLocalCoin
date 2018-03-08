@@ -8,7 +8,6 @@ import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.data.Validator;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.DataHash;
-import im.djm.blockchain.hash.HashUtil;
 
 /**
  * @author djm.im
@@ -23,7 +22,7 @@ public class Miner {
 	}
 
 	public static Block createNewBlock(Block prevBlock, Data data) {
-		DataHash dataHash = HashUtil.dataHash(data.getRawData());
+		DataHash dataHash = DataHash.hash(data.getRawData());
 		Head head = createHead(prevBlock, dataHash);
 
 		BlockHash blockHash = findNonce(head);
@@ -46,7 +45,7 @@ public class Miner {
 
 	public static BlockHash calcBlockHashForHead(Head head) {
 		byte[] rawHead = head.getRawHead();
-		BlockHash blockHash = HashUtil.blockHash(rawHead);
+		BlockHash blockHash = BlockHash.hash(rawHead);
 
 		return blockHash;
 	}

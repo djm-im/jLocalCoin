@@ -1,9 +1,8 @@
 package im.djm.test.blockchain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -12,9 +11,11 @@ import im.djm.blockchain.block.Head;
 import im.djm.blockchain.block.Miner;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.DataHash;
-import im.djm.blockchain.hash.HashUtil;
 import im.djm.tx.TxData;
 
+/**
+ * @author djm.im
+ */
 public class MinerTest {
 
 	@Test
@@ -30,7 +31,7 @@ public class MinerTest {
 		TxData txData = mock(TxData.class);
 		when(txData.getRawData()).thenReturn(prevBlockHashByte);
 
-		DataHash dataHash = HashUtil.dataHash(txData.getRawData());
+		DataHash dataHash = DataHash.hash(txData.getRawData());
 		Head aHead = Miner.createHead(prevBlock, dataHash);
 
 		assertThat(aHead.getDifficulty()).isEqualTo(16);

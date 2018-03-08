@@ -2,7 +2,6 @@ package im.djm.wallet;
 
 import java.security.interfaces.RSAPublicKey;
 
-import im.djm.blockchain.hash.HashUtil;
 import im.djm.txhash.AddressHash;
 
 /**
@@ -17,7 +16,7 @@ public final class WalletAddress {
 	public WalletAddress(RSAPublicKey publicKey) {
 		this.address = publicKey;
 
-		this.addressHash = HashUtil.addressHash(this.address.getEncoded());
+		this.addressHash = AddressHash.hash(this.address.getEncoded());
 	}
 
 	public RSAPublicKey getAddress() {

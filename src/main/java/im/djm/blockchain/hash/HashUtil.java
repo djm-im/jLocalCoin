@@ -4,8 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import im.djm.exception.WrapperException;
-import im.djm.txhash.AddressHash;
-import im.djm.txhash.TxHash;
 
 /**
  * @author djm.im
@@ -16,31 +14,7 @@ public final class HashUtil {
 		throw new IllegalStateException("It is not allowed to call private constructor.");
 	}
 
-	public static DataHash dataHash(byte[] rawData) {
-		byte[] hashBytes = HashUtil.calculateRawHash(rawData);
-
-		return new DataHash(hashBytes);
-	}
-
-	public static BlockHash blockHash(byte[] rawHead) {
-		byte[] hashBytes = HashUtil.calculateRawHash(rawHead);
-
-		return new BlockHash(hashBytes);
-	}
-
-	public static AddressHash addressHash(byte[] rawAddress) {
-		byte[] hashBytes = HashUtil.calculateRawHash(rawAddress);
-
-		return new AddressHash(hashBytes);
-	}
-
-	public static TxHash txHash(byte[] rawTx) {
-		byte[] hashBytes = HashUtil.calculateRawHash(rawTx);
-
-		return new TxHash(hashBytes);
-	}
-
-	private static byte[] calculateRawHash(byte[] rawBytes) {
+	public static byte[] calculateRawHash(byte[] rawBytes) {
 		try {
 			String hashAlgorithm = "SHA-256";
 
