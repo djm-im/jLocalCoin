@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import im.djm.blockchain.block.Block;
-import im.djm.blockchain.block.Miner;
 import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.data.Validator;
 import im.djm.blockchain.block.nulls.NullTxData;
@@ -15,6 +14,7 @@ import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.NullWalletAddressException;
+import im.djm.node.TxDataBlock;
 import im.djm.node.TxUtxoPoolsNode;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
@@ -171,42 +171,7 @@ public class BlockChain {
 		return block;
 	}
 
-	public static class TxDataBlock {
-
-		private static final int REWARD = 100;
-
-		private BlockChain blockChain;
-
-		private WalletAddress minerAddress;
-
-		private TxUtxoPoolsNode txUtxoPool;
-
-		public TxDataBlock(BlockChain blockChain, WalletAddress minerAddress, TxUtxoPoolsNode txUtxoPool) {
-			this.blockChain = blockChain;
-			this.minerAddress = minerAddress;
-
-			this.txUtxoPool = txUtxoPool;
-		}
-
-		private Block generateNewTxBlock(final TxData txData) {
-			TxData txDataLocal = this.addCoinbaseTx(txData);
-
-			this.txUtxoPool.updateTxPoolAndUtxoPool(txDataLocal);
-
-			Block prevBlock = blockChain.getTopBlock();
-
-			return Miner.createNewBlock(prevBlock, txDataLocal);
-		}
-
-		private TxData addCoinbaseTx(TxData txData) {
-			Tx coinbaseTx = new Tx(this.minerAddress, TxDataBlock.REWARD);
-			txData.addCoinbaseTx(coinbaseTx);
-
-			return txData;
-		}
-	}
-
-	private Block getTopBlock() {
+	public Block getTopBlock() {
 		return this.topBlockWrapper.getBlock();
 	}
 
