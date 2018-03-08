@@ -3,7 +3,7 @@ package im.djm.tx;
 import com.google.common.primitives.Longs;
 
 import im.djm.blockchain.BlockUtil;
-import im.djm.blockchain.hash.TxHash;
+import im.djm.txhash.TxHash;
 
 /**
  * @author djm.im

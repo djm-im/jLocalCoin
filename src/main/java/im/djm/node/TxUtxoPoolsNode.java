@@ -3,11 +3,11 @@ package im.djm.node;
 import java.util.ArrayList;
 import java.util.List;
 
-import im.djm.blockchain.hash.TxHash;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
 import im.djm.tx.TxPool;
+import im.djm.txhash.TxHash;
 import im.djm.utxo.Utxo;
 import im.djm.utxo.UtxoPool;
 import im.djm.wallet.WalletAddress;

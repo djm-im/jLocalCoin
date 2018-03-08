@@ -7,10 +7,10 @@ import com.google.common.primitives.Longs;
 
 import im.djm.blockchain.BlockUtil;
 import im.djm.blockchain.hash.HashUtil;
-import im.djm.blockchain.hash.TxHash;
-import im.djm.blockchain.hash.TxSignature;
 import im.djm.exception.TxInputException;
 import im.djm.exception.TxOutputException;
+import im.djm.txhash.TxHash;
+import im.djm.txhash.TxSignature;
 import im.djm.wallet.WalletAddress;
 
 /**

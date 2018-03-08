@@ -1,6 +1,8 @@
-package im.djm.blockchain.hash;
+package im.djm.txhash;
 
 import java.util.Arrays;
+
+import im.djm.blockchain.hash.ByteArray;
 
 /**
  * @author djm.im

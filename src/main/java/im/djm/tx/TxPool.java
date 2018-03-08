@@ -3,7 +3,7 @@ package im.djm.tx;
 import java.util.HashMap;
 import java.util.Map;
 
-import im.djm.blockchain.hash.TxHash;
+import im.djm.txhash.TxHash;
 
 /**
  * 

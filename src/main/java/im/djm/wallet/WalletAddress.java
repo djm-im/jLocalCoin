@@ -2,8 +2,8 @@ package im.djm.wallet;
 
 import java.security.interfaces.RSAPublicKey;
 
-import im.djm.blockchain.hash.AddressHash;
 import im.djm.blockchain.hash.HashUtil;
+import im.djm.txhash.AddressHash;
 
 /**
  * @author djm.im

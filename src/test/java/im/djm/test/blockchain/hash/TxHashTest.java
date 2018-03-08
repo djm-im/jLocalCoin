@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.Test;
 
-import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.NullHashException;
+import im.djm.txhash.TxHash;
 
 /**
  * @author djm.im

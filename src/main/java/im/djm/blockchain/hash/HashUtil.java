@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import im.djm.exception.WrapperException;
+import im.djm.txhash.AddressHash;
+import im.djm.txhash.TxHash;
 
 /**
  * @author djm.im

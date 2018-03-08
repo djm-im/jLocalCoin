@@ -10,12 +10,12 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import im.djm.blockchain.hash.TxHash;
-import im.djm.blockchain.hash.TxSignature;
 import im.djm.tx.Input;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
 import im.djm.tx.Tx.TxBuilder;
+import im.djm.txhash.TxHash;
+import im.djm.txhash.TxSignature;
 import im.djm.tx.TxException;
 import im.djm.wallet.Wallet;
 import im.djm.wallet.WalletAddress;

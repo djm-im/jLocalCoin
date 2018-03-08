@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import im.djm.blockchain.hash.TxHash;
 import im.djm.node.BlockChainNode;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
+import im.djm.txhash.TxHash;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;

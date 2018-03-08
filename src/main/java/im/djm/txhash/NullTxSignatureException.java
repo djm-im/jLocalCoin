@@ -1,4 +1,4 @@
-package im.djm.blockchain.hash;
+package im.djm.txhash;
 
 import im.djm.exception.BlockChainException;
 

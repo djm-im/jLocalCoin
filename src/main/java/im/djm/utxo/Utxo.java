@@ -1,6 +1,6 @@
 package im.djm.utxo;
 
-import im.djm.blockchain.hash.TxHash;
+import im.djm.txhash.TxHash;
 
 /**
  * 

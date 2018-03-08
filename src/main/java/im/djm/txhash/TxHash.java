@@ -1,4 +1,6 @@
-package im.djm.blockchain.hash;
+package im.djm.txhash;
+
+import im.djm.blockchain.hash.Hash;
 
 /**
  * 
