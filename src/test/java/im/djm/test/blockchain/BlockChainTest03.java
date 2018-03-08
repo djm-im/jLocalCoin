@@ -9,13 +9,13 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import im.djm.node.BlockChainNode;
-import im.djm.tx.Output;
-import im.djm.tx.Tx;
-import im.djm.tx.TxException;
-import im.djm.utxo.Utxo;
-import im.djm.wallet.Payment;
-import im.djm.wallet.Wallet;
+import im.djm.coin.node.BlockChainNode;
+import im.djm.coin.tx.Output;
+import im.djm.coin.tx.Tx;
+import im.djm.coin.tx.TxException;
+import im.djm.coin.utxo.Utxo;
+import im.djm.coin.wallet.Payment;
+import im.djm.coin.wallet.Wallet;
 
 /**
  * @author djm.im

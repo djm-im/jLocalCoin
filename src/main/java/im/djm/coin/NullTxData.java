@@ -1,6 +1,6 @@
 package im.djm.coin;
 
-import im.djm.tx.TxData;
+import im.djm.coin.tx.TxData;
 
 /**
  * @author djm.im

@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.Test;
 
-import im.djm.txhash.NullTxSignatureException;
-import im.djm.txhash.TxSignature;
+import im.djm.coin.txhash.NullTxSignatureException;
+import im.djm.coin.txhash.TxSignature;
 
 /**
  * @author djm.im

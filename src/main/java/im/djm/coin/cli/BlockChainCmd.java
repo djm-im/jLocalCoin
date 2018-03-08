@@ -5,8 +5,8 @@ import static im.djm.coin.cli.StdOutUtil.printMessages;
 import java.util.List;
 
 import im.djm.coin.cli.cmd.Cmd;
-import im.djm.node.BlockChainNode;
-import im.djm.utxo.Utxo;
+import im.djm.coin.node.BlockChainNode;
+import im.djm.coin.utxo.Utxo;
 
 /**
  * @author djm.im

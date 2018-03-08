@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.Test;
 
 import im.djm.blockchain.hash.NullHashException;
-import im.djm.txhash.AddressHash;
+import im.djm.coin.txhash.AddressHash;
 
 /**
  * @author djm.im

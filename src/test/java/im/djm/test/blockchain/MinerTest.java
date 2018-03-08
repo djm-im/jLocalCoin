@@ -11,7 +11,7 @@ import im.djm.blockchain.block.Head;
 import im.djm.blockchain.block.Miner;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.DataHash;
-import im.djm.tx.TxData;
+import im.djm.coin.tx.TxData;
 
 /**
  * @author djm.im

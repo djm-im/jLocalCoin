@@ -5,10 +5,10 @@ import static im.djm.coin.cli.StdOutUtil.printMessages;
 import java.util.Scanner;
 
 import im.djm.blockchain.GlobalConstants;
-import im.djm.node.BlockChainNode;
-import im.djm.tx.TxException;
-import im.djm.wallet.Trezor;
-import im.djm.wallet.Wallet;
+import im.djm.coin.node.BlockChainNode;
+import im.djm.coin.tx.TxException;
+import im.djm.coin.wallet.Trezor;
+import im.djm.coin.wallet.Wallet;
 
 /**
  * @author djm.im
