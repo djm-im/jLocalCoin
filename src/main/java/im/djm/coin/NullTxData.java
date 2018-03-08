@@ -1,11 +1,9 @@
-package im.djm.blockchain.block.nulls;
+package im.djm.coin;
 
 import im.djm.tx.TxData;
 
 /**
- * 
  * @author djm.im
- *
  */
 public class NullTxData extends TxData {
 
