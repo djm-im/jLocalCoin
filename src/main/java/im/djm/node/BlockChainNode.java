@@ -4,8 +4,10 @@ import java.util.List;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.block.Block;
+import im.djm.blockchain.block.Miner;
 import im.djm.blockchain.block.nulls.NullTxData;
 import im.djm.blockchain.hash.TxHash;
+import im.djm.exception.NullWalletAddressException;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
 import im.djm.utxo.Utxo;
@@ -16,18 +18,22 @@ import im.djm.wallet.WalletAddress;
  */
 public class BlockChainNode {
 
+	static final int REWARD = 100;
+
 	private BlockChain blockChain;
 
 	private TxUtxoPoolsNode txUtxoPool;
 
-	private TxDataBlock txDataBlock;
+	private WalletAddress minerAddress;
 
-	public BlockChainNode(WalletAddress minerWallet) {
+	public BlockChainNode(WalletAddress minerAddress) {
+		if (minerAddress == null) {
+			throw new NullWalletAddressException("Wallet address cannot be null.");
+		}
+		this.minerAddress = minerAddress;
 		this.txUtxoPool = new TxUtxoPoolsNode();
 
-		this.blockChain = new BlockChain(this.txUtxoPool, minerWallet);
-
-		this.txDataBlock = this.blockChain.getTxDataBlock();
+		this.blockChain = new BlockChain();
 
 		Block nullTxBlock = this.createNullTxBlock();
 		this.blockChain.add(nullTxBlock);
@@ -36,7 +42,7 @@ public class BlockChainNode {
 	private Block createNullTxBlock() {
 		NullTxData nullTxData = new NullTxData();
 
-		Block txBlock = this.txDataBlock.generateNewTxBlock(nullTxData);
+		Block txBlock = this.generateNewTxBlock(nullTxData);
 
 		return txBlock;
 	}
@@ -80,9 +86,26 @@ public class BlockChainNode {
 		TxData txData = new TxData();
 		txData.add(tx);
 
-		Block block = this.txDataBlock.generateNewTxBlock(txData);
+		Block block = this.generateNewTxBlock(txData);
 
 		return block;
+	}
+
+	public Block generateNewTxBlock(final TxData txData) {
+		TxData txDataLocal = this.addCoinbaseTx(txData);
+
+		this.txUtxoPool.updateTxPoolAndUtxoPool(txDataLocal);
+
+		Block prevBlock = blockChain.getTopBlock();
+
+		return Miner.createNewBlock(prevBlock, txDataLocal);
+	}
+
+	private TxData addCoinbaseTx(TxData txData) {
+		Tx coinbaseTx = new Tx(this.minerAddress, BlockChainNode.REWARD);
+		txData.addCoinbaseTx(coinbaseTx);
+
+		return txData;
 	}
 
 	@Override

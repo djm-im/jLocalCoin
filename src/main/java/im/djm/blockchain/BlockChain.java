@@ -11,10 +11,6 @@ import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.data.Validator;
 import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
-import im.djm.exception.NullWalletAddressException;
-import im.djm.node.TxDataBlock;
-import im.djm.node.TxUtxoPoolsNode;
-import im.djm.wallet.WalletAddress;
 
 /**
  * @author djm.im
@@ -29,8 +25,6 @@ public class BlockChain {
 
 	private static Validator<Data> dataValidator = new Validator<Data>() {
 	};
-
-	private TxDataBlock txDataBlock;
 
 	private static List<Predicate<Data>> dataValidationRules = new ArrayList<>();
 	static {
@@ -82,20 +76,10 @@ public class BlockChain {
 
 	}
 
-	public BlockChain(TxUtxoPoolsNode txUtxoPool, WalletAddress walletAddress) {
-		if (walletAddress == null) {
-			throw new NullWalletAddressException("Wallet address cannot be null.");
-		}
-
+	public BlockChain() {
 		this.initBlockValidationRules();
 
-		this.txDataBlock = new TxDataBlock(this, walletAddress, txUtxoPool);
-
 		this.initNullBlock();
-	}
-
-	public TxDataBlock getTxDataBlock() {
-		return this.txDataBlock;
 	}
 
 	// the null block has to be the same for in all nodes
