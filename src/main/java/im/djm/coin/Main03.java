@@ -1,11 +1,9 @@
-package im.djm;
+package im.djm.coin;
 
 import im.djm.coin.cli.NodeCliStdIn;
 
 /**
- * 
  * @author djm.im
- *
  */
 public class Main03 {
 

@@ -1,4 +1,4 @@
-package im.djm.coin;
+package im.djm.coin.nulltx;
 
 import im.djm.coin.tx.TxData;
 

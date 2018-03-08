@@ -2,7 +2,7 @@
 apply plugin: 'java-library'
 apply plugin: 'application'
 
-mainClassName = 'im.djm.Main03'
+mainClassName = 'im.djm.coin.Main03'
 
 archivesBaseName = 'jLocalCoin'
 version = "0.2"
