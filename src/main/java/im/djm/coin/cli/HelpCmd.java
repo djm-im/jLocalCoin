@@ -1,12 +1,12 @@
-package im.djm.cli;
+package im.djm.coin.cli;
 
-import static im.djm.cli.StdOutUtil.printMessages;
+import static im.djm.coin.cli.StdOutUtil.printMessages;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import im.djm.blockchain.GlobalConstants;
-import im.djm.cli.cmd.Cmd;
+import im.djm.coin.cli.cmd.Cmd;
 
 /**
  * @author djm.im

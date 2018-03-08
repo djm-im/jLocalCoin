@@ -1,6 +1,6 @@
-package im.djm.cli;
+package im.djm.coin.cli;
 
-import static im.djm.cli.StdOutUtil.printMessages;
+import static im.djm.coin.cli.StdOutUtil.printMessages;
 
 import java.util.Scanner;
 

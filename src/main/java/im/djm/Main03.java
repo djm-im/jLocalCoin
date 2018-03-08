@@ -1,6 +1,6 @@
 package im.djm;
 
-import im.djm.cli.NodeCliStdIn;
+import im.djm.coin.cli.NodeCliStdIn;
 
 /**
  * 

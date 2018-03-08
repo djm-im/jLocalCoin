@@ -1,13 +1,13 @@
-package im.djm.cli;
+package im.djm.coin.cli;
 
-import static im.djm.cli.StdOutUtil.printMessages;
+import static im.djm.coin.cli.StdOutUtil.printMessages;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import im.djm.cli.cmd.Cmd;
+import im.djm.coin.cli.cmd.Cmd;
 import im.djm.node.BlockChainNode;
 import im.djm.tx.Tx;
 import im.djm.wallet.Payment;

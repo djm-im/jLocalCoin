@@ -1,4 +1,4 @@
-package im.djm.cli.cmd;
+package im.djm.coin.cli.cmd;
 
 /**
  * @author djm.im
