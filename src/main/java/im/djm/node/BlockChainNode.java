@@ -4,6 +4,7 @@ import java.util.List;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.block.Block;
+import im.djm.blockchain.block.nulls.NullTxData;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
@@ -27,6 +28,17 @@ public class BlockChainNode {
 		this.blockChain = new BlockChain(this.txUtxoPool, minerWallet);
 
 		this.txDataBlock = this.blockChain.getTxDataBlock();
+
+		Block nullTxBlock = this.createNullTxBlock();
+		this.blockChain.add(nullTxBlock);
+	}
+
+	private Block createNullTxBlock() {
+		NullTxData nullTxData = new NullTxData();
+
+		Block txBlock = this.txDataBlock.generateNewTxBlock(nullTxData);
+
+		return txBlock;
 	}
 
 	// TODO remove

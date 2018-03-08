@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 import im.djm.blockchain.block.Block;
 import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.data.Validator;
-import im.djm.blockchain.block.nulls.NullTxData;
 import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.exception.NullWalletAddressException;
@@ -93,7 +92,6 @@ public class BlockChain {
 		this.txDataBlock = new TxDataBlock(this, walletAddress, txUtxoPool);
 
 		this.initNullBlock();
-		this.initNullTxBlock();
 	}
 
 	public TxDataBlock getTxDataBlock() {
@@ -103,14 +101,6 @@ public class BlockChain {
 	// the null block has to be the same for in all nodes
 	private void initNullBlock() {
 		this.wrapAndAddBlock(NullValues.NULL_BLOCK, null);
-	}
-
-	private void initNullTxBlock() {
-		NullTxData nullTxData = new NullTxData();
-
-		Block txBlock = this.txDataBlock.generateNewTxBlock(nullTxData);
-
-		this.add(txBlock);
 	}
 
 	// End: constructor area
