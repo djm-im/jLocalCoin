@@ -7,8 +7,8 @@ import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.data.Validator;
 import im.djm.blockchain.hash.BlockHash;
-import im.djm.blockchain.hash.HashUtil;
 import im.djm.blockchain.hash.DataHash;
+import im.djm.blockchain.hash.HashUtil;
 
 /**
  * @author djm.im

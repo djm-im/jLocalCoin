@@ -28,18 +28,16 @@ public class BlockChain {
 
 	public static final int DIFFICULTY = 16;
 
-	private static final int REWARD = 100;
-
 	private Map<BlockHash, BlockWrapper> blocks = new HashMap<>();
 
 	private BlockWrapper topBlockWrapper;
-
-	private WalletAddress minerAddress;
 
 	private static Validator<Data> dataValidator = new Validator<Data>() {
 	};
 
 	private TxUtxoPoolsNode txNode;
+
+	private TxDataBlock txDataBlock;
 
 	private static List<Predicate<Data>> dataValidationRules = new ArrayList<>();
 	static {
@@ -98,9 +96,9 @@ public class BlockChain {
 
 		this.initBlockValidationRules();
 
-		this.minerAddress = walletAddress;
-
 		this.txNode = new TxUtxoPoolsNode();
+
+		this.txDataBlock = new TxDataBlock(this, walletAddress, this.txNode);
 
 		this.initNullBlock();
 		this.initNullTxBlock();
@@ -114,7 +112,7 @@ public class BlockChain {
 	private void initNullTxBlock() {
 		NullTxData nullTxData = new NullTxData();
 
-		Block txBlock = generateNewTxBlock(nullTxData);
+		Block txBlock = this.txDataBlock.generateNewTxBlock(nullTxData);
 		this.add(txBlock);
 	}
 
@@ -159,29 +157,53 @@ public class BlockChain {
 	}
 
 	public void add(Tx tx) {
-		TxData txData = new TxData();
-		txData.add(tx);
-
-		Block block = generateNewTxBlock(txData);
+		Block block = createTxDataBlock(tx);
 
 		this.add(block);
 	}
 
-	private Block generateNewTxBlock(final TxData txData) {
-		TxData txDataLocal = this.addCoinbaseTx(txData);
+	private Block createTxDataBlock(Tx tx) {
+		TxData txData = new TxData();
+		txData.add(tx);
 
-		this.txNode.updateTxPoolAndUtxoPool(txDataLocal);
+		Block block = this.txDataBlock.generateNewTxBlock(txData);
 
-		Block prevBlock = this.getTopBlock();
-
-		return Miner.createNewBlock(prevBlock, txDataLocal);
+		return block;
 	}
 
-	private TxData addCoinbaseTx(TxData txData) {
-		Tx coinbaseTx = new Tx(this.minerAddress, BlockChain.REWARD);
-		txData.addCoinbaseTx(coinbaseTx);
+	public static class TxDataBlock {
 
-		return txData;
+		private static final int REWARD = 100;
+
+		private BlockChain blockChain;
+
+		private WalletAddress minerAddress;
+
+		private TxUtxoPoolsNode txUtxoPool;
+
+		public TxDataBlock(BlockChain blockChain, WalletAddress minerAddress, TxUtxoPoolsNode txUtxoPool) {
+			this.blockChain = blockChain;
+			this.minerAddress = minerAddress;
+
+			this.txUtxoPool = txUtxoPool;
+		}
+
+		private Block generateNewTxBlock(final TxData txData) {
+			TxData txDataLocal = this.addCoinbaseTx(txData);
+
+			this.txUtxoPool.updateTxPoolAndUtxoPool(txDataLocal);
+
+			Block prevBlock = blockChain.getTopBlock();
+
+			return Miner.createNewBlock(prevBlock, txDataLocal);
+		}
+
+		private TxData addCoinbaseTx(TxData txData) {
+			Tx coinbaseTx = new Tx(this.minerAddress, TxDataBlock.REWARD);
+			txData.addCoinbaseTx(coinbaseTx);
+
+			return txData;
+		}
 	}
 
 	private Block getTopBlock() {
