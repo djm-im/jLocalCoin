@@ -83,7 +83,7 @@ public class Wallet {
 			throw new NullBlockChainNodeException("Cannot send coins: BlockChainNode is not set.");
 		}
 
-		List<Utxo> utxoList = this.blockChainNode.getBlockchain().getUtxoFor(this.walletAddress);
+		List<Utxo> utxoList = this.blockChainNode.getUtxoFor(this.walletAddress);
 
 		List<Utxo> spentOutputs = new ArrayList<>();
 		long senderBalance = 0;
@@ -103,7 +103,7 @@ public class Wallet {
 
 	private long getCoinValueFor(Utxo utxo) {
 		TxHash txId = utxo.getTxId();
-		Tx txFromPool = this.blockChainNode.getBlockchain().getTxFromPool(txId);
+		Tx txFromPool = this.blockChainNode.getTxFromPool(txId);
 		Output txOutput = txFromPool.getOutput(utxo.getOutputIndexd());
 		long coinValue = txOutput.getCoinValue();
 

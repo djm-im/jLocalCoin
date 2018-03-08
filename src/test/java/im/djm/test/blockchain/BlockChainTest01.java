@@ -23,7 +23,7 @@ public class BlockChainTest01 {
 	@Test
 	public void blockChainNullWallet() {
 		assertThatThrownBy(() -> {
-			new BlockChain(null);
+			new BlockChain(null, null);
 		}).isInstanceOf(NullWalletAddressException.class).hasMessage("Wallet address cannot be null.");
 	}
 
@@ -41,7 +41,7 @@ public class BlockChainTest01 {
 
 		TxHash txId = allUtxo.get(0).getTxId();
 
-		Tx txFromPool = blockChainNode.getBlockchain().getTxFromPool(txId);
+		Tx txFromPool = blockChainNode.getTxFromPool(txId);
 		assertThat(txFromPool).isNotNull();
 	}
 

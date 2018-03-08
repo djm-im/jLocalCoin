@@ -33,7 +33,7 @@ public class BlockChainNodeTest {
 		assertThat(utxo.getOutputIndexd()).isEqualTo(0);
 
 		TxHash txId = utxo.getTxId();
-		Tx tx = blockChainNode.getBlockchain().getTxFromPool(txId);
+		Tx tx = blockChainNode.getTxFromPool(txId);
 		assertThat(tx.getOutputs()).hasSize(1);
 
 		assertThat(tx.getOutput(0).getWalletAddres()).isEqualTo(miner.address());

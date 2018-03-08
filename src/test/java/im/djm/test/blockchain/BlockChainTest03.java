@@ -17,6 +17,9 @@ import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;
 
+/**
+ * @author djm.im
+ */
 public class BlockChainTest03 {
 
 	@Test
@@ -28,7 +31,7 @@ public class BlockChainTest03 {
 		List<Utxo> allUtxo = bcn.getAllUtxo();
 		assertThat(allUtxo).hasSize(1);
 
-		Tx txNull = bcn.getBlockchain().getTxFromPool(allUtxo.get(0).getTxId());
+		Tx txNull = bcn.getTxFromPool(allUtxo.get(0).getTxId());
 		assertThat(txNull.isCoinbase()).isTrue();
 		assertThat(txNull.getInputSize()).isEqualTo(0);
 		assertThat(txNull.getOutputSize()).isEqualTo(1);

@@ -3,6 +3,7 @@ package im.djm.node;
 import java.util.List;
 
 import im.djm.blockchain.BlockChain;
+import im.djm.blockchain.hash.TxHash;
 import im.djm.tx.Tx;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.WalletAddress;
@@ -14,10 +15,15 @@ public class BlockChainNode {
 
 	private BlockChain blockChain;
 
+	private TxUtxoPoolsNode txUtxoPool;
+
 	public BlockChainNode(WalletAddress minerWallet) {
-		this.blockChain = new BlockChain(minerWallet);
+		this.txUtxoPool = new TxUtxoPoolsNode();
+
+		this.blockChain = new BlockChain(this.txUtxoPool, minerWallet);
 	}
 
+	// TODO remove
 	public BlockChain getBlockchain() {
 		return this.blockChain;
 	}
@@ -27,7 +33,11 @@ public class BlockChainNode {
 	}
 
 	public List<Utxo> getAllUtxo() {
-		return this.blockChain.getAllUtxo();
+		return this.txUtxoPool.getAllUtxo();
+	}
+
+	public Tx getTxFromPool(TxHash txId) {
+		return this.txUtxoPool.getTxFromPool(txId);
 	}
 
 	public String printBlockChain() {
@@ -35,7 +45,15 @@ public class BlockChainNode {
 	}
 
 	public long getBalance(WalletAddress walletAddress) {
-		return this.blockChain.getBalance(walletAddress);
+		return this.txUtxoPool.getBalance(walletAddress);
+	}
+
+	public List<Utxo> getUtxoFor(WalletAddress walletAddress) {
+		return this.txUtxoPool.getUtxoFor(walletAddress);
+	}
+
+	public void sendCoin(Tx newTx) {
+		this.blockChain.add(newTx);
 	}
 
 	@Override
@@ -43,7 +61,4 @@ public class BlockChainNode {
 		return this.blockChain.toString();
 	}
 
-	public void sendCoin(Tx newTx) {
-		this.blockChain.add(newTx);
-	}
 }

@@ -12,13 +12,11 @@ import im.djm.blockchain.block.data.Validator;
 import im.djm.blockchain.block.nulls.NullTxData;
 import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
-import im.djm.blockchain.hash.TxHash;
 import im.djm.exception.NullWalletAddressException;
 import im.djm.node.TxDataBlock;
 import im.djm.node.TxUtxoPoolsNode;
 import im.djm.tx.Tx;
 import im.djm.tx.TxData;
-import im.djm.utxo.Utxo;
 import im.djm.wallet.WalletAddress;
 
 /**
@@ -34,8 +32,6 @@ public class BlockChain {
 
 	private static Validator<Data> dataValidator = new Validator<Data>() {
 	};
-
-	private TxUtxoPoolsNode txNode;
 
 	private TxDataBlock txDataBlock;
 
@@ -89,16 +85,14 @@ public class BlockChain {
 
 	}
 
-	public BlockChain(WalletAddress walletAddress) {
+	public BlockChain(TxUtxoPoolsNode txUtxoPool, WalletAddress walletAddress) {
 		if (walletAddress == null) {
 			throw new NullWalletAddressException("Wallet address cannot be null.");
 		}
 
 		this.initBlockValidationRules();
 
-		this.txNode = new TxUtxoPoolsNode();
-
-		this.txDataBlock = new TxDataBlock(this, walletAddress, this.txNode);
+		this.txDataBlock = new TxDataBlock(this, walletAddress, txUtxoPool);
 
 		this.initNullBlock();
 		this.initNullTxBlock();
@@ -173,22 +167,6 @@ public class BlockChain {
 
 	public Block getTopBlock() {
 		return this.topBlockWrapper.getBlock();
-	}
-
-	public List<Utxo> getAllUtxo() {
-		return this.txNode.getAllUtxo();
-	}
-
-	public Tx getTxFromPool(TxHash txId) {
-		return this.txNode.getTxFromPool(txId);
-	}
-
-	public List<Utxo> getUtxoFor(WalletAddress walletAddress) {
-		return this.txNode.getUtxoFor(walletAddress);
-	}
-
-	public long getBalance(WalletAddress walletAddress) {
-		return this.txNode.getBalance(walletAddress);
 	}
 
 	public String status() {

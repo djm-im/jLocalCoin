@@ -62,7 +62,7 @@ public class Scenario {
 		TxHash airTxId = airUtxo.getTxId();
 		assertThat(airTxId.toString()).hasSize(66);
 
-		Tx airCoinbaseTx = this.blockChainNode.getBlockchain().getTxFromPool(airTxId);
+		Tx airCoinbaseTx = this.blockChainNode.getTxFromPool(airTxId);
 		this.assertCoinbaseTx(airCoinbaseTx, this.minerAddress);
 
 		// ---------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ public class Scenario {
 
 		Tx tx0Coinbase = null;
 		for (Utxo utxo : tx0allUtxo) {
-			Tx tx = this.blockChainNode.getBlockchain().getTxFromPool(utxo.getTxId());
+			Tx tx = this.blockChainNode.getTxFromPool(utxo.getTxId());
 			if (tx.isCoinbase()) {
 				tx0Coinbase = tx;
 			}
