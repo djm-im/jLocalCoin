@@ -14,9 +14,7 @@ import im.djm.exception.TxOutputException;
 import im.djm.wallet.WalletAddress;
 
 /**
- * 
  * @author djm.im
- *
  */
 public class Tx {
 
@@ -50,6 +48,93 @@ public class Tx {
 		this.timestamp = timeNow();
 
 		this.addOutput(minerAddress, coinValue);
+	}
+
+	private Tx(List<Input> inputs, List<Output> outputs, TxSignature txSignature) {
+		this.coinbase = false;
+
+		this.inputs = new ArrayList<>(inputs);
+		this.txSignature = new TxSignature(txSignature.getBytes());
+		this.outputs = new ArrayList<>(outputs);
+
+		this.timestamp = timeNow();
+	}
+
+	public static class TxBuilder {
+
+		private List<Input> inputs;
+
+		private List<Output> outputs;
+
+		private TxSignature txSignature;
+
+		public Tx build() {
+			this.validate();
+
+			return new Tx(this.inputs, this.outputs, this.txSignature);
+		}
+
+		private void validate() {
+			if (this.inputs == null && this.outputs == null) {
+				throw new TxException("Tx is not complited. Inputs and Outputs are null.");
+			}
+
+			if (this.inputs == null) {
+				throw new TxException("Tx in not completed. Inputs are null.");
+			}
+
+			if (this.outputs == null) {
+				throw new TxException("Tx in not completed. Outputs are null.");
+			}
+
+			if (this.txSignature == null) {
+				throw new TxException("Tx in not completed. Signature is null.");
+			}
+		}
+
+		public TxBuilder addInputs(List<Input> inputs) {
+			if (inputs == null) {
+				throw new TxException("Error: Inputs cannot be null.");
+			}
+			if (this.inputs != null) {
+				throw new TxException("Error: Inputs are already added.");
+			}
+
+			this.inputs = new ArrayList<>(inputs);
+
+			return this;
+		}
+
+		public TxBuilder addOutputs(List<Output> outputs) {
+			if (outputs == null) {
+				throw new TxException("Error: Outputs cannot be null.");
+			}
+			if (this.outputs != null) {
+				throw new TxException("Error: Outputs are already added.");
+			}
+
+			this.outputs = new ArrayList<>(outputs);
+
+			return this;
+		}
+
+		public TxBuilder addSignature(TxSignature signature) {
+			if (signature == null) {
+				throw new TxException("Error: Signature cannot be null.");
+			}
+			if (this.txSignature != null) {
+				throw new TxException("Error: Signature is already added.");
+			}
+
+			this.txSignature = new TxSignature(signature.getBytes());
+
+			return this;
+		}
+
+		public List<Input> getInputsForSignature() {
+			return this.inputs;
+		}
+
 	}
 
 	private long timeNow() {

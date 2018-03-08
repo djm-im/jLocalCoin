@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import im.djm.exception.TxException;
 import im.djm.node.BlockChainNode;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
+import im.djm.tx.TxException;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;

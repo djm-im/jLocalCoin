@@ -11,9 +11,9 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import im.djm.exception.TxException;
 import im.djm.node.BlockChainNode;
 import im.djm.tx.Tx;
+import im.djm.tx.TxException;
 import im.djm.wallet.NullPaymentException;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Wallet;

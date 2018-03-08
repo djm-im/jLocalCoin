@@ -5,8 +5,8 @@ import static im.djm.cli.StdOutUtil.printMessages;
 import java.util.Scanner;
 
 import im.djm.blockchain.GlobalConstants;
-import im.djm.exception.TxException;
 import im.djm.node.BlockChainNode;
+import im.djm.tx.TxException;
 import im.djm.wallet.Trezor;
 import im.djm.wallet.Wallet;
 

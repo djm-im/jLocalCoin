@@ -14,12 +14,12 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import im.djm.blockchain.hash.TxHash;
-import im.djm.exception.TxException;
 import im.djm.exception.WrapperException;
 import im.djm.node.BlockChainNode;
 import im.djm.node.NullBlockChainNodeException;
 import im.djm.tx.Output;
 import im.djm.tx.Tx;
+import im.djm.tx.TxException;
 import im.djm.utxo.Utxo;
 
 /**

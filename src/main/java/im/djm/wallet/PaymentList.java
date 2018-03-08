@@ -2,7 +2,7 @@ package im.djm.wallet;
 
 import java.util.List;
 
-import im.djm.exception.TxException;
+import im.djm.tx.TxException;
 
 /**
  * @author djm.im
