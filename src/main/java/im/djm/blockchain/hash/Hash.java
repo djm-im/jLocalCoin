@@ -2,8 +2,6 @@ package im.djm.blockchain.hash;
 
 import java.util.Arrays;
 
-import im.djm.exception.NullHashException;
-
 /**
  * @author djm.im
  * 

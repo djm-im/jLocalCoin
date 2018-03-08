@@ -1,6 +1,6 @@
 package im.djm.node;
 
-import im.djm.exception.BlockChainException;
+import im.djm.blockchain.exception.BlockChainException;
 
 /**
  * @author djm.im

@@ -1,6 +1,6 @@
 package im.djm.txhash;
 
-import im.djm.exception.BlockChainException;
+import im.djm.blockchain.exception.BlockChainException;
 
 /**
  * @author djm.im

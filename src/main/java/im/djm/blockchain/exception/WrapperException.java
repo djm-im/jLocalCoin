@@ -1,4 +1,4 @@
-package im.djm.exception;
+package im.djm.blockchain.exception;
 
 public class WrapperException extends RuntimeException {
 

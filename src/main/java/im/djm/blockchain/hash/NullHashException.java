@@ -1,4 +1,6 @@
-package im.djm.exception;
+package im.djm.blockchain.hash;
+
+import im.djm.blockchain.exception.BlockChainException;
 
 public class NullHashException extends BlockChainException {
 

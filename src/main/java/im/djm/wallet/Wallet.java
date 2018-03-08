@@ -13,7 +13,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import im.djm.exception.WrapperException;
+import im.djm.blockchain.exception.WrapperException;
 import im.djm.node.BlockChainNode;
 import im.djm.node.NullBlockChainNodeException;
 import im.djm.tx.Output;

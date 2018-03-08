@@ -1,4 +1,4 @@
-package im.djm.exception;
+package im.djm.blockchain.exception;
 
 public abstract class BlockChainException extends RuntimeException {
 

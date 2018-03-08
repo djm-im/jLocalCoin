@@ -3,7 +3,7 @@ package im.djm.blockchain.hash;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import im.djm.exception.WrapperException;
+import im.djm.blockchain.exception.WrapperException;
 
 /**
  * @author djm.im

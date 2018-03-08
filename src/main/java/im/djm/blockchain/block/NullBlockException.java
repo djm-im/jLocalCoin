@@ -1,4 +1,6 @@
-package im.djm.exception;
+package im.djm.blockchain.block;
+
+import im.djm.blockchain.exception.BlockChainException;
 
 public class NullBlockException extends BlockChainException {
 

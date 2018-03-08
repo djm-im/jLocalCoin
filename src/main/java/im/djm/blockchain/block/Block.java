@@ -6,8 +6,6 @@ import im.djm.blockchain.block.nulls.NullData;
 import im.djm.blockchain.block.nulls.NullHead;
 import im.djm.blockchain.hash.BlockHash;
 import im.djm.blockchain.hash.DataHash;
-import im.djm.exception.NullBlockException;
-import im.djm.exception.NullDataException;
 
 /**
  * @author djm.im

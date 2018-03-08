@@ -1,6 +1,6 @@
 package im.djm.wallet;
 
-import im.djm.exception.BlockChainException;
+import im.djm.blockchain.exception.BlockChainException;
 
 public class NullPaymentListException extends BlockChainException {
 

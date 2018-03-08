@@ -6,11 +6,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.Test;
 
 import im.djm.blockchain.block.Block;
+import im.djm.blockchain.block.NullBlockException;
+import im.djm.blockchain.block.NullDataException;
 import im.djm.blockchain.block.data.Data;
 import im.djm.blockchain.block.nulls.NullValues;
 import im.djm.blockchain.hash.BlockHash;
-import im.djm.exception.NullBlockException;
-import im.djm.exception.NullDataException;
 
 /**
  * @author djm.im
