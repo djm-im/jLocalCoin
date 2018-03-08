@@ -22,6 +22,7 @@ public class TxDataBlock {
 
 	public TxDataBlock(BlockChain blockChain, WalletAddress minerAddress, TxUtxoPoolsNode txUtxoPool) {
 		this.blockChain = blockChain;
+
 		this.minerAddress = minerAddress;
 
 		this.txUtxoPool = txUtxoPool;
@@ -42,15 +43,6 @@ public class TxDataBlock {
 		txData.addCoinbaseTx(coinbaseTx);
 
 		return txData;
-	}
-
-	public Block createTxDataBlock(Tx tx) {
-		TxData txData = new TxData();
-		txData.add(tx);
-
-		Block block = this.generateNewTxBlock(txData);
-
-		return block;
 	}
 
 }

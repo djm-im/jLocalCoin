@@ -15,7 +15,6 @@ import im.djm.blockchain.hash.BlockHash;
 import im.djm.exception.NullWalletAddressException;
 import im.djm.node.TxDataBlock;
 import im.djm.node.TxUtxoPoolsNode;
-import im.djm.tx.Tx;
 import im.djm.wallet.WalletAddress;
 
 /**
@@ -97,6 +96,10 @@ public class BlockChain {
 		this.initNullTxBlock();
 	}
 
+	public TxDataBlock getTxDataBlock() {
+		return this.txDataBlock;
+	}
+
 	// the null block has to be the same for in all nodes
 	private void initNullBlock() {
 		this.wrapAndAddBlock(NullValues.NULL_BLOCK, null);
@@ -148,12 +151,6 @@ public class BlockChain {
 		this.topBlockWrapper = blockWrapper;
 
 		return true;
-	}
-
-	public void add(Tx tx) {
-		Block block = this.txDataBlock.createTxDataBlock(tx);
-
-		this.add(block);
 	}
 
 	public Block getTopBlock() {

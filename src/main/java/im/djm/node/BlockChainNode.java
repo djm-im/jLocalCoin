@@ -3,8 +3,10 @@ package im.djm.node;
 import java.util.List;
 
 import im.djm.blockchain.BlockChain;
+import im.djm.blockchain.block.Block;
 import im.djm.blockchain.hash.TxHash;
 import im.djm.tx.Tx;
+import im.djm.tx.TxData;
 import im.djm.utxo.Utxo;
 import im.djm.wallet.WalletAddress;
 
@@ -17,10 +19,14 @@ public class BlockChainNode {
 
 	private TxUtxoPoolsNode txUtxoPool;
 
+	private TxDataBlock txDataBlock;
+
 	public BlockChainNode(WalletAddress minerWallet) {
 		this.txUtxoPool = new TxUtxoPoolsNode();
 
 		this.blockChain = new BlockChain(this.txUtxoPool, minerWallet);
+
+		this.txDataBlock = this.blockChain.getTxDataBlock();
 	}
 
 	// TODO remove
@@ -53,7 +59,18 @@ public class BlockChainNode {
 	}
 
 	public void sendCoin(Tx newTx) {
-		this.blockChain.add(newTx);
+		Block block = this.createTxDataBlock(newTx);
+
+		this.blockChain.add(block);
+	}
+
+	public Block createTxDataBlock(Tx tx) {
+		TxData txData = new TxData();
+		txData.add(tx);
+
+		Block block = this.txDataBlock.generateNewTxBlock(txData);
+
+		return block;
 	}
 
 	@Override
