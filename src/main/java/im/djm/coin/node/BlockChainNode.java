@@ -47,11 +47,6 @@ public class BlockChainNode {
 		return txBlock;
 	}
 
-	// TODO remove
-	public BlockChain getBlockchain() {
-		return this.blockChain;
-	}
-
 	public String status() {
 		return this.blockChain.status();
 	}
@@ -82,7 +77,7 @@ public class BlockChainNode {
 		this.blockChain.add(block);
 	}
 
-	public Block createTxDataBlock(Tx tx) {
+	private Block createTxDataBlock(Tx tx) {
 		TxData txData = new TxData();
 		txData.add(tx);
 
@@ -91,7 +86,7 @@ public class BlockChainNode {
 		return block;
 	}
 
-	public Block generateNewTxBlock(final TxData txData) {
+	private Block generateNewTxBlock(final TxData txData) {
 		TxData txDataLocal = this.addCoinbaseTx(txData);
 
 		this.txUtxoPool.updateTxPoolAndUtxoPool(txDataLocal);
