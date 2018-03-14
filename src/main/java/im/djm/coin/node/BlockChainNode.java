@@ -5,7 +5,6 @@ import java.util.List;
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.block.Block;
 import im.djm.blockchain.block.Miner;
-import im.djm.coin.exception.NullWalletAddressException;
 import im.djm.coin.nulltx.NullTxData;
 import im.djm.coin.tx.Tx;
 import im.djm.coin.tx.TxData;

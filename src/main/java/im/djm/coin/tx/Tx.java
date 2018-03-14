@@ -6,8 +6,6 @@ import java.util.List;
 import com.google.common.primitives.Longs;
 
 import im.djm.blockchain.BlockUtil;
-import im.djm.coin.exception.TxInputException;
-import im.djm.coin.exception.TxOutputException;
 import im.djm.coin.txhash.TxHash;
 import im.djm.coin.txhash.TxSignature;
 import im.djm.coin.wallet.WalletAddress;

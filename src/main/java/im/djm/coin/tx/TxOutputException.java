@@ -1,8 +1,11 @@
-package im.djm.coin.exception;
+package im.djm.coin.tx;
 
 import im.djm.blockchain.exception.BlockChainException;
 
-public class TxOutputException extends BlockChainException {
+/**
+ * @author djm.im
+ */
+class TxOutputException extends BlockChainException {
 
 	private static final long serialVersionUID = 2898183211477185983L;
 
