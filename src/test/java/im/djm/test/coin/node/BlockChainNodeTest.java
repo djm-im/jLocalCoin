@@ -21,7 +21,7 @@ public class BlockChainNodeTest {
 	public void constructorNoWallet() {
 		BlockChainNode bcn = new BlockChainNode();
 
-		assertThat(bcn.status()).isEqualTo("0");
+		assertThat(bcn.status().getLength()).isEqualTo(0);
 	}
 
 	@Test
@@ -31,7 +31,7 @@ public class BlockChainNodeTest {
 
 		assertThat(blockChainNode).isNotNull();
 
-		assertThat(blockChainNode.status()).isEqualTo("1");
+		assertThat(blockChainNode.status().getLength()).isEqualTo(1);
 
 		List<Utxo> allUtxo = blockChainNode.getAllUtxo();
 		assertThat(allUtxo.size()).isEqualTo(1);

@@ -4,6 +4,7 @@ import static im.djm.p2p.cli.StdOutUtil.printMessages;
 
 import java.util.Scanner;
 
+import im.djm.blockchain.BlockChainStatus;
 import im.djm.coin.node.BlockChainNode;
 import im.djm.coin.tx.TxException;
 import im.djm.coin.wallet.Trezor;
@@ -41,7 +42,7 @@ public class NodeCliStdIn implements Runnable {
 
 		while (isRunning) {
 			try {
-				printMessages("[BC length: " + status() + "].$ ");
+				printMessages("[BC length: " + this.status() + "].$ ");
 				isRunning = this.menuReadStdin(stdin);
 			} catch (TxException txEx) {
 				printMessages("Error: " + txEx.getMessage());
@@ -51,7 +52,7 @@ public class NodeCliStdIn implements Runnable {
 		stdin.close();
 	}
 
-	public String status() {
+	public BlockChainStatus status() {
 		return this.blockChainNode.status();
 	}
 

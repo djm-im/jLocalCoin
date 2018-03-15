@@ -20,7 +20,7 @@ public class BlockChainNodeNetworkTest {
 	public void noNullTx() {
 		BlockChainNode bcn = new BlockChainNode();
 
-		assertThat(bcn.status()).isEqualTo("0");
+		assertThat(bcn.status().getLength()).isEqualTo(0);
 	}
 
 	@Test

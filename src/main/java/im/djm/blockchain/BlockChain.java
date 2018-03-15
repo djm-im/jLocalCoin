@@ -131,8 +131,10 @@ public class BlockChain {
 		return this.topBlockWrapper.getBlock();
 	}
 
-	public String status() {
-		return Long.toString(this.getTopBlock().getLength());
+	public BlockChainStatus status() {
+		long length = this.getTopBlock().getLength();
+
+		return new BlockChainStatus(length);
 	}
 
 	public List<Block> getBlocksFrom(long start) {

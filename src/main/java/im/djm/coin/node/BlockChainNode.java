@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.djm.blockchain.BlockChain;
+import im.djm.blockchain.BlockChainStatus;
 import im.djm.blockchain.block.Block;
 import im.djm.blockchain.block.Miner;
 import im.djm.blockchain.block.data.Data;
@@ -56,7 +57,7 @@ public class BlockChainNode {
 		return txBlock;
 	}
 
-	public String status() {
+	public BlockChainStatus status() {
 		return this.blockChain.status();
 	}
 
@@ -123,7 +124,7 @@ public class BlockChainNode {
 
 		BlockChainNode bcn = this.network.get(0);
 		if (!this.status().equals(bcn.status())) {
-			long start = Long.parseLong(this.status());
+			long start = this.status().getLength();
 			List<Block> blocksFrom = bcn.getBlocksFrom(start);
 
 			for (Block block : blocksFrom) {

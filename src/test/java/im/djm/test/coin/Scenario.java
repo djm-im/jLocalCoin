@@ -49,7 +49,7 @@ public class Scenario {
 		// Length: 1
 		// Null Tx Block
 
-		assertThat(this.blockChainNode.status()).isEqualTo("1");
+		assertThat(this.blockChainNode.status().getLength()).isEqualTo(1);
 
 		assertThat(this.blockChainNode.getBalance(this.minerAddress)).isEqualTo(100);
 
@@ -77,7 +77,7 @@ public class Scenario {
 
 		assertThat(tx0Send).isNotNull();
 
-		assertThat(this.blockChainNode.status()).isEqualTo("2");
+		assertThat(this.blockChainNode.status().getLength()).isEqualTo(2);
 
 		assertThat(this.blockChainNode.getBalance(this.minerAddress)).isEqualTo(101);
 		assertThat(this.blockChainNode.getBalance(djm.address())).isEqualTo(99);
@@ -119,7 +119,7 @@ public class Scenario {
 
 		assertThat(tx1Send).isNotNull();
 
-		assertThat(this.blockChainNode.status()).isEqualTo("3");
+		assertThat(this.blockChainNode.status().getLength()).isEqualTo(3);
 
 		assertThat(this.miner.balance()).isEqualTo(201);
 		assertThat(djm.balance()).isEqualTo(89);

@@ -24,7 +24,7 @@ public class BlockChainTest01 {
 		miner.setBlockchainNode(blockChainNode);
 
 		assertThat(blockChainNode).isNotNull();
-		assertThat(blockChainNode.status()).isEqualTo("1");
+		assertThat(blockChainNode.status().getLength()).isEqualTo(1);
 
 		List<Utxo> allUtxo = blockChainNode.getAllUtxo();
 		assertThat(allUtxo).hasSize(1);
