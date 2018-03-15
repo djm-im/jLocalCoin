@@ -1,10 +1,12 @@
 package im.djm.coin.node;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.block.Block;
 import im.djm.blockchain.block.Miner;
+import im.djm.blockchain.block.data.Data;
 import im.djm.coin.NullTxData;
 import im.djm.coin.tx.Tx;
 import im.djm.coin.tx.TxData;
@@ -24,6 +26,8 @@ public class BlockChainNode {
 	private TxUtxoPoolsNode txUtxoPool;
 
 	private WalletAddress minerAddress;
+
+	private List<BlockChainNode> network = new ArrayList<>();
 
 	public BlockChainNode() {
 		this.txUtxoPool = new TxUtxoPoolsNode();
@@ -106,6 +110,37 @@ public class BlockChainNode {
 		txData.addCoinbaseTx(coinbaseTx);
 
 		return txData;
+	}
+
+	public void sync() {
+		if (this.network == null || this.network.isEmpty()) {
+			throw new NullNetworkException("No netwrok: The node didn't discover network.");
+		}
+
+		// TODO
+		// Improve algorithm for sync
+		// for now just sync with the first node
+
+		BlockChainNode bcn = this.network.get(0);
+		if (!this.status().equals(bcn.status())) {
+			long start = Long.parseLong(this.status());
+			List<Block> blocksFrom = bcn.getBlocksFrom(start);
+
+			for (Block block : blocksFrom) {
+				this.blockChain.add(block);
+
+				Data data = block.getData();
+				this.txUtxoPool.updateTxPoolAndUtxoPool((TxData) data);
+			}
+		}
+	}
+
+	private List<Block> getBlocksFrom(long start) {
+		return this.blockChain.getBlocksFrom(start);
+	}
+
+	public void addNode(BlockChainNode bcn) {
+		this.network.add(bcn);
 	}
 
 	@Override

@@ -135,6 +135,21 @@ public class BlockChain {
 		return Long.toString(this.getTopBlock().getLength());
 	}
 
+	public List<Block> getBlocksFrom(long start) {
+		Block topBlock = this.getTopBlock();
+		long topLength = topBlock.getLength();
+
+		List<Block> blocks = new ArrayList<>();
+		while (topLength != start) {
+			blocks.add(0, topBlock);
+			//
+			topBlock = this.blocks.get(topBlock.getPrevBlockHash()).getBlock();
+			topLength = topBlock.getLength();
+		}
+
+		return blocks;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
