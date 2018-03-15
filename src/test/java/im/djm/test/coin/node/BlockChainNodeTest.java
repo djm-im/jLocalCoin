@@ -18,7 +18,14 @@ import im.djm.coin.wallet.Wallet;
 public class BlockChainNodeTest {
 
 	@Test
-	public void blockChainNode() {
+	public void constructorNoWallet() {
+		BlockChainNode bcn = new BlockChainNode();
+
+		assertThat(bcn.status()).isEqualTo("0");
+	}
+
+	@Test
+	public void constructorWallet() {
 		Wallet miner = Wallet.createNewWallet();
 		BlockChainNode blockChainNode = new BlockChainNode(miner.address());
 

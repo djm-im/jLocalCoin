@@ -25,10 +25,16 @@ public class BlockChainNode {
 
 	private WalletAddress minerAddress;
 
+	public BlockChainNode() {
+		this.txUtxoPool = new TxUtxoPoolsNode();
+		this.blockChain = new BlockChain();
+	}
+
 	public BlockChainNode(WalletAddress minerAddress) {
 		if (minerAddress == null) {
 			throw new NullWalletAddressException("Wallet address cannot be null.");
 		}
+
 		this.minerAddress = minerAddress;
 		this.txUtxoPool = new TxUtxoPoolsNode();
 
