@@ -1,18 +1,18 @@
-package im.djm.coin.cli;
+package im.djm.p2p.cli;
 
-import static im.djm.coin.cli.StdOutUtil.printMessages;
+import static im.djm.p2p.cli.StdOutUtil.printMessages;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import im.djm.coin.cli.cmd.Cmd;
 import im.djm.coin.node.BlockChainNode;
 import im.djm.coin.tx.Tx;
 import im.djm.coin.wallet.Payment;
 import im.djm.coin.wallet.Trezor;
 import im.djm.coin.wallet.Wallet;
+import im.djm.p2p.cli.cmd.Cmd;
 
 /**
  * @author djm.im

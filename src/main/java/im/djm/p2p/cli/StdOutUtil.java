@@ -1,4 +1,4 @@
-package im.djm.coin.cli;
+package im.djm.p2p.cli;
 
 /**
  * @author djm.im

@@ -1,12 +1,12 @@
-package im.djm.coin.cli;
+package im.djm.p2p.cli;
 
-import static im.djm.coin.cli.StdOutUtil.printMessages;
+import static im.djm.p2p.cli.StdOutUtil.printMessages;
 
 import java.util.List;
 
-import im.djm.coin.cli.cmd.Cmd;
 import im.djm.coin.node.BlockChainNode;
 import im.djm.coin.utxo.Utxo;
+import im.djm.p2p.cli.cmd.Cmd;
 
 /**
  * @author djm.im

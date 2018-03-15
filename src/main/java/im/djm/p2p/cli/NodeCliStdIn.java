@@ -1,10 +1,9 @@
-package im.djm.coin.cli;
+package im.djm.p2p.cli;
 
-import static im.djm.coin.cli.StdOutUtil.printMessages;
+import static im.djm.p2p.cli.StdOutUtil.printMessages;
 
 import java.util.Scanner;
 
-import im.djm.blockchain.GlobalConstants;
 import im.djm.coin.node.BlockChainNode;
 import im.djm.coin.tx.TxException;
 import im.djm.coin.wallet.Trezor;

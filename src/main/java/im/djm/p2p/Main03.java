@@ -1,6 +1,6 @@
-package im.djm.coin;
+package im.djm.p2p;
 
-import im.djm.coin.cli.NodeCliStdIn;
+import im.djm.p2p.cli.NodeCliStdIn;
 
 /**
  * @author djm.im
