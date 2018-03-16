@@ -14,13 +14,13 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import im.djm.blockchain.exception.WrapperException;
-import im.djm.coin.node.BlockChainNode;
-import im.djm.coin.node.NullBlockChainNodeException;
 import im.djm.coin.tx.Output;
 import im.djm.coin.tx.Tx;
 import im.djm.coin.tx.TxException;
 import im.djm.coin.txhash.TxHash;
 import im.djm.coin.utxo.Utxo;
+import im.djm.p2p.node.BlockChainNode;
+import im.djm.p2p.node.NullBlockChainNodeException;
 
 /**
  * @author djm.im

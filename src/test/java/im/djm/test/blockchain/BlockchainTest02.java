@@ -9,12 +9,12 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import im.djm.coin.node.BlockChainNode;
 import im.djm.coin.tx.Output;
 import im.djm.coin.tx.Tx;
 import im.djm.coin.tx.TxException;
 import im.djm.coin.wallet.Payment;
 import im.djm.coin.wallet.Wallet;
+import im.djm.p2p.node.BlockChainNode;
 
 /**
  * @author djm.im

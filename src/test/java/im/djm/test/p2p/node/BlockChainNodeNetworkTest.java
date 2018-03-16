@@ -1,4 +1,4 @@
-package im.djm.test.coin.node;
+package im.djm.test.p2p.node;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import im.djm.coin.node.BlockChainNode;
-import im.djm.coin.node.NullNetworkException;
 import im.djm.coin.wallet.Payment;
 import im.djm.coin.wallet.Wallet;
+import im.djm.p2p.node.BlockChainNode;
+import im.djm.p2p.node.NullNetworkException;
 
 public class BlockChainNodeNetworkTest {
 

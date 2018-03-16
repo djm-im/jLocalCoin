@@ -1,4 +1,4 @@
-package im.djm.coin.node;
+package im.djm.p2p.node;
 
 import im.djm.blockchain.exception.BlockChainException;
 

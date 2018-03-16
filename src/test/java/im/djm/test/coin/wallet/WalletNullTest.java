@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import im.djm.coin.node.NullBlockChainNodeException;
 import im.djm.coin.wallet.Payment;
 import im.djm.coin.wallet.Wallet;
 import im.djm.coin.wallet.WalletAddress;
+import im.djm.p2p.node.NullBlockChainNodeException;
 
 /**
  * @author djm.im
