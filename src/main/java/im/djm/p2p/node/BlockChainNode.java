@@ -107,6 +107,10 @@ public class BlockChainNode {
 	}
 
 	private TxData addCoinbaseTx(TxData txData) {
+		if (this.minerAddress == null) {
+			throw new NullBlockChainNodeException("Miner wallet is not set.");
+		}
+
 		Tx coinbaseTx = new Tx(this.minerAddress, BlockChainNode.REWARD);
 		txData.addCoinbaseTx(coinbaseTx);
 
@@ -142,6 +146,10 @@ public class BlockChainNode {
 
 	public void addNode(BlockChainNode bcn) {
 		this.network.add(bcn);
+	}
+
+	public void setMinerAddress(WalletAddress minerAddress) {
+		this.minerAddress = minerAddress;
 	}
 
 	@Override
