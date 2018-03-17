@@ -41,8 +41,8 @@ public class BlockChainNode {
 		}
 
 		this.minerAddress = minerAddress;
-		this.txUtxoPool = new TxUtxoPoolsNode();
 
+		this.txUtxoPool = new TxUtxoPoolsNode();
 		this.blockChain = new BlockChain();
 
 		Block nullTxBlock = this.createNullTxBlock();
@@ -85,6 +85,20 @@ public class BlockChainNode {
 		Block block = this.createTxDataBlock(newTx);
 
 		this.blockChain.add(block);
+
+		this.announceNewBlockToNetwork(block);
+	}
+
+	private void announceNewBlockToNetwork(Block block) {
+		for (BlockChainNode node : this.network) {
+			node.annonceNewBlockCreated(block);
+		}
+	}
+
+	private void annonceNewBlockCreated(Block block) {
+		this.blockChain.add(block);
+		TxData txData = (TxData) block.getData();
+		this.txUtxoPool.updateTxPoolAndUtxoPool(txData);
 	}
 
 	private Block createTxDataBlock(Tx tx) {

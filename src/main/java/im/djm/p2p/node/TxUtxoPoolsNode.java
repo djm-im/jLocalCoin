@@ -84,8 +84,6 @@ public class TxUtxoPoolsNode {
 		return sum;
 	}
 
-	// TODO
-	// Group getter methods
 	public Tx getTxFromPool(TxHash txId) {
 		return this.txPool.getTx(txId);
 	}

@@ -111,7 +111,6 @@ public class Wallet {
 	}
 
 	private Tx createAndAddTx(PaymentList paymentList, List<Utxo> spentOutputs, long senderBalance) {
-
 		if (senderBalance < paymentList.total()) {
 			String errMsg = "Not enough coins for tx. Tried to send " + paymentList.total() + ". Utxo is "
 					+ senderBalance + ".";

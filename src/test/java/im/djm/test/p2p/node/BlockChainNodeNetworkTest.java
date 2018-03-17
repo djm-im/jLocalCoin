@@ -100,39 +100,6 @@ public class BlockChainNodeNetworkTest {
 	}
 
 	@Test
-	public void tx2NotSync() {
-		Wallet miner00 = Wallet.createNewWallet();
-		BlockChainNode node00 = new BlockChainNode(miner00.address());
-		miner00.setBlockchainNode(node00);
-
-		Wallet djm = Wallet.createNewWallet();
-		Payment pm00 = new Payment(djm.address(), 99);
-		List<Payment> pms00 = ImmutableList.of(pm00);
-		miner00.send(pms00);
-
-		Wallet miner01 = Wallet.createNewWallet();
-		BlockChainNode node01 = new BlockChainNode();
-		node01.setMinerAddress(miner01.address());
-
-		node01.addNode(node00);
-		node01.sync();
-
-		djm.setBlockchainNode(node01);
-		Payment pm01 = new Payment(miner01.address(), 50);
-		List<Payment> pms01 = ImmutableList.of(pm01);
-		djm.send(pms01);
-
-		assertThat(node00.getBalance(miner00.address())).isEqualTo(101);
-		assertThat(node00.getBalance(djm.address())).isEqualTo(99);
-		assertThat(node00.getBalance(miner01.address())).isEqualTo(0);
-
-		assertThat(node01.getBalance(miner00.address())).isEqualTo(101);
-		assertThat(node01.getBalance(djm.address())).isEqualTo(49);
-		assertThat(node01.getBalance(miner01.address())).isEqualTo(150);
-
-	}
-
-	@Test
 	public void tx2Synced() {
 		Wallet miner00 = Wallet.createNewWallet();
 		BlockChainNode node00 = new BlockChainNode(miner00.address());
@@ -157,6 +124,38 @@ public class BlockChainNodeNetworkTest {
 
 		node00.addNode(node01);
 		node00.sync();
+
+		assertThat(node00.getBalance(miner00.address())).isEqualTo(101);
+		assertThat(node00.getBalance(djm.address())).isEqualTo(49);
+		assertThat(node00.getBalance(miner01.address())).isEqualTo(150);
+
+		assertThat(node01.getBalance(miner00.address())).isEqualTo(101);
+		assertThat(node01.getBalance(djm.address())).isEqualTo(49);
+		assertThat(node01.getBalance(miner01.address())).isEqualTo(150);
+	}
+
+	@Test
+	public void annonce() {
+		Wallet miner00 = Wallet.createNewWallet();
+		BlockChainNode node00 = new BlockChainNode(miner00.address());
+		miner00.setBlockchainNode(node00);
+
+		Wallet djm = Wallet.createNewWallet();
+		Payment pm00 = new Payment(djm.address(), 99);
+		List<Payment> pms00 = ImmutableList.of(pm00);
+		miner00.send(pms00);
+
+		Wallet miner01 = Wallet.createNewWallet();
+		BlockChainNode node01 = new BlockChainNode();
+		node01.setMinerAddress(miner01.address());
+
+		node01.addNode(node00);
+		node01.sync();
+
+		djm.setBlockchainNode(node01);
+		Payment pm01 = new Payment(miner01.address(), 50);
+		List<Payment> pms01 = ImmutableList.of(pm01);
+		djm.send(pms01);
 
 		assertThat(node00.getBalance(miner00.address())).isEqualTo(101);
 		assertThat(node00.getBalance(djm.address())).isEqualTo(49);
