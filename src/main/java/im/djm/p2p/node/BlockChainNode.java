@@ -7,7 +7,6 @@ import im.djm.blockchain.BlockChain;
 import im.djm.blockchain.BlockChainStatus;
 import im.djm.blockchain.block.Block;
 import im.djm.blockchain.block.Miner;
-import im.djm.blockchain.block.data.Data;
 import im.djm.coin.NullTxData;
 import im.djm.coin.tx.Tx;
 import im.djm.coin.tx.TxData;
@@ -31,20 +30,31 @@ public class BlockChainNode {
 	private List<BlockChainNode> network = new ArrayList<>();
 
 	public BlockChainNode() {
-		this.txUtxoPool = new TxUtxoPoolsNode();
-		this.blockChain = new BlockChain();
+		this.initBlockChainAndPools();
 	}
 
 	public BlockChainNode(WalletAddress minerAddress) {
+		this.initMinerAddress(minerAddress);
+
+		this.initBlockChainAndPools();
+
+		this.initNullTxBlock();
+	}
+
+	private void initMinerAddress(WalletAddress minerAddress) {
 		if (minerAddress == null) {
 			throw new NullWalletAddressException("Wallet address cannot be null.");
 		}
 
 		this.minerAddress = minerAddress;
+	}
 
+	private void initBlockChainAndPools() {
 		this.txUtxoPool = new TxUtxoPoolsNode();
 		this.blockChain = new BlockChain();
+	}
 
+	private void initNullTxBlock() {
 		Block nullTxBlock = this.createNullTxBlock();
 		this.blockChain.add(nullTxBlock);
 	}
@@ -90,15 +100,11 @@ public class BlockChainNode {
 	}
 
 	private void announceNewBlockToNetwork(Block block) {
-		for (BlockChainNode node : this.network) {
-			node.annonceNewBlockCreated(block);
-		}
+		this.network.forEach(node -> node.annonceNewBlockCreated(block));
 	}
 
 	private void annonceNewBlockCreated(Block block) {
-		this.blockChain.add(block);
-		TxData txData = (TxData) block.getData();
-		this.txUtxoPool.updateTxPoolAndUtxoPool(txData);
+		this.update(block);
 	}
 
 	private Block createTxDataBlock(Tx tx) {
@@ -111,21 +117,22 @@ public class BlockChainNode {
 	}
 
 	private Block generateNewTxBlock(final TxData txData) {
-		TxData txDataLocal = this.addCoinbaseTx(txData);
-
-		this.txUtxoPool.updateTxPoolAndUtxoPool(txDataLocal);
+		TxData txDataLocal = this.addCoinbaseTx(txData, BlockChainNode.REWARD);
 
 		Block prevBlock = blockChain.getTopBlock();
 
-		return Miner.createNewBlock(prevBlock, txDataLocal);
+		Block newBlock = Miner.createNewBlock(prevBlock, txDataLocal);
+		this.updatePools(newBlock);
+
+		return newBlock;
 	}
 
-	private TxData addCoinbaseTx(TxData txData) {
+	private TxData addCoinbaseTx(TxData txData, long reward) {
 		if (this.minerAddress == null) {
 			throw new NullBlockChainNodeException("Miner wallet is not set.");
 		}
 
-		Tx coinbaseTx = new Tx(this.minerAddress, BlockChainNode.REWARD);
+		Tx coinbaseTx = new Tx(this.minerAddress, reward);
 		txData.addCoinbaseTx(coinbaseTx);
 
 		return txData;
@@ -143,15 +150,27 @@ public class BlockChainNode {
 		BlockChainNode bcn = this.network.get(0);
 		if (!this.status().equals(bcn.status())) {
 			long start = this.status().getLength();
+
 			List<Block> blocksFrom = bcn.getBlocksFrom(start);
 
-			for (Block block : blocksFrom) {
-				this.blockChain.add(block);
-
-				Data data = block.getData();
-				this.txUtxoPool.updateTxPoolAndUtxoPool((TxData) data);
-			}
+			this.updateBlockChain(blocksFrom);
 		}
+	}
+
+	private void updateBlockChain(List<Block> newBlocks) {
+		newBlocks.forEach(block -> this.update(block));
+	}
+
+	private void update(Block block) {
+		this.blockChain.add(block);
+
+		this.updatePools(block);
+	}
+
+	private void updatePools(Block block) {
+		TxData txData = (TxData) block.getData();
+
+		this.txUtxoPool.updateTxPoolAndUtxoPool(txData);
 	}
 
 	private List<Block> getBlocksFrom(long start) {
