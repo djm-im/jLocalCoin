@@ -75,14 +75,20 @@ public class Wallet {
 	}
 
 	public Tx send(List<Payment> payments) {
-		PaymentList paymentList = new PaymentList(payments);
-
-		// TODO
-		// Use immutable payments ==> Java 9
 		if (this.blockChainNode == null) {
 			throw new NullBlockChainNodeException("Cannot send coins: BlockChainNode is not set.");
 		}
 
+		PaymentList paymentList = new PaymentList(payments);
+
+		Bill bill = createBill(paymentList);
+
+		Tx newTx = createAndAddTx(paymentList, bill);
+
+		return newTx;
+	}
+
+	private Bill createBill(PaymentList paymentList) {
 		List<Utxo> utxoList = this.blockChainNode.getUtxoFor(this.walletAddress);
 
 		List<Utxo> spentOutputs = new ArrayList<>();
@@ -97,8 +103,7 @@ public class Wallet {
 			index++;
 		}
 
-		Tx newTx = createAndAddTx(paymentList, spentOutputs, senderBalance);
-		return newTx;
+		return new Bill(spentOutputs, senderBalance);
 	}
 
 	private long getCoinValueFor(Utxo utxo) {
@@ -110,37 +115,44 @@ public class Wallet {
 		return coinValue;
 	}
 
-	private Tx createAndAddTx(PaymentList paymentList, List<Utxo> spentOutputs, long senderBalance) {
-		if (senderBalance < paymentList.total()) {
-			String errMsg = "Not enough coins for tx. Tried to send " + paymentList.total() + ". Utxo is "
-					+ senderBalance + ".";
-			throw new TxException(errMsg);
-		}
+	private Tx createAndAddTx(PaymentList paymentList, Bill bill) {
+		hasEnoughUtxo(paymentList, bill);
 
-		Tx newTx = createNewTx(paymentList, spentOutputs, senderBalance);
+		Tx newTx = createNewTx(paymentList, bill);
 
 		this.blockChainNode.sendCoin(newTx);
 
 		return newTx;
 	}
 
-	private Tx createNewTx(PaymentList paymentList, List<Utxo> spentOutputs, long senderBalance) {
-		Tx newTx = fillInputsAndSign(spentOutputs);
+	private void hasEnoughUtxo(PaymentList paymentList, Bill bill) {
+		long senderBalance = bill.getSenderBalance();
+		long totalSpent = paymentList.total();
 
-		PaymentList paymentListWithChange = addChangePayment(paymentList, senderBalance);
+		if (senderBalance < totalSpent) {
+			String errMsg = "Not enough coins for tx. Tried to send " + totalSpent + ". Utxo is " + senderBalance + ".";
+
+			throw new TxException(errMsg);
+		}
+	}
+
+	private Tx createNewTx(PaymentList paymentList, Bill bill) {
+		Tx newTx = fillInputsAndSign(bill.getSpentOutputs());
+
+		PaymentList paymentListWithChange = addChangePayment(paymentList, bill);
 
 		this.createOutputs(newTx, paymentListWithChange);
 
 		return newTx;
 	}
 
-	private PaymentList addChangePayment(PaymentList paymentList, long senderBalance) {
-		if (senderBalance == paymentList.total()) {
+	private PaymentList addChangePayment(PaymentList paymentList, Bill bill) {
+		if (bill.getSenderBalance() == paymentList.total()) {
 			return paymentList;
 		}
 
 		// if (senderBalance > totalSpent) {
-		Payment changePayment = this.createChangePayment(senderBalance, paymentList.total());
+		Payment changePayment = this.createChangePayment(paymentList.total(), bill);
 		List<Payment> paymentsWithChange = Lists.newArrayList(paymentList.getPayments());
 		paymentsWithChange.add(changePayment);
 
@@ -155,8 +167,8 @@ public class Wallet {
 		return newTx;
 	}
 
-	private Payment createChangePayment(long senderBalance, long totalSpent) {
-		long change = senderBalance - totalSpent;
+	private Payment createChangePayment(long totalSpent, Bill bill) {
+		long change = bill.getSenderBalance() - totalSpent;
 		Payment changePayment = new Payment(this.walletAddress, change);
 
 		return changePayment;
