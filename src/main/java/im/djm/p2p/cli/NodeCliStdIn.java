@@ -6,9 +6,9 @@ import java.util.Scanner;
 
 import im.djm.blockchain.BlockChainStatus;
 import im.djm.coin.tx.TxException;
-import im.djm.coin.wallet.Trezor;
-import im.djm.coin.wallet.Wallet;
 import im.djm.p2p.node.BlockChainNode;
+import im.djm.wallet.Trezor;
+import im.djm.wallet.Wallet;
 
 /**
  * @author djm.im

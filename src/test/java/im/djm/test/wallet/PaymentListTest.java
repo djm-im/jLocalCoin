@@ -1,4 +1,4 @@
-package im.djm.test.coin.wallet;
+package im.djm.test.wallet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -9,11 +9,11 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import im.djm.coin.wallet.NullPaymentListException;
-import im.djm.coin.wallet.Payment;
-import im.djm.coin.wallet.PaymentList;
-import im.djm.coin.wallet.Wallet;
-import im.djm.coin.wallet.WalletAddress;
+import im.djm.wallet.NullPaymentListException;
+import im.djm.wallet.Payment;
+import im.djm.wallet.PaymentList;
+import im.djm.wallet.Wallet;
+import im.djm.wallet.WalletAddress;
 
 public class PaymentListTest {
 

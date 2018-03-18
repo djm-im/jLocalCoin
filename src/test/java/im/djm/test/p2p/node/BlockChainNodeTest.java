@@ -9,8 +9,8 @@ import org.junit.Test;
 import im.djm.coin.tx.Tx;
 import im.djm.coin.txhash.TxHash;
 import im.djm.coin.utxo.Utxo;
-import im.djm.coin.wallet.Wallet;
 import im.djm.p2p.node.BlockChainNode;
+import im.djm.wallet.Wallet;
 
 /**
  * @author djm.im

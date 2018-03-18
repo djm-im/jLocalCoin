@@ -3,7 +3,7 @@ package im.djm.coin.tx;
 import com.google.common.primitives.Longs;
 
 import im.djm.blockchain.BlockUtil;
-import im.djm.coin.wallet.WalletAddress;
+import im.djm.wallet.WalletAddress;
 
 /**
  * 

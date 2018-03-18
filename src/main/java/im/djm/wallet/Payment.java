@@ -1,5 +1,8 @@
-package im.djm.coin.wallet;
+package im.djm.wallet;
 
+/**
+ * @author djm.im
+ */
 public final class Payment {
 
 	private WalletAddress walletAddress;

@@ -1,4 +1,4 @@
-package im.djm.coin.wallet;
+package im.djm.wallet;
 
 import java.util.HashMap;
 import java.util.Map;

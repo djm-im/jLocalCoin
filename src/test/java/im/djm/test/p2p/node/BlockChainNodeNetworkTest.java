@@ -9,11 +9,11 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import im.djm.coin.wallet.Payment;
-import im.djm.coin.wallet.Wallet;
 import im.djm.p2p.node.BlockChainNode;
 import im.djm.p2p.node.NullBlockChainNodeException;
 import im.djm.p2p.node.NullNetworkException;
+import im.djm.wallet.Payment;
+import im.djm.wallet.Wallet;
 
 public class BlockChainNodeNetworkTest {
 

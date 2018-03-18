@@ -13,9 +13,9 @@ import im.djm.coin.tx.Output;
 import im.djm.coin.tx.Tx;
 import im.djm.coin.tx.TxException;
 import im.djm.coin.utxo.Utxo;
-import im.djm.coin.wallet.Payment;
-import im.djm.coin.wallet.Wallet;
 import im.djm.p2p.node.BlockChainNode;
+import im.djm.wallet.Payment;
+import im.djm.wallet.Wallet;
 
 /**
  * @author djm.im

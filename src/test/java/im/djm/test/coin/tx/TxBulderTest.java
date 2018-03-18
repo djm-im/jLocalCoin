@@ -17,8 +17,8 @@ import im.djm.coin.tx.TxException;
 import im.djm.coin.tx.Tx.TxBuilder;
 import im.djm.coin.txhash.TxHash;
 import im.djm.coin.txhash.TxSignature;
-import im.djm.coin.wallet.Wallet;
-import im.djm.coin.wallet.WalletAddress;
+import im.djm.wallet.Wallet;
+import im.djm.wallet.WalletAddress;
 
 public class TxBulderTest {
 

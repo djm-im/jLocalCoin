@@ -8,11 +8,11 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import im.djm.coin.tx.Tx;
-import im.djm.coin.wallet.Payment;
-import im.djm.coin.wallet.Trezor;
-import im.djm.coin.wallet.Wallet;
 import im.djm.p2p.cli.cmd.Cmd;
 import im.djm.p2p.node.BlockChainNode;
+import im.djm.wallet.Payment;
+import im.djm.wallet.Trezor;
+import im.djm.wallet.Wallet;
 
 /**
  * @author djm.im

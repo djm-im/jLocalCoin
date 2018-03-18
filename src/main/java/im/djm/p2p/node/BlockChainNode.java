@@ -12,7 +12,7 @@ import im.djm.coin.tx.Tx;
 import im.djm.coin.tx.TxData;
 import im.djm.coin.txhash.TxHash;
 import im.djm.coin.utxo.Utxo;
-import im.djm.coin.wallet.WalletAddress;
+import im.djm.wallet.WalletAddress;
 
 /**
  * @author djm.im

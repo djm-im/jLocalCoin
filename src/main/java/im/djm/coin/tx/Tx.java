@@ -8,7 +8,7 @@ import com.google.common.primitives.Longs;
 import im.djm.blockchain.BlockUtil;
 import im.djm.coin.txhash.TxHash;
 import im.djm.coin.txhash.TxSignature;
-import im.djm.coin.wallet.WalletAddress;
+import im.djm.wallet.WalletAddress;
 
 /**
  * @author djm.im
