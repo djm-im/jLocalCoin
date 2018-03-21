@@ -15,7 +15,7 @@ import im.djm.wallet.Wallet;
  */
 public class NodeCliStdIn implements Runnable {
 
-	private static final String MINER_WALLET_NAME = "_miner";
+	public static final String MINER_WALLET_NAME = "_miner";
 
 	private BlockChainNode blockChainNode;
 

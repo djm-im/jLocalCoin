@@ -44,7 +44,7 @@ class HelpCmd implements Cmd {
 	}
 
 	public static void printHelp() {
-		printMessages("jLocalCooin - blockchain implementation in Java.");
+		printMessages("jLocalCoin - blockchain implementation in Java.");
 
 		cmdHelp.forEach((cmdName, helpDesc) -> {
 			printMessages(cmdName + GlobalConstants.TAB_SIGN + " - " + helpDesc);

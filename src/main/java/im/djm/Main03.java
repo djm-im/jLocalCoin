@@ -1,4 +1,4 @@
-package im.djm.p2p;
+package im.djm;
 
 import im.djm.p2p.cli.NodeCliStdIn;
 

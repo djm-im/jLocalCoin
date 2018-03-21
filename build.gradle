@@ -2,7 +2,7 @@
 apply plugin: 'java-library'
 apply plugin: 'application'
 
-mainClassName = 'im.djm.p2p.Main03'
+mainClassName = 'im.djm.Main04'
 
 archivesBaseName = 'jLocalCoin'
 version = "0.2"
@@ -21,11 +21,15 @@ repositories {
 dependencies {
 	compile 'com.google.guava:guava:24.0-jre'
 
-    testImplementation 'junit:junit:4.12'
+	compile 'com.sparkjava:spark-core:2.7.1'
 
-    testCompile 'org.assertj:assertj-core:3.9.0'
+	compile 'org.slf4j:slf4j-simple:1.7.25'
 
-    testCompile 'org.mockito:mockito-core:2.15.0'
+	testImplementation 'junit:junit:4.12'
+
+	testCompile 'org.assertj:assertj-core:3.9.0'
+
+	testCompile 'org.mockito:mockito-core:2.15.0'
 }
 
 test {
@@ -42,4 +46,3 @@ jar {
 		(configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) }
 	}
 }
-
