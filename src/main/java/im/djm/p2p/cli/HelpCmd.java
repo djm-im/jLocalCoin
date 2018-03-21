@@ -10,7 +10,7 @@ import im.djm.p2p.cli.cmd.Cmd;
 /**
  * @author djm.im
  */
-class HelpCmd implements Cmd {
+public class HelpCmd implements Cmd {
 
 	private static Map<String, String> cmdHelp = new LinkedHashMap<>();
 
@@ -43,16 +43,28 @@ class HelpCmd implements Cmd {
 				CmdConstants.CMD_MSEND + " WALLET-SENDER WALLET-NAME-1 VALUE-1 ... WALLET-NAME-N VALUE-N");
 	}
 
+	public static String getHelpText() {
+		return HelpCmd.helpText();
+	}
+
 	public static void printHelp() {
-		printMessages("jLocalCoin - blockchain implementation in Java.");
+		String helpText = HelpCmd.helpText();
+		printMessages(helpText);
+	}
+
+	private static String helpText() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("jLocalCoin - BlockChain implementation in Java.").append(GlobalConstants.LINE_SEPARATOR);
 
 		cmdHelp.forEach((cmdName, helpDesc) -> {
-			printMessages(cmdName + GlobalConstants.TAB_SIGN + " - " + helpDesc);
+			sb.append(cmdName + GlobalConstants.TAB_SIGN + " - " + helpDesc).append(GlobalConstants.LINE_SEPARATOR);
 			if (cmdHelpExample.containsKey(cmdName)) {
-				printMessages(cmdHelpExample.get(cmdName));
+				sb.append(cmdHelpExample.get(cmdName)).append(GlobalConstants.LINE_SEPARATOR);
 			}
-			printMessages(GlobalConstants.LINE_SEPARATOR);
+			sb.append(GlobalConstants.LINE_SEPARATOR);
 		});
+
+		return sb.toString();
 	}
 
 }

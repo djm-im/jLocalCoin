@@ -9,6 +9,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import im.djm.coin.tx.Tx;
+import im.djm.p2p.cli.HelpCmd;
 import im.djm.p2p.cli.NodeCliStdIn;
 import im.djm.p2p.node.BlockChainNode;
 import im.djm.wallet.Payment;
@@ -42,11 +43,7 @@ public class SparkNode {
 		});
 
 		get("/help", (req, res) -> {
-			// TODO
-			// HelpCmd.getHelpMessage();
-			//
-
-			return "TODO: Help...\n\n";
+			return HelpCmd.getHelpText();
 		});
 
 		get("/exit", (req, res) -> {
