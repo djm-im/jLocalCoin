@@ -86,35 +86,35 @@ public class NodeCliStdIn implements Runnable {
 			return false;
 
 		case CmdConstants.CMD_SEND:
-			wCmd.sendCoin(this.trezor, cmdLine);
+			printMessages(wCmd.sendCoin(this.trezor, cmdLine));
 			return true;
 
 		case CmdConstants.CMD_MSEND:
-			wCmd.sendMultiCoins(this.trezor, cmdLine);
+			printMessages(wCmd.sendMultiCoins(this.trezor, cmdLine));
 			return true;
 
 		case CmdConstants.CMD_WNEW:
-			wCmd.createNewWallet(this.blockChainNode, this.trezor, cmdLine);
+			printMessages(wCmd.createNewWallet(this.blockChainNode, this.trezor, cmdLine));
 			return true;
 
 		case CmdConstants.CMD_MWNEW:
-			wCmd.createMultiNewWallets(blockChainNode, this.trezor, cmdLine);
+			printMessages(wCmd.createMultiNewWallets(blockChainNode, this.trezor, cmdLine));
 			return true;
 
 		case CmdConstants.CMD_WSTAT:
-			wCmd.walletStatus(this.trezor, cmdLine);
+			printMessages(wCmd.walletStatus(this.trezor, cmdLine));
 			return true;
 
 		case CmdConstants.CMD_WDEL:
-			wCmd.deleteWallet(this.trezor, cmdLine);
+			printMessages(wCmd.deleteWallet(this.trezor, cmdLine));
 			return true;
 
 		case CmdConstants.CMD_WLIST:
-			wCmd.listAllWallets(this.trezor);
+			printMessages(wCmd.listAllWallets(this.trezor));
 			return true;
 
 		case CmdConstants.CMD_PRINT:
-			bcCmd.printCmd(this.blockChainNode, cmdLine);
+			printMessages(bcCmd.printCmd(this.blockChainNode, cmdLine));
 			return true;
 
 		default:

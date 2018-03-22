@@ -1,7 +1,5 @@
 package im.djm.p2p.cli;
 
-import static im.djm.p2p.cli.StdOutUtil.printMessages;
-
 import java.util.List;
 
 import im.djm.coin.utxo.Utxo;
@@ -11,50 +9,66 @@ import im.djm.p2p.node.BlockChainNode;
 /**
  * @author djm.im
  */
-class BlockChainCmd implements Cmd {
+public class BlockChainCmd implements Cmd {
 
-	public void printCmd(BlockChainNode blockChainNode, String[] cmdLine) {
+	public String printCmd(BlockChainNode blockChainNode, String[] cmdLine) {
+		StringBuilder response = new StringBuilder();
 		if (cmdLine.length == 1) {
-			printMessages("BlockChain length: " + blockChainNode.status() + ".");
-			return;
+			response.append("BlockChain length: " + blockChainNode.status() + ".").append("\n");
+			response.append("\n");
+
+			return response.toString();
 		}
 
 		switch (cmdLine[1]) {
 		case CmdConstants.CMD_PRINT_BC:
-			printBlockchain(blockChainNode);
-			return;
+			return printBlockchain(blockChainNode);
 
 		case CmdConstants.CMD_PRINT_UTXO:
-			printUtxo(blockChainNode);
-			return;
+			return printUtxo(blockChainNode);
 
 		case CmdConstants.CMD_PRINT_BLOCK:
-			printBlock(cmdLine);
-			return;
+			return printBlock(cmdLine);
 
 		default:
-			printMessages("Unknow command.", "Type help.");
-			return;
+			return unknowCommand();
 		}
 	}
 
-	private void printBlock(String[] cmdLine) {
+	private String unknowCommand() {
+		return "Unknow command." + "\n" + "Type help." + "\n" + "\n";
+	}
+
+	private String printBlock(String[] cmdLine) {
+		StringBuilder response = new StringBuilder();
 		if (cmdLine.length != 3) {
-			printMessages("Wrong command format.", HelpCmd.cmdHelpExample.get(CmdConstants.CMD_PRINT));
+			response.append("Wrong command format.").append("\n");
+			response.append(HelpCmd.cmdHelpExample.get(CmdConstants.CMD_PRINT)).append("\n");
+
+			response.append("\n");
+
+			return response.toString();
 		}
 
-		printMessages("This command is not implemented yet.");
+		response.append("This command is not implemented yet.").append("\n");
+		response.append("\n");
+
+		return response.toString();
 	}
 
-	private void printUtxo(BlockChainNode blockChainNode) {
+	private String printUtxo(BlockChainNode blockChainNode) {
+		StringBuilder response = new StringBuilder();
 		List<Utxo> allUtxo = blockChainNode.getAllUtxo();
-		for (Utxo utxo : allUtxo) {
-			printMessages(utxo.toString());
-		}
+		allUtxo.forEach(utxo -> {
+			response.append(utxo.toString()).append("\n");
+		});
+		response.append("\n");
+
+		return response.toString();
 	}
 
-	private void printBlockchain(BlockChainNode blockChainNode) {
-		printMessages(blockChainNode.printBlockChain());
+	private String printBlockchain(BlockChainNode blockChainNode) {
+		return blockChainNode.printBlockChain();
 	}
 
 }
