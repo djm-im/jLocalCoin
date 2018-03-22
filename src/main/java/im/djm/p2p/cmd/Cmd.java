@@ -1,4 +1,4 @@
-package im.djm.p2p.cli.cmd;
+package im.djm.p2p.cmd;
 
 /**
  * @author djm.im

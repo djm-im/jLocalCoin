@@ -1,6 +1,4 @@
-package im.djm.p2p.cli;
-
-import static im.djm.p2p.cli.StdOutUtil.printMessages;
+package im.djm.p2p.cmd;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +6,6 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import im.djm.coin.tx.Tx;
-import im.djm.p2p.cli.cmd.Cmd;
 import im.djm.p2p.node.BlockChainNode;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Trezor;
@@ -196,19 +193,21 @@ public class WalletCmd implements Cmd {
 			return response.toString();
 		}
 
-		response.append(this.creatWalletWithName(blockChainNode, trezor, cmdLine[1].trim())).append("\n");
+		String walletName = cmdLine[1].trim();
+		if (trezor.containsKey(walletName)) {
+			// TODO
+			// throw exception
+			response.append("Wallet with name " + walletName + " already exists.").append("\n");
+			response.append("\n");
+		}
+
+		response.append(this.creatWalletWithName(blockChainNode, trezor, walletName)).append("\n");
 		response.append("\n");
 
 		return response.toString();
 	}
 
 	private Wallet creatWalletWithName(BlockChainNode blockChainNode, Trezor trezor, String walletName) {
-		if (trezor.containsKey(walletName)) {
-			// TODO
-			// throw exception
-			printMessages("Wallet with name " + walletName + " already exists.");
-		}
-
 		Wallet newWallet = Wallet.createNewWallet().setBlockchainNode(blockChainNode);
 		trezor.put(walletName, newWallet);
 

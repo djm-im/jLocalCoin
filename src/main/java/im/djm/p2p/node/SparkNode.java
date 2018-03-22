@@ -4,10 +4,10 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.stop;
 
-import im.djm.p2p.cli.BlockChainCmd;
-import im.djm.p2p.cli.HelpCmd;
 import im.djm.p2p.cli.NodeCliStdIn;
-import im.djm.p2p.cli.WalletCmd;
+import im.djm.p2p.cmd.BlockChainCmd;
+import im.djm.p2p.cmd.HelpCmd;
+import im.djm.p2p.cmd.WalletCmd;
 import im.djm.wallet.Trezor;
 import im.djm.wallet.Wallet;
 
@@ -40,7 +40,7 @@ public class SparkNode {
 		post("/help", (request, response) -> {
 			response.type("application/json");
 
-			return HelpCmd.getHelpText();
+			return HelpCmd.helpMessage();
 		});
 
 		post("/exit", (request, response) -> {

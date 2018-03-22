@@ -6,6 +6,11 @@ import java.util.Scanner;
 
 import im.djm.blockchain.BlockChainStatus;
 import im.djm.coin.tx.TxException;
+import im.djm.p2p.cmd.BlockChainCmd;
+import im.djm.p2p.cmd.CmdConstants;
+import im.djm.p2p.cmd.ExitCmd;
+import im.djm.p2p.cmd.HelpCmd;
+import im.djm.p2p.cmd.WalletCmd;
 import im.djm.p2p.node.BlockChainNode;
 import im.djm.wallet.Trezor;
 import im.djm.wallet.Wallet;
@@ -78,11 +83,11 @@ public class NodeCliStdIn implements Runnable {
 
 		switch (cmdName) {
 		case CmdConstants.CMD_HELP:
-			HelpCmd.printHelp();
+			printMessages(HelpCmd.helpMessage());
 			return true;
 
 		case CmdConstants.CMD_EXIT:
-			ExitCmd.exit();
+			printMessages(ExitCmd.exit());
 			return false;
 
 		case CmdConstants.CMD_SEND:

@@ -1,9 +1,9 @@
-package im.djm.p2p.cli;
+package im.djm.p2p.cmd;
 
 /**
  * @author djm.im
  */
-class CmdConstants {
+public class CmdConstants {
 	// TODO??
 	// use enum
 

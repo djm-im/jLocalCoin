@@ -1,11 +1,9 @@
-package im.djm.p2p.cli;
-
-import static im.djm.p2p.cli.StdOutUtil.printMessages;
+package im.djm.p2p.cmd;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import im.djm.p2p.cli.cmd.Cmd;
+import im.djm.p2p.cli.GlobalConstants;
 
 /**
  * @author djm.im
@@ -43,16 +41,7 @@ public class HelpCmd implements Cmd {
 				CmdConstants.CMD_MSEND + " WALLET-SENDER WALLET-NAME-1 VALUE-1 ... WALLET-NAME-N VALUE-N");
 	}
 
-	public static String getHelpText() {
-		return HelpCmd.helpText();
-	}
-
-	public static void printHelp() {
-		String helpText = HelpCmd.helpText();
-		printMessages(helpText);
-	}
-
-	private static String helpText() {
+	public static String helpMessage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("jLocalCoin - BlockChain implementation in Java.").append(GlobalConstants.LINE_SEPARATOR);
 
