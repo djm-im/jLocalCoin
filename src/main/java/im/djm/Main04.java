@@ -1,6 +1,6 @@
 package im.djm;
 
-import im.djm.p2p.SparkNode;
+import im.djm.p2p.node.SparkNode;
 
 /**
  * @author djm.im

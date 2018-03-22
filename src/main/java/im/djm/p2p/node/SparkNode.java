@@ -1,7 +1,7 @@
-package im.djm.p2p;
+package im.djm.p2p.node;
 
-import static spark.Spark.get;
 import static spark.Spark.port;
+import static spark.Spark.post;
 import static spark.Spark.stop;
 
 import java.util.List;
@@ -11,7 +11,6 @@ import com.google.common.collect.ImmutableList;
 import im.djm.coin.tx.Tx;
 import im.djm.p2p.cli.HelpCmd;
 import im.djm.p2p.cli.NodeCliStdIn;
-import im.djm.p2p.node.BlockChainNode;
 import im.djm.wallet.Payment;
 import im.djm.wallet.Trezor;
 import im.djm.wallet.Wallet;
@@ -38,55 +37,78 @@ public class SparkNode {
 	public void mainMethod(int port) {
 		port(port);
 
-		get("/miner-address", (req, res) -> {
-			return this.trezor.get(NodeCliStdIn.MINER_WALLET_NAME) + "\n\n";
-		});
+		post("/help", (request, response) -> {
+			response.type("application/json");
 
-		get("/help", (req, res) -> {
 			return HelpCmd.getHelpText();
 		});
 
-		get("/exit", (req, res) -> {
+		post("/exit", (request, response) -> {
 			stop();
-			return "Spark Node Stoped.\n\n";
+
+			return "{ Message: Spark Node Stoped. }\n\n";
 		});
 
-		// wnew WALLET-NAME
-		get("/wnew", (req, res) -> {
-			String walletName = req.queryParams("name");
+		post("/maddr", (request, response) -> {
+			String minerAddress = "{ Miner: " + this.trezor.get(NodeCliStdIn.MINER_WALLET_NAME) + "}" + "\n\n";
+
+			return minerAddress;
+		});
+
+		// TODO
+		// improve - use JSON or YAML format
+		// Body: 'name: WALLET-NAME'
+		post("/wnew", "application/json", (request, response) -> {
+			String walletName = request.body().trim();
 
 			Wallet newWallet = Wallet.createNewWallet().setBlockchainNode(this.blockChainNode);
 			this.trezor.put(walletName, newWallet);
 
-			return "Created new wallet: " + walletName + ".\n\n";
+			String retString = "{ NewWallet: " + newWallet + " }\n\n";
+			return retString;
 		});
 
-		get("/mwnew", (req, res) -> {
-			// TODO
-			// Use post method
-			// mwnew WALLET-NAME-1 WALLET-NAME-2 ... WALLET-NAME-N
-			//
+		// TODO
+		// improve
+		post("/mwnew", "application/json", (request, response) -> {
+			String body = request.body();
 
-			return "TODO: MWNew...\n\n";
+			String[] walletNames = body.split(" ");
+
+			StringBuilder report = new StringBuilder();
+
+			for (String walletName : walletNames) {
+				if (trezor.containsKey(walletName)) {
+					report.append("Wallet with name " + walletName + " already exists.").append("\n");
+				}
+
+				Wallet newWallet = Wallet.createNewWallet().setBlockchainNode(blockChainNode);
+				trezor.put(walletName, newWallet);
+
+				report.append("Created: " + newWallet).append("\n");
+			}
+
+			return report.toString();
 		});
 
-		get("/wstat", (req, res) -> {
-			String walletName = req.queryParams("name");
+		post("/wstat", "application/json", (request, response) -> {
+			String walletName = request.body().trim();
+
 			Wallet wallet = this.trezor.get(walletName);
 
-			String walletStat = wallet + "\n\n";
+			String walletStat = "{ " + wallet + " }" + "\n\n";
 
 			return walletStat;
 		});
 
-		get("/wdel- Delete a wallet wdel WALLET- NAME", (req, res) -> {
+		// wdel NAME
+		post("/wdel", "application/json", (request, response) -> {
 			// TODO
-			//
 
 			return "TODO: wdel...\n\n";
 		});
 
-		get("/wlist", (req, res) -> {
+		post("/wlist", "application/json", (request, response) -> {
 			StringBuilder sb = new StringBuilder();
 			this.trezor.allWallets().forEach((walletName, wallet) -> {
 				sb.append("{ Wallet Name: " + walletName + " " + wallet + ", Balance: " + wallet.balance() + " }");
@@ -99,13 +121,12 @@ public class SparkNode {
 
 		// Send coins from one to another wallet.
 		// send WALLET-NAME-1 WLLET-NAME-2 VALUE"
-		get("/send/:w1/:w2/:amount", (req, res) -> {
-			// TODO
-			String wallet1Name = req.params(":w1");
-			String wallet2Name = req.params(":w2");
-			String amount = req.params(":amount");
-			System.out.println("Req: " + req);
-			System.out.println("Parameters: " + req.queryParams());
+		post("/send", "application/json", (request, response) -> {
+			String[] cmd = request.body().split(" ");
+			String wallet1Name = cmd[0].trim();
+			String wallet2Name = cmd[1].trim();
+			String amount = cmd[2].trim();
+
 			System.out.println("w1: " + wallet1Name);
 			System.out.println("w2: " + wallet2Name);
 			System.out.println("Amount: " + amount);
@@ -124,26 +145,27 @@ public class SparkNode {
 			return retString;
 		});
 
-		get("/msend. msend WALLET-SENDER WALLET-NAME-1 VALUE-1...WALLET-NAME-N VALUE-N", (req, res) -> {
+		// msend WALLET-SENDER WALLET-NAME-1 VALUE-1...WALLET-NAME-N VALUE-N"
+		post("/msend", "application/json", (request, response) -> {
 			// TODO
 			//
 
-			return "TODO: MSend...";
+			return "TODO: MSend..." + "\n\n";
 		});
 
-		get("/print", (req, res) -> {
+		post("/print", "application/json", (request, response) -> {
 			String retString = this.blockChainNode.status() + "\n\n";
 
 			return retString;
 		});
 
-		get("/print-bc", (req, res) -> {
+		post("/print-bc", "application/json", (request, response) -> {
 			String bcString = this.blockChainNode.printBlockChain();
 
 			return bcString;
 		});
 
-		get("/print-utxo", (req, res) -> {
+		post("/print-utxo", "application/json", (request, response) -> {
 			StringBuilder sb = new StringBuilder();
 
 			this.blockChainNode.getAllUtxo().forEach(utxo -> {
@@ -155,11 +177,11 @@ public class SparkNode {
 			return retString;
 		});
 
-		get("/print-block[NUM]", (req, res) -> {
+		post("/print-block[NUM]", "application/json", (request, response) -> {
 			// TODO
 			//
 
-			return "TODO: Pring Block Num...";
+			return "TODO: Pring Block Num..." + "\n\n";
 		});
 	}
 
